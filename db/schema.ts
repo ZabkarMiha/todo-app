@@ -1,4 +1,4 @@
-import { pgTable, index, uuid, text, boolean } from "drizzle-orm/pg-core"
+import { pgTable, index, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -9,6 +9,7 @@ export const task = pgTable("task", {
         title: text().notNull(),
         description: text(),
         completed: boolean().notNull(),
+        dateAdded: timestamp({withTimezone: true}).defaultNow().notNull()
     },
     (table) => {
         return {

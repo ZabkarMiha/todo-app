@@ -1,37 +1,121 @@
+'use client'
+
 import {Plus} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {
     Dialog,
-    DialogContent,
-    DialogFooter,
+    DialogContent, DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
-import {Label} from "@/components/ui/label";
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm, SubmitHandler} from "react-hook-form"
+import {insertFormValues} from "@/lib/actions";
+import {useToast} from "@/hooks/use-toast";
+import {z} from "zod"
+import {taskFormSchema} from "@/lib/form-schemas";
 
 export default function AddTask() {
+
+    const {toast} = useToast();
+
+    const form = useForm<z.infer<typeof taskFormSchema>>({
+        resolver: zodResolver(taskFormSchema),
+        defaultValues: {
+            title: "",
+            description: "",
+            completed: false,
+        },
+    })
+
+    const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (data) => {
+        const fetchedData = await insertFormValues(data)
+
+        toast({
+            title: fetchedData === null ? "Uh oh! Something went wrong." : "Task successfully added",
+            description: fetchedData === null ? "There was a problem with your request." : JSON.stringify(fetchedData),
+        })
+
+    }
+
     return (
         <Dialog>
-            <DialogTrigger><Button variant="ghost" className={"h-fit"}><Plus size={50}/></Button></DialogTrigger>
-            <DialogContent>
+            <DialogTrigger asChild><Button variant="ghost" className={"h-fit"}><Plus
+                size={50}/></Button></DialogTrigger>
+            <DialogContent className={"space-y-6"}>
                 <DialogHeader>
                     <DialogTitle>Create new task</DialogTitle>
+                    <DialogDescription>To create a new task</DialogDescription>
                 </DialogHeader>
-                <div className={"grid grid-flow-col grid-rows-6 gap-2 my-5"}>
-                    <Input placeholder={"Title"}></Input>
-                    <Input placeholder={"Description"} className={"h-full row-span-4"}></Input>
-                    <div className={"h-full flex items-center gap-2"}>
-                        <Checkbox id={"completed"}/>
-                        <Label htmlFor={"completed"}>Completed</Label>
-                    </div>
-                </div>
-                <DialogFooter>
-                    <div className={"flex-1"}><Button>Save</Button></div>
-                    <Button variant={"outline"} className={""}>Cancel</Button>
-                </DialogFooter>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Title</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Title" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        The title of your task
+                                    </FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Description" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        The description of your task (optional).
+                                    </FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="completed"
+                            render={({field}) => (
+                                <FormItem className={"flex flex-row items-center space-x-4 space-y-0"}>
+                                    <FormLabel>Completed</FormLabel>
+                                    <FormControl>
+                                        <Checkbox
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Whether your task is completed or not
+                                    </FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <Button type={"submit"}>Save</Button>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     )
