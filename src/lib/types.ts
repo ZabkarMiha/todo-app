@@ -1,6 +1,7 @@
-type Task = {
-    id?: string;
+export type Task = {
+    id: string;
     title: string;
     description: string | null;
     completed: boolean;
+    dateAdded: Date;
 }
