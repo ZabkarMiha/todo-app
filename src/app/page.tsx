@@ -8,7 +8,7 @@ export default async function Home() {
 
     return (
         <>
-            {tasks && tasks.length > 0 || tasks === null ? (
+            {tasks && tasks.length > 0 || tasks !== null ? (
                 <Tasks tasks={tasks}/>
             ) : (
                 <div className="flex justify-center items-center flex-grow">
