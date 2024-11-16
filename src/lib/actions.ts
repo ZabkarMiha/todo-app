@@ -5,7 +5,6 @@ import {z} from "zod";
 import {taskFormSchema} from "@/lib/form-schemas";
 import {task} from "@/schema";
 import {revalidatePath} from "next/cache";
-import {desc, eq} from "drizzle-orm";
 
 export async function insertFormValues(values: z.infer<typeof taskFormSchema>){
     try{
@@ -21,7 +20,7 @@ export async function insertFormValues(values: z.infer<typeof taskFormSchema>){
 
 export async function getTasks(){
     try {
-        return await db.select().from(task).orderBy(desc(task.dateAdded))
+        return await db.select().from(task)
     }
     catch(e){
         console.log(e)
