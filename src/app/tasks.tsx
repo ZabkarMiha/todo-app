@@ -20,6 +20,9 @@ export default function TaskList({tasks}: { tasks: Task[] | null }) {
     return (
         <div className="my-10 mx-20 space-y-5">
             <div className="flex items-center justify-center w-full space-x-2">
+                <div className="flex justify-start items-center flex-grow">
+                    <AddTask/>
+                </div>
                 <Label>Sort by date:</Label>
                 <RadioGroup
                     value={sortOrder}
@@ -40,9 +43,6 @@ export default function TaskList({tasks}: { tasks: Task[] | null }) {
                 {sortedTasks.map((task) => (
                     <TodoTaskCard key={task.id} task={task}/>
                 ))}
-                <div className="flex justify-center items-center flex-grow">
-                    <AddTask/>
-                </div>
             </div>
         </div>
     );

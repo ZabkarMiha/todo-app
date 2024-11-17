@@ -3,7 +3,7 @@
 import {Plus} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {
-    Dialog,
+    Dialog, DialogClose,
     DialogContent, DialogDescription,
     DialogHeader,
     DialogTitle,
@@ -26,6 +26,7 @@ import {insertFormValues} from "@/lib/actions";
 import {useToast} from "@/hooks/use-toast";
 import {z} from "zod"
 import {taskFormSchema} from "@/lib/form-schemas";
+import {Label} from "@/components/ui/label";
 
 export default function AddTask() {
 
@@ -48,12 +49,14 @@ export default function AddTask() {
             description: fetchedData === null ? "There was a problem with your request." : JSON.stringify(fetchedData),
         })
 
+        form.reset()
     }
 
     return (
         <Dialog>
-            <DialogTrigger asChild><Button variant="ghost" className={"h-fit"}><Plus
-                size={50}/></Button></DialogTrigger>
+            <DialogTrigger asChild>
+                <Button variant="ghost" className={"h-fit space-x-1"}><Label>Add Task</Label><Plus size={30}/></Button>
+            </DialogTrigger>
             <DialogContent className={"space-y-6"}>
                 <DialogHeader>
                     <DialogTitle>Create new task</DialogTitle>
@@ -113,7 +116,9 @@ export default function AddTask() {
                                 </FormItem>
                             )}
                         />
-                        <Button type={"submit"}>Save</Button>
+                        <DialogClose asChild>
+                            <Button type={"submit"}>Save</Button>
+                        </DialogClose>
                     </form>
                 </Form>
             </DialogContent>
