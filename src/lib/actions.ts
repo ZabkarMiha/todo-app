@@ -19,9 +19,19 @@ export async function insertFormValues(values: z.infer<typeof taskFormSchema>){
     }
 }
 
-export async function getTasks(){
+export async function getTasksCount(){
     try {
-        return await db.select().from(task)
+        return await db.$count(task);
+    }
+    catch(e){
+        console.log(e);
+        return null
+    }
+}
+
+export async function getTasksPerPage(currentPage: number, pageSize: number){
+    try {
+        return await db.select().from(task).limit(pageSize).offset((currentPage - 1) * pageSize);
     }
     catch(e){
         console.log(e)

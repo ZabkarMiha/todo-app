@@ -3,9 +3,17 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>dmy</DateStyle>
-      <IntrospectionStateNumber>837</IntrospectionStateNumber>
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+4||-9223372036854775808|c|G
+4||10|c|G
+4||10|C|G
+4||10|T|G</Grants>
+      <IntrospectionStateNumber>912</IntrospectionStateNumber>
       <ServerVersion>17.0</ServerVersion>
-      <StartupTime>1731358685</StartupTime>
+      <StartupTime>1731708117</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -805,7 +813,7 @@ false Zulu
 14704||10|C|G
 14704||-9223372036854775808|U|G
 14704||10|U|G</Grants>
-      <IntrospectionStateNumber>837</IntrospectionStateNumber>
+      <IntrospectionStateNumber>912</IntrospectionStateNumber>
       <ObjectId>24576</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -4232,15 +4240,15 @@ false Zulu
     <schema id="266" parent="3" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>837</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-11-12.21:16:51</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>912</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-11-18.14:47:24</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>532</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
     </schema>
     <table id="267" parent="266" name="task">
       <ObjectId>40962</ObjectId>
-      <StateNumber>830</StateNumber>
+      <StateNumber>911</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>postgres</OwnerName>
     </table>
@@ -4283,7 +4291,7 @@ false Zulu
     <index id="273" parent="267" name="task_id_unique">
       <ColNames>id</ColNames>
       <ObjectId>40972</ObjectId>
-      <StateNumber>830</StateNumber>
+      <StateNumber>911</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
@@ -4292,14 +4300,14 @@ false Zulu
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>40967</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>830</StateNumber>
+      <StateNumber>911</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
     <index id="275" parent="267" name="title__index">
       <ColNames>title</ColNames>
       <ObjectId>40969</ObjectId>
-      <StateNumber>830</StateNumber>
+      <StateNumber>911</StateNumber>
       <AccessMethodId>403</AccessMethodId>
       <CollationNames>default</CollationNames>
       <CollationIds>100</CollationIds>
