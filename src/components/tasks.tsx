@@ -10,7 +10,6 @@ import {Label} from "@/components/ui/label";
 export default function TaskList({tasks}: { tasks: Task[] | null }) {
     const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
 
-    // Sort tasks based on the selected order
     const sortedTasks = [...tasks!].sort((a, b) => {
         const dateA = new Date(a.dateAdded).getTime();
         const dateB = new Date(b.dateAdded).getTime();
