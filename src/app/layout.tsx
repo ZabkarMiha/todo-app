@@ -24,20 +24,19 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="en" className={"h-screen"}>
-        <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
-        >
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <TopNav/>
-            <Toaster/>
-            {children}
-        </ThemeProvider>
-        </body>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <TopNav/>
+                    <Toaster/>
+                    {children}
+                </ThemeProvider>
+            </body>
         </html>
     );
 }
