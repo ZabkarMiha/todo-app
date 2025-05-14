@@ -23,12 +23,14 @@ export default async function Page({ searchParams }: PageProps) {
                 tasksCount === null ? (
                     <h1>Something went wrong</h1>
                 ) : tasksCount === 0 ? (
-                    <AddTask/>
+                    <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+                        <h1 className="text-5xl font-bold mb-4">Add your first task!</h1>
+                        <AddTask/>
+                    </div>
                 ) : (
                 <>
                     <Tasks tasks={tasks}/>
-                    <PaginationBar tasksCount={tasksCount} currentPage={currentPage}
-                                   tasksPerPage={tasksPerPage}/>
+                    <PaginationBar tasksCount={tasksCount} currentPage={currentPage} tasksPerPage={tasksPerPage}/>
                 </>
                 )
             }

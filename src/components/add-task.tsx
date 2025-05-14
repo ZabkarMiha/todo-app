@@ -55,7 +55,7 @@ export default function AddTask() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="ghost" className={"h-fit space-x-1"}><Label>Add Task</Label><Plus size={30}/></Button>
+                <Button variant="outline" className={"h-fit space-x-1"}><Label>Add Task</Label><Plus size={30}/></Button>
             </DialogTrigger>
             <DialogContent className={"space-y-6"}>
                 <DialogHeader>
