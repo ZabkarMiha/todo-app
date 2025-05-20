@@ -51,3 +51,15 @@ export async function deleteTask(id: string){
         return null
     }
 }
+
+export async function completeTaskToggle(id: string, completed: boolean){
+    try {
+        const data = await db.update(task).set({completed}).where(eq(task.id, id)).returning({ returnedTitle: task.title, returnedDescription: task.description})
+        revalidatePath("/")
+        return data
+    }
+    catch(e){
+        console.log(e);
+        return null
+    }
+}

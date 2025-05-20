@@ -1,11 +1,11 @@
 'use client'
 
 import {Input} from "@/components/ui/input";
-import {Checkbox} from "@/components/ui/checkbox";
+import {Toggle} from "@/components/ui/toggle";
 import {Label} from "@/components/ui/label";
 import {Task} from "@/lib/types"
 import {Button} from "@/components/ui/button";
-import {deleteTask} from "@/lib/actions";
+import {completeTaskToggle, deleteTask} from "@/lib/actions";
 import {toast} from "@/hooks/use-toast";
 import {useEffect, useState} from "react";
 
@@ -18,8 +18,8 @@ export default function TodoTaskCard({task}: {task: Task}) {
     }, [task.dateAdded]);
 
 
-    const deleteTaskOnClick =  async (id: string) => {
-        const fetchedData = await deleteTask(id);
+    const deleteTaskOnClick =  async () => {
+        const fetchedData = await deleteTask(task.id);
 
         toast({
             title: fetchedData === null ? "Uh oh! Something went wrong." : "Task deleted successfully",
@@ -27,17 +27,25 @@ export default function TodoTaskCard({task}: {task: Task}) {
         })
     }
 
+    const completedToggleOnChange = async (completed: boolean) => {
+        const fetchedData = await completeTaskToggle(task.id, completed);
+
+        toast({
+            title: fetchedData === null ? "Uh oh! Something went wrong." : "Task completion updated successfully",
+            description: fetchedData === null ? "There was a problem with your request." : JSON.stringify(fetchedData),
+        })
+    }
+
     return (
-        <div className="grid grid-rows-3 h-56 outline p-5">
-            <Label className={""}>{task.title}</Label>
-            <Label>{task.description}</Label>
-            <div>
-                <Label htmlFor={"completed"}>Completed</Label>
-                <Checkbox id={"completed"} checked={task.completed} />
+        <div className="grid grid-rows-3 h-56 outline outline-1 rounded-md p-5">
+            <div className="flex items-center w-full">
+                <h1 className={"text-4xl font-bold"}>{task.title}</h1>
+                <Toggle className="ml-auto self-center" pressed={task.completed} onPressedChange={completedToggleOnChange}>Completed</Toggle>
             </div>
+            <Label>{task.description}</Label>
             <Label className={""}>Date added: {date}</Label>
             <div>
-                <Button variant={"destructive"} onClick={async () => deleteTaskOnClick(task.id)}>Delete</Button>
+                <Button variant={"destructive"} onClick={deleteTaskOnClick}>Delete</Button>
                 <Button variant={"outline"}>Edit</Button>
             </div>
         </div>
