@@ -19,7 +19,7 @@ export default function PaginationBar({tasksCount, currentPage, tasksPerPage}: P
         const maxNextPages = 2;
 
         return (
-            <Pagination>
+            <Pagination className="absolute inset-x-0 bottom-20">
                 <PaginationContent>
                     {
                         currentPage > 1 && (
