@@ -1,6 +1,5 @@
 'use client'
 
-import {Input} from "@/components/ui/input";
 import {Toggle} from "@/components/ui/toggle";
 import {Label} from "@/components/ui/label";
 import {Task} from "@/lib/types"
@@ -8,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import {completeTaskToggle, deleteTask} from "@/lib/actions";
 import {toast} from "@/hooks/use-toast";
 import {useEffect, useState} from "react";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 export default function TodoTaskCard({task}: {task: Task}) {
 
@@ -38,9 +38,9 @@ export default function TodoTaskCard({task}: {task: Task}) {
 
     return (
         <div className="grid grid-rows-3 h-56 outline outline-1 rounded-md p-5">
-            <div className="flex items-center w-full">
-                <h1 className={"text-4xl font-bold"}>{task.title}</h1>
-                <Toggle className="ml-auto self-center" pressed={task.completed} onPressedChange={completedToggleOnChange}>Completed</Toggle>
+            <div className="grid grid-cols-3 content-center size-full">
+                <h1 className={"text-4xl col-span-2 font-bold text-ellipsis overflow-hidden"}>{task.title}</h1>
+                <Toggle className="ml-auto self-center dark:bg-zinc-900/40 dark:hover:bg-zinc-600/40 dark:data-[state=on]:bg-green-900/40 dark:data-[state=on]:hover:bg-green-600/40" variant={"outline"} pressed={task.completed} onPressedChange={completedToggleOnChange}><CheckIcon/></Toggle>
             </div>
             <Label>{task.description}</Label>
             <Label className={""}>Date added: {date}</Label>

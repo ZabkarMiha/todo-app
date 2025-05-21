@@ -1,6 +1,7 @@
 'use client'
 
-import {Plus} from "lucide-react";
+//import {Plus} from "lucide-react";
+import {PlusIcon} from "@radix-ui/react-icons";
 import {Button} from "@/components/ui/button";
 import {
     Dialog, DialogClose,
@@ -55,7 +56,7 @@ export default function AddTask() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className={"h-fit space-x-1"}><Label>Add Task</Label><Plus size={30}/></Button>
+                <Button variant="outline" className={"h-fit space-x-1"}><Label>Add Task</Label><PlusIcon width={24} height={24}/></Button>
             </DialogTrigger>
             <DialogContent className={"space-y-6"}>
                 <DialogHeader>
