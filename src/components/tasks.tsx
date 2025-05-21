@@ -6,15 +6,29 @@ import AddTask from "@/components/add-task";
 import {Task} from "@/lib/types";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Label} from "@/components/ui/label";
+import PaginationBar from "@/components/pagination-bar";
 
-export default function TaskList({tasks}: { tasks: Task[] | null }) {
+export default function TaskList({
+    tasks,
+    currentPage,
+    tasksPerPage
+}: { 
+    tasks: Task[] | null,
+    currentPage: number,
+    tasksPerPage: number 
+}) {
     const [sortOrder, setSortOrder] = useState<"ascending" | "descending">("descending");
 
-    const sortedTasks = [...tasks!].sort((a, b) => {
+    if (!tasks) return null;
+
+    const sortedTasks = [...tasks].sort((a, b) => {
         const dateA = new Date(a.dateAdded).getTime();
         const dateB = new Date(b.dateAdded).getTime();
         return sortOrder === "ascending" ? dateA - dateB : dateB - dateA;
     });
+
+    const startIndex = (currentPage - 1) * tasksPerPage;
+    const paginatedTasks = sortedTasks.slice(startIndex, startIndex + tasksPerPage);
 
     return (
         <div className="my-10 mx-20 space-y-5">
@@ -39,10 +53,17 @@ export default function TaskList({tasks}: { tasks: Task[] | null }) {
                 </RadioGroup>
             </div>
             <div className="grid grid-cols-4 auto-rows-max gap-5 h-full">
-                {sortedTasks.map((task) => (
+                {paginatedTasks.map((task) => (
                     <TodoTaskCard key={task.id} task={task}/>
                 ))}
             </div>
+            {tasks.length > tasksPerPage && (
+                <PaginationBar 
+                    tasksCount={tasks.length} 
+                    currentPage={currentPage} 
+                    tasksPerPage={tasksPerPage}
+                />
+            )}
         </div>
     );
 }

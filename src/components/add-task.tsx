@@ -23,7 +23,7 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm, SubmitHandler} from "react-hook-form"
-import {insertFormValues} from "@/lib/actions";
+import {insertTaskFormValues} from "@/lib/actions";
 import {useToast} from "@/hooks/use-toast";
 import {z} from "zod"
 import {taskFormSchema} from "@/lib/form-schemas";
@@ -43,7 +43,7 @@ export default function AddTask() {
     })
 
     const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (data) => {
-        const fetchedData = await insertFormValues(data)
+        const fetchedData = await insertTaskFormValues(data)
 
         toast({
             title: fetchedData === null ? "Uh oh! Something went wrong." : "Task successfully added",

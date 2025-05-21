@@ -28,19 +28,14 @@ export default function TodoTaskCard({task}: {task: Task}) {
     }
 
     const completedToggleOnChange = async (completed: boolean) => {
-        const fetchedData = await completeTaskToggle(task.id, completed);
-
-        toast({
-            title: fetchedData === null ? "Uh oh! Something went wrong." : "Task completion updated successfully",
-            description: fetchedData === null ? "There was a problem with your request." : JSON.stringify(fetchedData),
-        })
+        await completeTaskToggle(task.id, completed);
     }
 
     return (
         <div className="grid grid-rows-3 h-56 outline outline-1 rounded-md p-5">
             <div className="grid grid-cols-3 content-center size-full">
                 <h1 className={"text-4xl col-span-2 font-bold text-ellipsis overflow-hidden"}>{task.title}</h1>
-                <Toggle className="ml-auto self-center dark:bg-zinc-900/40 dark:hover:bg-zinc-600/40 dark:data-[state=on]:bg-green-900/40 dark:data-[state=on]:hover:bg-green-600/40" variant={"outline"} pressed={task.completed} onPressedChange={completedToggleOnChange}><CheckIcon/></Toggle>
+                <Toggle className="ml-auto self-center dark:bg-zinc-900/40 dark:hover:bg-zinc-600/40 dark:data-[state=on]:bg-green-800/40 dark:data-[state=on]:hover:bg-green-600/40" variant={"outline"} pressed={task.completed} onPressedChange={completedToggleOnChange}><CheckIcon/></Toggle>
             </div>
             <Label>{task.description}</Label>
             <Label className={""}>Date added: {date}</Label>
