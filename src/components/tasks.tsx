@@ -31,7 +31,7 @@ export default function TaskList({
     const paginatedTasks = sortedTasks.slice(startIndex, startIndex + tasksPerPage);
 
     return (
-        <div className="my-10 mx-20 space-y-5">
+        <div className="my-10 mx-20 space-y-5 h-full">
             <div className="flex items-center justify-center w-full space-x-2">
                 <div className="flex justify-start items-center flex-grow">
                     <AddTask/>
@@ -52,7 +52,7 @@ export default function TaskList({
                     </div>
                 </RadioGroup>
             </div>
-            <div className="grid grid-cols-4 auto-rows-max gap-5 h-full">
+            <div className="grid grid-cols-4 grid-rows-2 h-4/5 gap-5">
                 {paginatedTasks.map((task) => (
                     <TodoTaskCard key={task.id} task={task}/>
                 ))}
