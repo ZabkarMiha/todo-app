@@ -1,12 +1,17 @@
-import {ThemeToggleButton} from "@/components/theme-toggle-button";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuPortal,
+    DropdownMenuSub,
+    DropdownMenuSubTrigger,
+    DropdownMenuSubTheme
 } from "@/components/ui/dropdown-menu"
 import AppLogo from "@/components/app-logo";
+import { GearIcon } from "@radix-ui/react-icons";
+import { Button } from "./ui/button";
 
 export default function TopNav() {
     return (
@@ -15,15 +20,26 @@ export default function TopNav() {
             <div className={"justify-self-end"}>
                 <div className={"flex gap-5"}>
                     <DropdownMenu>
-                        <DropdownMenuTrigger>My account</DropdownMenuTrigger>
+                        <DropdownMenuTrigger asChild><Button variant={"ghost"}><GearIcon width={20} height={20}/></Button></DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem>Preferences</DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubTheme/>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild><Button variant={"ghost"}>My account</Button></DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuItem>Log in</DropdownMenuItem>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem>Register</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-
-                    <ThemeToggleButton/>
                 </div>
             </div>
         </div>
