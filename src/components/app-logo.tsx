@@ -1,24 +1,5 @@
-import Image from "next/image";
-
 export default function AppLogo() {
-    const images = [
-        { src: "/images/todo-app-logo-dark-mode.png", className: "hidden dark:block" },
-        { src: "/images/todo-app-logo-light-mode.png", className: "block dark:hidden" },
-    ];
-
     return (
-        <div>
-            {images.map((image, index) => (
-                <Image
-                    key={index}
-                    className={image.className}
-                    src={image.src}
-                    alt={`${index === 0 ? "dark" : "light"}-mode-image`}
-                    width={144}
-                    height={144}
-                    priority={true}
-                />
-            ))}
-        </div>
+        <svg height="46px" width="207px" xmlns="http://www.w3.org/2000/svg"><text className="fill-black dark:fill-white" fontFamily="Arial" fontSize="50px" y="36">Todo App</text></svg>
     );
 }
