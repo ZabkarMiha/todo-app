@@ -40,7 +40,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="grid grid-rows-4 outline outline-1 rounded-md p-5 bg-neutral-50 dark:bg-neutral-900">
+    <div className="grid grid-rows-4 outline outline-1 outline-neutral-200 dark:outline-neutral-800 rounded-md p-5 bg-neutral-50 dark:bg-neutral-900">
       <div className="grid grid-cols-5 content-center">
         <h1
           className={
