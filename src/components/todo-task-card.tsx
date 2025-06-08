@@ -40,17 +40,17 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="grid grid-rows-4 outline outline-1 outline-neutral-200 dark:outline-neutral-800 rounded-md p-5 bg-neutral-50 dark:bg-neutral-900">
-      <div className="grid grid-cols-5 content-center">
+    <div className="flex flex-col w-full outline outline-1 outline-neutral-200 dark:outline-neutral-800 rounded-md p-5 bg-neutral-50 dark:bg-neutral-900">
+      <div className="flex flex-row items-center gap-2 mb-2">
         <h1
           className={
-            "text-4xl col-span-4 font-bold text-ellipsis overflow-hidden"
+            "text-4xl font-bold text-ellipsis overflow-hidden"
           }
         >
           {task.title}
         </h1>
         <Toggle
-          className="ml-auto self-center bg-white data-[state=off]:hover:bg-neutral-300 data-[state=on]:bg-green-400/80 data-[state=on]:hover:bg-green-600/80 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:data-[state=on]:bg-green-600/40 dark:data-[state=on]:hover:bg-green-200/40"
+          className="ml-auto bg-white data-[state=off]:hover:bg-neutral-300 data-[state=on]:bg-green-400/80 data-[state=on]:hover:bg-green-600/80 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:data-[state=on]:bg-green-600/40 dark:data-[state=on]:hover:bg-green-200/40"
           variant={"outline"}
           pressed={task.completed}
           onPressedChange={completedToggleOnChange}
@@ -58,12 +58,12 @@ export default function TodoTaskCard({ task }: { task: Task }) {
           <CheckIcon />
         </Toggle>
       </div>
-      <p className="row-span-2 break-all overflow-y-auto">{task.description}</p>
-      <div className="flex gap-2 items-center">
+      <p className="break-all hover:overflow-y-auto overflow-hidden mb-5">{task.description}</p>
+      <div className="flex flex-row items-center gap-2 self-center mt-auto w-full">
         <Button variant={"destructive"} onClick={deleteTaskOnClick}>
           Delete
         </Button>
-        <Label className={"grow text-center"}>{date}</Label>
+        <Label className={"text-center grow"}>{date}</Label>
         <Button
           className={"hover:bg-neutral-300 dark:hover:bg-neutral-800"}
           variant={"outline"}

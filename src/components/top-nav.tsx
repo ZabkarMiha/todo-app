@@ -17,11 +17,11 @@ export default function TopNav() {
   return (
     <div
       className={
-        "grid grid-cols-2 justify-items-stretch w-screen p-7 sticky top-0 backdrop-blur-lg"
+        "flex flex-row items-center w-full p-7 sticky top-0 backdrop-blur-lg"
       }
     >
       <AppLogo />
-      <div className={"justify-self-end"}>
+      <div className={"ml-auto"}>
         <div className={"flex gap-5"}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

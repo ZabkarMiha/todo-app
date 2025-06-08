@@ -36,12 +36,12 @@ export default function TaskList({
   )
 
   return (
-    <div className="my-10 mx-20 space-y-5 h-full">
-      <div className="flex items-center justify-center w-full ">
-        <div className="justify-self-start flex-grow">
+    <div className="flex flex-col my-10 mx-20 gap-5 h-4/5">
+      <div className="flex flex-row w-full">
+        <div className="justify-self-start">
           <AddTask />
         </div>
-        <div className="flex justify-end items-center space-x-2 outline outline-1 outline-neutral-200 dark:outline-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-4 rounded-md">
+        <div className="justify-self-end ml-auto flex flex-row justify-center items-center gap-2 outline outline-1 outline-neutral-200 dark:outline-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-4 rounded-md">
           <Label>Sort by date:</Label>
           <RadioGroup
             value={sortOrder}
@@ -50,7 +50,7 @@ export default function TaskList({
             }
             className="flex items-center"
           >
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <RadioGroupItem
                 className="bg-white dark:bg-neutral-900"
                 value="descending"
@@ -58,14 +58,14 @@ export default function TaskList({
               />
               <Label htmlFor="option-one">Newest first</Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <RadioGroupItem value="ascending" id="option-two" />
               <Label htmlFor="option-two">Oldest first</Label>
             </div>
           </RadioGroup>
         </div>
       </div>
-      <div className="grid grid-cols-4 grid-rows-2 h-4/5 gap-5">
+      <div className="grid grid-cols-4 grid-rows-2 gap-5 h-5/6">
         {paginatedTasks.map((task) => (
           <TodoTaskCard key={task.id} task={task} />
         ))}
