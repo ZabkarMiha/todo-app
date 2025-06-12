@@ -21,17 +21,17 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }, [task.dateAdded])
 
   const deleteTaskOnClick = async () => {
-    const fetchedData = await deleteTask(task.id)
+    const result = await deleteTask(task.id)
 
     toast({
       title:
-        fetchedData === null
+        result.error
           ? "Uh oh! Something went wrong."
           : "Task deleted successfully",
       description:
-        fetchedData === null
-          ? "There was a problem with your request."
-          : JSON.stringify(fetchedData),
+        result.error
+          ? result.error
+          : JSON.stringify(result.data),
     })
   }
 

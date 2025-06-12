@@ -1,5 +1,5 @@
 import Tasks from "@/components/tasks"
-import { getAllTasks } from "@/lib/actions"
+import { getAllTasks, getTasksCount } from "@/lib/actions"
 import AddTask from "@/components/add-task"
 
 type PageProps = {
@@ -7,26 +7,40 @@ type PageProps = {
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const tasks = await getAllTasks()
+  const tasksCountResult = await getTasksCount()
 
+  if (tasksCountResult.error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+        <h1>Error: {tasksCountResult.error}</h1>
+      </div>
+    )
+  }
+
+  if (tasksCountResult.data === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+        <h1 className="text-5xl font-bold mb-4">Add your first task!</h1>
+        <AddTask />
+      </div>
+    )
+  }
+
+  const tasksResult = await getAllTasks()
+  if (tasksResult.error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+        <h1>Error: {tasksResult.error}</h1>
+      </div>
+    )
+  }
+
+  const currentPage = parseInt(searchParams.page as string) || 1
   return (
-    <>
-      {tasks === null ? (
-        <h1>Something went wrong</h1>
-      ) : tasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
-          <h1 className="text-5xl font-bold mb-4">Add your first task!</h1>
-          <AddTask />
-        </div>
-      ) : (
-        <>
-          <Tasks
-            tasks={tasks}
-            currentPage={parseInt(searchParams.page as string) || 1}
-            tasksPerPage={8}
-          />
-        </>
-      )}
-    </>
+    <Tasks
+      tasks={tasksResult.data || null}
+      currentPage={currentPage}
+      tasksPerPage={8}
+    />
   )
 }

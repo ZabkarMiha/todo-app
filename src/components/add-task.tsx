@@ -44,17 +44,15 @@ export default function AddTask() {
   const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (
     data
   ) => {
-    const fetchedData = await insertTaskFormValues(data)
+    const result = await insertTaskFormValues(data)
 
     toast({
-      title:
-        fetchedData === null
-          ? "Uh oh! Something went wrong."
-          : "Task successfully added",
-      description:
-        fetchedData === null
-          ? "There was a problem with your request."
-          : JSON.stringify(fetchedData),
+      title: result.error
+        ? "Uh oh! Something went wrong."
+        : "Task successfully added",
+      description: result.error
+        ? result.error
+        : JSON.stringify(result.data),
     })
 
     form.reset()
