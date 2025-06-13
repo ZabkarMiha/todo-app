@@ -43,7 +43,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
           <CheckIcon />
         </Toggle>
       </div>
-      <p className="break-all hover:overflow-y-auto overflow-hidden mb-5">
+      <p className="break-all overflow-hidden hover:overflow-y-auto mb-5">
         {task.description}
       </p>
       <div className="flex flex-row items-center gap-2 self-center mt-auto w-full">
