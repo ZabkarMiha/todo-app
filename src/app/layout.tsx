@@ -18,7 +18,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Todo App",
-  description: "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle",
+  description:
+    "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle",
 }
 
 export default function RootLayout({
