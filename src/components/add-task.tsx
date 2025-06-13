@@ -64,7 +64,7 @@ export default function AddTask() {
         <Button
           variant="outline"
           className={
-            "h-fit space-x-2 dark:bg-neutral-900 p-4 dark:hover:bg-neutral-800"
+            "h-fit space-x-2 bg-neutral-50 hover:bg-neutral-300 dark:bg-neutral-900 p-4 dark:hover:bg-neutral-800"
           }
         >
           <p>Add Task</p>
