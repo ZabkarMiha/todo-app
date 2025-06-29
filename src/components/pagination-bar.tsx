@@ -22,6 +22,7 @@ export default function PaginationBar({
   {
     const maxPreviousPages = 2
     const maxNextPages = 2
+    const totalPages = Math.ceil(tasksCount / tasksPerPage)
 
     return (
       <Pagination className="outline outline-1 outline-container-outline rounded-md bg-container p-2 w-fit bottom-5 sticky">
@@ -37,10 +38,11 @@ export default function PaginationBar({
                   <PaginationItem>
                     <PaginationLink href={`/?page=1`}>1</PaginationLink>
                   </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
+                  {currentPage > maxPreviousPages + 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
                 </>
               )}
 
@@ -69,36 +71,29 @@ export default function PaginationBar({
 
           {tasksCount - currentPage * tasksPerPage > 0 && (
             <>
-              {[
-                ...Array(
-                  Math.min(
-                    maxNextPages,
-                    Math.ceil(tasksCount / tasksPerPage) - currentPage
+              {[...Array(Math.min(maxNextPages, totalPages - currentPage))].map(
+                (_, idx) => {
+                  const page = currentPage + idx + 1
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink href={`/?page=${page}`}>
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
                   )
-                ),
-              ].map((_, idx) => {
-                const page = currentPage + idx + 1
-                return (
-                  <PaginationItem key={page}>
-                    <PaginationLink href={`/?page=${page}`}>
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              })}
+                }
+              )}
 
-              {currentPage + maxNextPages <
-                Math.ceil(tasksCount / tasksPerPage) && (
+              {currentPage + maxNextPages < totalPages && (
                 <>
+                  {currentPage + maxNextPages + 1 < totalPages && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
                   <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationLink
-                      href={`/?page=${Math.ceil(tasksCount / tasksPerPage)}`}
-                    >
-                      {Math.ceil(tasksCount / tasksPerPage)}
+                    <PaginationLink href={`/?page=${totalPages}`}>
+                      {totalPages}
                     </PaginationLink>
                   </PaginationItem>
                 </>
