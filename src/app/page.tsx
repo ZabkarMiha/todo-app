@@ -36,7 +36,7 @@ export default async function Page(props: PageProps) {
     )
   }
 
-  const currentPage = parseInt(searchParams.page as string) || 1
+  const currentPage = Number(searchParams?.page) || 1
   return (
     <Tasks
       tasks={tasksResult.data || null}
