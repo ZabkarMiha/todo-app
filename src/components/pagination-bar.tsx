@@ -24,7 +24,7 @@ export default function PaginationBar({
     const maxNextPages = 2
 
     return (
-      <Pagination>
+      <Pagination className="outline outline-1 outline-container-outline rounded-md bg-container p-2 w-fit bottom-5 sticky">
         <PaginationContent>
           {currentPage > 1 && (
             <>

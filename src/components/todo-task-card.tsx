@@ -29,13 +29,13 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="flex flex-col w-full outline outline-1 outline-neutral-200 dark:outline-neutral-800 rounded-md p-5 bg-neutral-50 dark:bg-neutral-900">
+    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background">
       <div className="flex flex-row items-center gap-2 mb-2">
         <h1 className={"text-4xl font-bold text-ellipsis overflow-hidden"}>
           {task.title}
         </h1>
         <Toggle
-          className="ml-auto bg-white data-[state=off]:hover:bg-neutral-300 data-[state=on]:bg-green-400/80 data-[state=on]:hover:bg-green-600/80 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:data-[state=on]:bg-green-600/40 dark:data-[state=on]:hover:bg-green-200/40"
+          className="ml-auto"
           variant={"outline"}
           pressed={task.completed}
           onPressedChange={completedToggleOnChange}
@@ -53,12 +53,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
         <Label className={"text-center grow"}>
           {task.dateAdded.toLocaleDateString("en-GB", options)}
         </Label>
-        <Button
-          className={"hover:bg-neutral-300 dark:hover:bg-neutral-800"}
-          variant={"outline"}
-        >
-          Edit
-        </Button>
+        <Button variant={"outline"}>Edit</Button>
       </div>
     </div>
   )

@@ -41,7 +41,7 @@ export default function TaskList({
         <div className="justify-self-start">
           <AddTask />
         </div>
-        <div className="justify-self-end ml-auto flex flex-row justify-center items-center gap-2 outline outline-1 outline-neutral-200 dark:outline-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-4 rounded-md">
+        <div className="justify-self-end ml-auto flex flex-row justify-center items-center gap-2 outline outline-1 outline-container-outline bg-container p-4 rounded-md">
           <Label>Sort by date:</Label>
           <RadioGroup
             value={sortOrder}
@@ -59,7 +59,11 @@ export default function TaskList({
               <Label htmlFor="option-one">Newest first</Label>
             </div>
             <div className="flex items-center gap-2">
-              <RadioGroupItem value="ascending" id="option-two" />
+              <RadioGroupItem
+                className="bg-white dark:bg-neutral-900"
+                value="ascending"
+                id="option-two"
+              />
               <Label htmlFor="option-two">Oldest first</Label>
             </div>
           </RadioGroup>

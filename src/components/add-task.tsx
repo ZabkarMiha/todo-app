@@ -50,9 +50,7 @@ export default function AddTask() {
       title: result.error
         ? "Uh oh! Something went wrong."
         : "Task successfully added",
-      description: result.error
-        ? result.error
-        : JSON.stringify(result.data),
+      description: result.error ? result.error : JSON.stringify(result.data),
     })
 
     form.reset()
@@ -61,12 +59,7 @@ export default function AddTask() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className={
-            "h-fit space-x-2 bg-neutral-50 hover:bg-neutral-300 dark:bg-neutral-900 p-4 dark:hover:bg-neutral-800"
-          }
-        >
+        <Button variant="outline" className={"h-fit space-x-2 p-4"}>
           <p>Add Task</p>
           <PlusIcon width={22} height={22} />
         </Button>
