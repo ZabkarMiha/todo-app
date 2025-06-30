@@ -4,9 +4,8 @@ import { useState } from "react"
 import TodoTaskCard from "@/components/todo-task-card"
 import AddTask from "@/components/add-task"
 import { Task } from "@/lib/types"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
 import PaginationBar from "@/components/pagination-bar"
+import SortTasks from "@/components/sort-tasks"
 
 export default function TaskList({
   tasks,
@@ -17,16 +16,14 @@ export default function TaskList({
   currentPage: number
   tasksPerPage: number
 }) {
-  const [sortOrder, setSortOrder] = useState<"ascending" | "descending">(
-    "descending"
+  const [sortOrder, setSortOrder] = useState<"oldest" | "newest">(
+    "newest"
   )
 
-  if (!tasks) return null
-
-  const sortedTasks = [...tasks].sort((a, b) => {
+  const sortedTasks = [...tasks!].sort((a, b) => {
     const dateA = new Date(a.dateAdded).getTime()
     const dateB = new Date(b.dateAdded).getTime()
-    return sortOrder === "ascending" ? dateA - dateB : dateB - dateA
+    return sortOrder === "oldest" ? dateA - dateB : dateB - dateA
   })
 
   const startIndex = (currentPage - 1) * tasksPerPage
@@ -41,32 +38,8 @@ export default function TaskList({
         <div className="justify-self-start">
           <AddTask />
         </div>
-        <div className="justify-self-end ml-auto flex flex-row justify-center items-center gap-2 outline outline-1 outline-container-outline bg-container p-4 rounded-md">
-          <Label>Sort by date:</Label>
-          <RadioGroup
-            value={sortOrder}
-            onValueChange={(value) =>
-              setSortOrder(value as "ascending" | "descending")
-            }
-            className="flex items-center"
-          >
-            <div className="flex items-center gap-2">
-              <RadioGroupItem
-                className="bg-white dark:bg-neutral-900"
-                value="descending"
-                id="option-one"
-              />
-              <Label htmlFor="option-one">Newest first</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <RadioGroupItem
-                className="bg-white dark:bg-neutral-900"
-                value="ascending"
-                id="option-two"
-              />
-              <Label htmlFor="option-two">Oldest first</Label>
-            </div>
-          </RadioGroup>
+        <div className="justify-self-end ml-auto">
+          <SortTasks sortOrder={sortOrder} setSortOrder={setSortOrder} />
         </div>
       </div>
       <div className="grid grid-cols-4 grid-rows-2 gap-5 h-5/6">
@@ -74,9 +47,9 @@ export default function TaskList({
           <TodoTaskCard key={task.id} task={task} />
         ))}
       </div>
-      {tasks.length > tasksPerPage && (
+      {tasks!.length > tasksPerPage && (
         <PaginationBar
-          tasksCount={tasks.length}
+          tasksCount={tasks!.length}
           currentPage={currentPage}
           tasksPerPage={tasksPerPage}
         />
