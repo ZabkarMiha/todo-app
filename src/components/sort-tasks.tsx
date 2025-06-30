@@ -1,18 +1,15 @@
+"use client"
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { useRouter, useSearchParams } from "next/navigation"
 
-interface SortTasksProps {
-  sortOrder: "newest" | "oldest"
-  setSortOrder: (order: "newest" | "oldest") => void
-}
-
-export default function SortTasks({ sortOrder, setSortOrder }: SortTasksProps) {
+export default function SortTasks() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const sortOrder = new URLSearchParams(searchParams).get("sort") || "newest"
 
   function handleSortChange(value: string) {
-    setSortOrder(value as "newest" | "oldest")
     const params = new URLSearchParams(searchParams)
     params.set("sort", value)
     router.replace(`?${params.toString()}`)

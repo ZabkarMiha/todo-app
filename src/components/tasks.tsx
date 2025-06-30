@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { Task } from "@/lib/types"
 import TodoTaskCard from "@/components/todo-task-card"
 import AddTask from "@/components/add-task"
-import { Task } from "@/lib/types"
 import PaginationBar from "@/components/pagination-bar"
 import SortTasks from "@/components/sort-tasks"
+import Search from "./search"
+import { useSearchParams } from "next/navigation"
 
 export default function TaskList({
   tasks,
@@ -16,11 +17,25 @@ export default function TaskList({
   currentPage: number
   tasksPerPage: number
 }) {
-  const [sortOrder, setSortOrder] = useState<"oldest" | "newest">(
-    "newest"
-  )
+  const searchParams = useSearchParams()
 
-  const sortedTasks = [...tasks!].sort((a, b) => {
+  const sortOrder =
+    new URLSearchParams(searchParams).get("sort") === "oldest"
+      ? "oldest"
+      : "newest"
+
+  const query =
+    new URLSearchParams(searchParams).get("query")?.toLowerCase() || ""
+
+  const filteredTasks = query
+    ? tasks!.filter(
+        (task) =>
+          task.title.toLowerCase().includes(query) ||
+          (task.description?.toLowerCase().includes(query) ?? false)
+      )
+    : tasks!
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
     const dateA = new Date(a.dateAdded).getTime()
     const dateB = new Date(b.dateAdded).getTime()
     return sortOrder === "oldest" ? dateA - dateB : dateB - dateA
@@ -39,7 +54,10 @@ export default function TaskList({
           <AddTask />
         </div>
         <div className="justify-self-end ml-auto">
-          <SortTasks sortOrder={sortOrder} setSortOrder={setSortOrder} />
+          <Search />
+        </div>
+        <div className="justify-self-end ml-auto">
+          <SortTasks />
         </div>
       </div>
       <div className="grid grid-cols-4 grid-rows-2 gap-5 h-5/6">
@@ -47,9 +65,9 @@ export default function TaskList({
           <TodoTaskCard key={task.id} task={task} />
         ))}
       </div>
-      {tasks!.length > tasksPerPage && (
+      {filteredTasks.length > tasksPerPage && (
         <PaginationBar
-          tasksCount={tasks!.length}
+          tasksCount={filteredTasks.length}
           currentPage={currentPage}
           tasksPerPage={tasksPerPage}
         />

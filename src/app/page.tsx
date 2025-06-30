@@ -1,3 +1,5 @@
+"use server"
+
 import Tasks from "@/components/tasks"
 import { getAllTasks, getTasksCount } from "@/lib/actions"
 import AddTask from "@/components/add-task"
@@ -7,7 +9,7 @@ type PageProps = {
 }
 
 export default async function Page(props: PageProps) {
-  const searchParams = await props.searchParams;
+  const searchParams = await props.searchParams
   const tasksCountResult = await getTasksCount()
 
   if (tasksCountResult.error) {
