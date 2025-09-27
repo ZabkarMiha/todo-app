@@ -2,10 +2,7 @@
 
 import { Task } from "@/lib/types"
 import TodoTaskCard from "@/components/todo-task-card"
-import AddTask from "@/components/add-task"
 import PaginationBar from "@/components/pagination-bar"
-import SortTasks from "@/components/sort-tasks"
-import Search from "./search"
 import { useSearchParams } from "next/navigation"
 import Dock from "./dock"
 
