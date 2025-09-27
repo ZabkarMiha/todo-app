@@ -7,6 +7,7 @@ import PaginationBar from "@/components/pagination-bar"
 import SortTasks from "@/components/sort-tasks"
 import Search from "./search"
 import { useSearchParams } from "next/navigation"
+import Dock from "./dock"
 
 export default function TaskList({
   tasks,
@@ -48,30 +49,23 @@ export default function TaskList({
   )
 
   return (
-    <div className="flex flex-col my-10 mx-20 gap-5 h-4/5">
-      <div className="flex flex-row w-full">
-        <div className="justify-self-start">
-          <AddTask />
-        </div>
-        <div className="justify-self-end ml-auto">
-          <Search />
-        </div>
-        <div className="justify-self-end ml-auto">
-          <SortTasks />
-        </div>
-      </div>
-      <div className="grid grid-cols-4 grid-rows-2 gap-5 h-5/6">
+    <div className="flex flex-col space-y-10 xl:mt-10 xl:mb-52 xl:mx-20 xl:h-full">
+      <div className="grid grid-cols-1 auto-rows-[minmax(0,21rem)] gap-5 mx-5 mb-36 md:mb-28 md:grid-cols-2 xl:mx-0 xl:mb-0 xl:grid-cols-4">
         {paginatedTasks.map((task) => (
           <TodoTaskCard key={task.id} task={task} />
         ))}
       </div>
-      {filteredTasks.length > tasksPerPage && (
-        <PaginationBar
-          tasksCount={filteredTasks.length}
-          currentPage={currentPage}
-          tasksPerPage={tasksPerPage}
-        />
-      )}
+      <div className="fixed left-0 right-0 bottom-2 z-50 w-[calc(100svw-1rem)] outline outline-1 outline-container-outline backdrop-blur-xl p-2 rounded-md flex flex-col space-y-1 mx-auto md:flex-row md:self-center md:justify-center md:space-y-0 md:space-x-1 xl:w-fit xl:bottom-10">
+        {filteredTasks.length > tasksPerPage && (
+          <PaginationBar
+            tasksCount={filteredTasks.length}
+            currentPage={currentPage}
+            tasksPerPage={tasksPerPage}
+            className="self-center h-full"
+          />
+        )}
+        <Dock/>
+      </div>
     </div>
   )
 }

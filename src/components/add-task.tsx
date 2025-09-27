@@ -28,8 +28,13 @@ import { insertTaskFormValues } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
+import { cn } from "@/lib/utils"
 
-export default function AddTask() {
+type AddTaskProps = {
+  className?: string
+}
+
+export default function AddTask({ className }: AddTaskProps) {
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof taskFormSchema>>({
@@ -59,9 +64,12 @@ export default function AddTask() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className={"h-fit space-x-2 p-4"}>
-          <p>Add Task</p>
-          <PlusIcon width={22} height={22} />
+        <Button
+          variant="outline"
+          className={cn("p-2 space-x-0 xl:space-x-2 xl:p-4", className)}
+        >
+          <p className="hidden xl:block">Add Task</p>
+          <PlusIcon className="h-6 w-6" />
         </Button>
       </DialogTrigger>
       <DialogContent className={"space-y-6"}>

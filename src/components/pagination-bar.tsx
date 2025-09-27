@@ -9,22 +9,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { cn } from "@/lib/utils"
 import { useSearchParams } from "next/navigation"
 
 type PaginationBarProps = {
   tasksCount: number
   currentPage: number
   tasksPerPage: number
+  className?: string
 }
 
 export default function PaginationBar({
   tasksCount,
   currentPage,
   tasksPerPage,
+  className,
 }: PaginationBarProps) {
   const searchParams = useSearchParams()
-  const maxPreviousPages = 2
-  const maxNextPages = 2
+  const maxPreviousPages = 0
+  const maxNextPages = 0
   const totalPages = Math.ceil(tasksCount / tasksPerPage)
 
   function getPageHref(page: number) {
@@ -34,7 +37,7 @@ export default function PaginationBar({
   }
 
   return (
-    <Pagination className="outline outline-1 outline-container-outline rounded-md bg-container p-2 w-fit bottom-5 sticky">
+    <Pagination className={cn("w-fit m-0", className)}>
       <PaginationContent>
         {currentPage > 1 && (
           <>

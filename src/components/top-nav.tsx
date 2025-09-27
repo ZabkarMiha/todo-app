@@ -15,12 +15,8 @@ import { Button } from "./ui/button"
 
 export default function TopNav() {
   return (
-    <div
-      className={
-        "flex flex-row items-center w-full p-7 sticky top-0 backdrop-blur-lg"
-      }
-    >
-      <AppLogo />
+    <div className={"sticky top-0 backdrop-blur-xl flex flex-row items-center w-full p-7"}>
+      <AppLogo className="w-32 h-8 md:w-52 md:h-10"/>
       <div className={"ml-auto flex gap-5"}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
