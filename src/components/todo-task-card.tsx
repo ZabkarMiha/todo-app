@@ -29,7 +29,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background h-full">
+    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background max-h-[500px]">
       <div className="flex flex-row items-center gap-2">
         <span className={"text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap xl:text-3xl xl:pb-2"}>
           {task.title}
@@ -43,7 +43,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
           <CheckIcon />
         </Toggle>
       </div>
-      <p className="h-full break-all overflow-hidden text-wrap overflow-y-auto mb-5">
+      <p className="h-full overflow-hidden text-pretty overflow-y-auto mb-5">
         {task.description}
       </p>
       <div className="flex flex-row items-center gap-2 self-center mt-auto w-full">
