@@ -24,41 +24,66 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { insertTaskFormValues } from "@/lib/actions"
+import { insertTaskFormValues, updateTask } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
 import { cn } from "@/lib/utils"
+import { Task } from "@/lib/types"
 
-type AddTaskProps = {
+type EditAddTaskProps = {
   className?: string
+  taskData?: Task
 }
 
-export default function AddTask({ className }: AddTaskProps) {
+export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
   const { toast } = useToast()
+
+  const initialValues = taskData
+    ? {
+        title: taskData.title ?? "",
+        description: taskData.description ?? "",
+        completed: Boolean(taskData.completed),
+      }
+    : {
+        title: "",
+        description: "",
+        completed: false,
+      }
+
+  const parsed = taskFormSchema.safeParse(initialValues)
+  const defaultValues = parsed.success ? parsed.data : initialValues
 
   const form = useForm<z.infer<typeof taskFormSchema>>({
     resolver: zodResolver(taskFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      completed: false,
-    },
+    defaultValues,
   })
 
   const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (
     data
   ) => {
-    const result = await insertTaskFormValues(data)
+    const result = taskData
+      ? await updateTask(taskData!.id, data)
+      : await insertTaskFormValues(data)
+
+    const actionText = taskData ? "updated" : "created"
 
     toast({
       title: result.error
         ? "Uh oh! Something went wrong."
-        : "Task successfully added",
-      description: result.error ? result.error : JSON.stringify(result.data),
+        : `Task ${actionText} successfully`,
+      description: result.error
+        ? result.error
+        : result.data?.title
+        ? `${result.data.title} — ${actionText}`
+        : JSON.stringify(result.data),
     })
 
-    form.reset()
+    if (taskData) {
+      form.reset(data)
+    } else {
+      form.reset()
+    }
   }
 
   return (
@@ -68,14 +93,18 @@ export default function AddTask({ className }: AddTaskProps) {
           variant="outline"
           className={cn("p-2 space-x-0 xl:space-x-2 xl:p-4", className)}
         >
-          <p className="hidden xl:block">Add Task</p>
-          <PlusIcon className="h-6 w-6" />
+          <p className="hidden xl:block">{taskData ? "Edit" : "Add Task"}</p>
+          {taskData ? <></> : <PlusIcon className="h-6 w-6" />}
         </Button>
       </DialogTrigger>
       <DialogContent className={"space-y-6"}>
         <DialogHeader>
-          <DialogTitle>Create new task</DialogTitle>
-          <DialogDescription>To create a new task</DialogDescription>
+          <DialogTitle>
+            {taskData ? "Edit task" : "Create new task"}
+          </DialogTitle>
+          <DialogDescription>
+            {taskData ? "To edit a task" : "To create a new task"}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

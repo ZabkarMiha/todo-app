@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { completeTaskToggle, deleteTask } from "@/lib/actions"
 import { toast } from "@/hooks/use-toast"
 import { CheckIcon } from "@radix-ui/react-icons"
+import EditAddTask from "./edit-add-task"
 
 export default function TodoTaskCard({ task }: { task: Task }) {
   const options = {
@@ -53,7 +54,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
         <Label className={"text-center grow"}>
           {task.dateAdded.toLocaleDateString("en-GB", options)}
         </Label>
-        <Button variant={"outline"}>Edit</Button>
+        <EditAddTask taskData={task}/>
       </div>
     </div>
   )

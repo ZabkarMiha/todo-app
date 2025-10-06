@@ -2,7 +2,7 @@
 
 import Tasks from "@/components/tasks"
 import { getAllTasks, getTasksCount } from "@/lib/actions"
-import AddTask from "@/components/add-task"
+import AddTask from "@/components/edit-add-task"
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>

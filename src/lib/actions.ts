@@ -70,6 +70,27 @@ export async function deleteTask(
   }
 }
 
+export async function updateTask(
+  id: string,
+  values: z.infer<typeof taskFormSchema>): Promise<
+  ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
+> {
+  try {
+    const data = await db
+      .update(task)
+      .set(values)
+      .where(eq(task.id, id))
+      .returning({
+        returnedTitle: task.title,
+        returnedDescription: task.description,
+      })
+    revalidatePath("/")
+    return { data: data[0] }
+  } catch (e) {
+    return { error: "Failed to update task" }
+  }
+}
+
 export async function completeTaskToggle(
   id: string,
   completed: boolean
