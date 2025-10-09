@@ -43,7 +43,6 @@ export default async function Page(props: PageProps) {
     <Tasks
       tasks={tasksResult.data || null}
       currentPage={currentPage}
-      tasksPerPage={8}
     />
   )
 }

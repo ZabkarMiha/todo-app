@@ -5,17 +5,18 @@ import TodoTaskCard from "@/components/todo-task-card"
 import PaginationBar from "@/components/pagination-bar"
 import { useSearchParams } from "next/navigation"
 import Dock from "./dock"
+import useLocalStorage from "@/hooks/use-localStorage"
 
 export default function TaskList({
   tasks,
   currentPage,
-  tasksPerPage,
 }: {
   tasks: Task[] | null
   currentPage: number
-  tasksPerPage: number
 }) {
   const searchParams = useSearchParams()
+
+  const [tasksPerPage] = useLocalStorage<number>("tasksPerPage", 8)
 
   const sortOrder =
     new URLSearchParams(searchParams).get("sort") === "oldest"
@@ -61,7 +62,7 @@ export default function TaskList({
             className="self-center h-full"
           />
         )}
-        <Dock/>
+        <Dock />
       </div>
     </div>
   )

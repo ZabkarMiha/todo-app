@@ -4,9 +4,9 @@ import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -72,9 +72,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       title: result.error
         ? "Uh oh! Something went wrong."
         : `Task ${actionText} successfully`,
-      description: result.error
-        ? result.error
-        : JSON.stringify(result.data),
+      description: result.error ? result.error : JSON.stringify(result.data),
     })
 
     if (taskData) {
@@ -158,9 +156,9 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                 </FormItem>
               )}
             />
-            <DialogClose asChild>
+            <DialogFooter>
               <Button type={"submit"}>Save</Button>
-            </DialogClose>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>
