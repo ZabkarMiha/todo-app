@@ -74,8 +74,6 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
         : `Task ${actionText} successfully`,
       description: result.error
         ? result.error
-        : result.data?.title
-        ? `${result.data.title} — ${actionText}`
         : JSON.stringify(result.data),
     })
 
