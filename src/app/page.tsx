@@ -1,6 +1,6 @@
 "use server"
 
-import Tasks from "@/components/tasks"
+import TaskList from "@/components/task-list"
 import { getAllTasks, getTasksCount } from "@/lib/actions"
 import AddTask from "@/components/edit-add-task"
 
@@ -40,7 +40,7 @@ export default async function Page(props: PageProps) {
 
   const currentPage = Number(searchParams?.page) || 1
   return (
-    <Tasks
+    <TaskList
       tasks={tasksResult.data || null}
       currentPage={currentPage}
       tasksPerPage={8}

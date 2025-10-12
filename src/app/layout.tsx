@@ -15,7 +15,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={"h-svh"} suppressHydrationWarning>
-      <body className={`font-sans antialiased text-base flex flex-col h-fit md:text-lg xl:text-xl`}>
+      <body className={`font-sans antialiased text-base flex flex-col h-fit md:text-md xl:text-lg`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

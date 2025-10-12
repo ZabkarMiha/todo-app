@@ -1,12 +1,12 @@
 "use client"
 
-import { PlusIcon } from "@radix-ui/react-icons"
+import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -91,8 +91,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           variant="outline"
           className={cn("p-2 space-x-0 xl:space-x-2 xl:p-4", className)}
         >
-          <p className="hidden xl:block">{taskData ? "Edit" : "Add Task"}</p>
-          {taskData ? <></> : <PlusIcon className="h-6 w-6" />}
+          {taskData ? <Pencil1Icon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4" />}
         </Button>
       </DialogTrigger>
       <DialogContent className={"space-y-6"}>
@@ -158,9 +157,9 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                 </FormItem>
               )}
             />
-            <DialogClose asChild>
+            <DialogFooter>
               <Button type={"submit"}>Save</Button>
-            </DialogClose>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

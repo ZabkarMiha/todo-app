@@ -4,7 +4,7 @@ import { Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { completeTaskToggle, deleteTask } from "@/lib/actions"
 import { toast } from "@/hooks/use-toast"
-import { CheckIcon } from "@radix-ui/react-icons"
+import { CheckIcon, TrashIcon } from "@radix-ui/react-icons"
 import EditAddTask from "./edit-add-task"
 
 export default function TodoTaskCard({ task }: { task: Task }) {
@@ -30,9 +30,9 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background max-h-[500px]">
+    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background space-y-2 max-h-[500px]">
       <div className="flex flex-row items-center gap-2">
-        <span className={"text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap xl:text-3xl xl:pb-2"}>
+        <span className={"text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap xl:text-3xl"}>
           {task.title}
         </span>
         <Toggle
@@ -49,7 +49,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       </p>
       <div className="flex flex-row items-center gap-2 self-center mt-auto w-full">
         <Button variant={"destructive"} onClick={deleteTaskOnClick}>
-          Delete
+          <TrashIcon className="h-4 w-4" />
         </Button>
         <Label className={"text-center grow"}>
           {task.dateAdded.toLocaleDateString("en-GB", options)}
