@@ -32,7 +32,7 @@ export default async function RootLayout({
         >
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
-            <main className={"h-full"}>
+            <main className={"h-full w-full"}>
               <TopNav />
               <Toaster />
               {children}

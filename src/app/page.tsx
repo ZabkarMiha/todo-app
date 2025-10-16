@@ -14,7 +14,7 @@ export default async function Page(props: PageProps) {
 
   if (tasksCountResult.error) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
         <h1>Error: {tasksCountResult.error}</h1>
       </div>
     )
@@ -22,7 +22,7 @@ export default async function Page(props: PageProps) {
 
   if (tasksCountResult.data === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
         <h1 className="text-5xl font-bold mb-4">Add your first task!</h1>
         <AddTask />
       </div>
@@ -32,7 +32,7 @@ export default async function Page(props: PageProps) {
   const tasksResult = await getAllTasks()
   if (tasksResult.error) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-16rem)]">
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
         <h1>Error: {tasksResult.error}</h1>
       </div>
     )
