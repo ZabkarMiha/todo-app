@@ -46,7 +46,7 @@ export default function TaskList({
   )
 
   return (
-    <div className="flex flex-col h-full mb-32 md:mb-24 mx-5 md:mx-10 xl:mb-32 xl:mt-10 xl:mx-20">
+    <div className="flex flex-col h-full mx-5 mb-32 md:mx-10 xl:mx-20">
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:mx-0 xl:grid-cols-4">
         {paginatedTasks.map((task) => (
           <TodoTaskCard key={task.id} task={task} />

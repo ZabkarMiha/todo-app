@@ -136,27 +136,6 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="completed"
-              render={({ field }) => (
-                <FormItem
-                  className={"flex flex-row items-center space-x-4 space-y-0"}
-                >
-                  <FormLabel>Completed</FormLabel>
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Whether your task is completed or not
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <DialogFooter>
               <Button type={"submit"}>Save</Button>
             </DialogFooter>

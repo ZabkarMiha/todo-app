@@ -4,8 +4,9 @@ import { Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { completeTaskToggle, deleteTask } from "@/lib/actions"
 import { toast } from "@/hooks/use-toast"
-import { CheckIcon, TrashIcon } from "@radix-ui/react-icons"
+import { CheckIcon, DividerHorizontalIcon, TrashIcon } from "@radix-ui/react-icons"
 import EditAddTask from "./edit-add-task"
+import { Separator } from "./ui/separator"
 
 export default function TodoTaskCard({ task }: { task: Task }) {
   const options = {
@@ -30,7 +31,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background space-y-2 max-h-[500px]">
+    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background space-y-4 max-h-[500px]">
       <div className="flex flex-row items-center gap-2">
         <span className={"text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap xl:text-3xl"}>
           {task.title}
@@ -47,6 +48,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       <p className="h-full overflow-hidden text-pretty overflow-y-auto mb-5">
         {task.description}
       </p>
+      <Separator className="w-full"/>
       <div className="flex flex-row items-center gap-2 self-center mt-auto w-full">
         <Button variant={"destructive"} onClick={deleteTaskOnClick}>
           <TrashIcon className="h-4 w-4" />
