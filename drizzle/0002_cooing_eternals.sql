@@ -1,1 +1,0 @@
-ALTER TABLE "task" ALTER COLUMN "dateAdded" SET NOT NULL;
