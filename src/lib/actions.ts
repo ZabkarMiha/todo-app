@@ -3,7 +3,7 @@
 import { db } from "@/index"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
-import { task } from "@/schema"
+import { task } from "@/schema/task"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 
