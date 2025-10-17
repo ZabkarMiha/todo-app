@@ -15,6 +15,13 @@
       "when": 1760692548468,
       "tag": "0001_volatile_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760722829802,
+      "tag": "0002_overjoyed_legion",
+      "breakpoints": true
     }
   ]
 }

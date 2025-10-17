@@ -1,5 +1,7 @@
 import { betterAuth } from "better-auth"
+import { username } from "better-auth/plugins"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
+
 import { db } from "@/index"
 
 export const auth = betterAuth({
@@ -10,4 +12,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  plugins: [
+    username()
+  ]
 })
