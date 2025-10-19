@@ -11,25 +11,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { insertTaskFormValues, updateTask } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
 import { cn } from "@/lib/utils"
 import { Task } from "@/lib/types"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "./ui/field"
 
 type EditAddTaskProps = {
   className?: string
@@ -72,9 +69,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       title: result.error
         ? "Uh oh! Something went wrong."
         : `Task ${actionText} successfully`,
-      description: result.error
-        ? result.error
-        : JSON.stringify(result.data),
+      description: result.error ? result.error : JSON.stringify(result.data),
     })
 
     if (taskData) {
@@ -91,7 +86,11 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           variant="outline"
           className={cn("p-2 space-x-0 xl:space-x-2 xl:p-4", className)}
         >
-          {taskData ? <Pencil1Icon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4" />}
+          {taskData ? (
+            <Pencil1Icon className="h-4 w-4" />
+          ) : (
+            <PlusIcon className="h-4 w-4" />
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className={"space-y-6"}>
@@ -104,43 +103,67 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
+        <form
+          id="task-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+        >
+          <FieldGroup>
+            <Controller
               name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title" {...field} />
-                  </FormControl>
-                  <FormDescription>The title of your task</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
               control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Description" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The description of your task (optional).
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="task-form-title">Title</FieldLabel>
+                  <Input
+                    {...field}
+                    id="task-form-title"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <FieldDescription>The title of your task</FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
               )}
             />
-            <DialogFooter>
-              <Button type={"submit"}>Save</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="task-form-description">
+                    Description
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="task-form-description"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <FieldDescription>
+                    The description of your task
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
+        <DialogFooter>
+          <Field>
+            <Button
+              type="button"
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+            <Button type="submit" form="task-form">
+              Submit
+            </Button>
+          </Field>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
