@@ -4,6 +4,9 @@ import TaskList from "@/components/task-list"
 import { getAllTasks, getTasksCount } from "@/lib/actions"
 import AddTask from "@/components/edit-add-task"
 
+import { auth } from "../../lib/auth/auth"
+import { headers } from "next/headers"
+
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
@@ -11,6 +14,18 @@ type PageProps = {
 export default async function Page(props: PageProps) {
   const searchParams = await props.searchParams
   const tasksCountResult = await getTasksCount()
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
+        <h1>Login</h1>
+      </div>
+    )
+  }
 
   if (tasksCountResult.error) {
     return (

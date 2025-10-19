@@ -1,11 +1,6 @@
-import type { Metadata } from "next"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import TopNav from "@/components/top-nav"
-import { Toaster } from "@/components/ui/toaster"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
-import { cookies } from "next/headers"
+import type { Metadata } from "next"
+import { ThemeProvider } from "next-themes"
 
 export const metadata: Metadata = {
   title: "Todo App",
@@ -13,12 +8,9 @@ export const metadata: Metadata = {
     "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle, Neon",
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
-
   return (
     <html lang="en" className={"h-svh"} suppressHydrationWarning>
       <body
@@ -30,14 +22,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange={false}
         >
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <main className={"h-full w-full"}>
-              <TopNav />
-              <Toaster />
-              {children}
-            </main>
-          </SidebarProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>
