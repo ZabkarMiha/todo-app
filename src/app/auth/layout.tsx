@@ -8,11 +8,11 @@ export default function AuthLayout({
 }) {
   return (
     <main className="flex flex-col items-center justify-center h-dvh w-full">
-        <div className="h-fit w-fit p-10 border rounded-md space-y-7">
-            <AppLogo className="h-[30%]"/>
-            <Separator />
-            {children}
-        </div>
+      <div className="h-fit w-[30%] p-10 border rounded-md space-y-7 bg-form-background">
+        <AppLogo className="h-10" />
+        <Separator />
+        {children}
+      </div>
     </main>
   )
 }

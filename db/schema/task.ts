@@ -7,13 +7,14 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core"
 import { user } from "./user"
-import { sql } from "drizzle-orm"
 
 export const task = pgTable(
   "task",
   {
     id: uuid().primaryKey().unique().defaultRandom().notNull(),
-    userId: text().references(() => user.id, { onDelete: "cascade" }).notNull(),
+    userId: text()
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
     title: text().notNull(),
     description: text(),
     completed: boolean().notNull(),

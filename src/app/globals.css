@@ -47,6 +47,9 @@ body {
     --task-outline: 0 0% 90%;
     --task-button: 0 0% 90%;
     --task-button-hover: 0 0% 85%;
+    --form-background: 0 0% 96%;
+    --form-input-background: 0 0% 90%;
+    --form-input-border: 0 0% 83%;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -90,6 +93,9 @@ body {
     --task-outline: 0 0% 15%;
     --task-button: 0 0% 30%;
     --task-button-hover: 0 0% 45%;
+    --form-background: 0 0% 9%;
+    --form-input-background: 0 0% 15%;
+    --form-input-border: 0 0% 25%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
