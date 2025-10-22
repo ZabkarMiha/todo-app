@@ -1,9 +1,10 @@
 "use server"
 
 import TaskList from "@/components/task-list"
-import { getAllTasks, getTasksCount } from "@/lib/actions"
 import AddTask from "@/components/edit-add-task"
+import { getAllTasks, getTasksCount } from "@/lib/actions"
 
+import { redirect } from 'next/navigation'
 import { auth } from "../../lib/auth/auth"
 import { headers } from "next/headers"
 
@@ -20,11 +21,7 @@ export default async function Page(props: PageProps) {
   })
 
   if (!session) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
-        <h1>Login</h1>
-      </div>
-    )
+    redirect('/auth/login')
   }
 
   if (tasksCountResult.error) {

@@ -10,11 +10,22 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { ChevronUpIcon } from "@radix-ui/react-icons"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import AppLogo from "./app-logo"
 import { ThemeToggle } from "./theme-toggle"
- 
-export function AppSidebar() {
+import { auth } from "../lib/auth/auth"
+import { headers } from "next/headers"
+
+export default async function AppSidebar() {
+  const session = await auth.api.getSession({
+    headers: await headers(), // you need to pass the headers object.
+  })
+
   return (
     <Sidebar variant="floating" collapsible="offcanvas">
       <SidebarHeader className="items-center p-5">
@@ -28,32 +39,32 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-              <ThemeToggle />
-            </SidebarMenuItem>
+            <ThemeToggle />
+          </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    Username
-                    <ChevronUpIcon className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  {session?.user.username}
+                  <ChevronUpIcon className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   )

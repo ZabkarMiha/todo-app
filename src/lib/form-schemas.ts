@@ -55,6 +55,14 @@ const passwordSchema = z
 
 export const registerFormSchema = z
   .object({
+    email: z.string().email({
+      message: "Invalid email address.",
+    }),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
     username: z
       .string()
       .min(2, {
@@ -63,13 +71,15 @@ export const registerFormSchema = z
       .max(30, {
         message: "Name must not exceed 30 characters.",
       }),
-    email: z.string().email({
-      message: "Invalid email address.",
-    }),
-    password: passwordSchema,
-    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   })
+
+export const loginFormSchema = z.object({
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  password: z.string(),
+})

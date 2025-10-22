@@ -16,13 +16,14 @@ import { authClient } from "@/lib/auth/auth-client"
 import { Spinner } from "@/components/ui/spinner"
 import { useRouter } from "next/navigation"
 
-export default function Page() {
+export default function RegisterPage() {
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
+      name: "",
+      username: "",
       confirmPassword: "",
     },
   })
@@ -36,7 +37,8 @@ export default function Page() {
       {
         email: values.email,
         password: values.password,
-        name: values.username,
+        name: values.name,
+        username: values.username,
         callbackURL: "/tasks",
       },
       {
@@ -72,6 +74,26 @@ export default function Page() {
                   className="bg-form-input-background border border-form-input-border"
                   {...field}
                   id="register-form-email"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+            name="name"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="register-form-name">
+                  Name
+                </FieldLabel>
+                <Input
+                  className="bg-form-input-background border border-form-input-border"
+                  {...field}
+                  id="register-form-name"
                   aria-invalid={fieldState.invalid}
                 />
                 {fieldState.invalid && (
