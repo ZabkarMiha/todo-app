@@ -2,7 +2,7 @@
 
 import { db } from "@/index"
 import { z } from "zod"
-import { taskFormSchema } from "@/lib/form-schemas"
+import { insertTaskSchema, taskFormSchema } from "@/lib/form-schemas"
 import { task } from "@/schema/task"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
@@ -13,7 +13,7 @@ interface ActionResponse<T> {
 }
 
 export async function insertTaskFormValues(
-  values: z.infer<typeof taskFormSchema>
+  values: z.infer<typeof insertTaskSchema>
 ): Promise<
   ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
 > {
@@ -72,7 +72,8 @@ export async function deleteTask(
 
 export async function updateTask(
   id: string,
-  values: z.infer<typeof taskFormSchema>): Promise<
+  values: z.infer<typeof taskFormSchema>
+): Promise<
   ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
 > {
   try {

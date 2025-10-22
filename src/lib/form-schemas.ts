@@ -19,8 +19,11 @@ export const taskFormSchema = z.object({
     })
     .optional(),
   completed: z.boolean(),
-  userId: z.string(),
 })
+
+export const insertTaskSchema = taskFormSchema.extend({
+  userId: z.string(),
+});
 
 const passwordSchema = z
   .string()

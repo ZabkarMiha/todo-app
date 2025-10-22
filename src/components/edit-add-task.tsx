@@ -11,6 +11,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
@@ -20,13 +27,7 @@ import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
 import { cn } from "@/lib/utils"
 import { Task } from "@/lib/types"
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "./ui/field"
+import { authClient } from "../lib/auth/auth-client"
 
 type EditAddTaskProps = {
   className?: string
@@ -35,6 +36,8 @@ type EditAddTaskProps = {
 
 export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
   const { toast } = useToast()
+
+  const { data: session, error } = authClient.useSession()
 
   const initialValues = taskData
     ? {
@@ -57,11 +60,16 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
   })
 
   const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (
-    data
+    data: z.infer<typeof taskFormSchema>
   ) => {
+    const completeTaskData = {
+      ...data,
+      userId: session!.user.id,
+    }
+
     const result = taskData
       ? await updateTask(taskData!.id, data)
-      : await insertTaskFormValues(data)
+      : await insertTaskFormValues(completeTaskData)
 
     const actionText = taskData ? "updated" : "created"
 
@@ -151,19 +159,14 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
             />
           </FieldGroup>
         </form>
-        <DialogFooter>
-          <Field>
-            <Button
-              type="button"
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-            <Button type="submit" form="task-form">
-              Submit
-            </Button>
-          </Field>
-        </DialogFooter>
+        <Field orientation="horizontal">
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            Reset
+          </Button>
+          <Button type="submit" form="task-form">
+            Submit
+          </Button>
+        </Field>
       </DialogContent>
     </Dialog>
   )
