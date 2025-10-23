@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth/auth-client"
 import { Spinner } from "@/components/ui/spinner"
 import { useRouter } from "next/navigation"
+import { DialogFooter } from "@/components/ui/dialog"
 
 export default function LoginPage() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -98,7 +99,7 @@ export default function LoginPage() {
           />
         </FieldGroup>
       </form>
-      <Field orientation="horizontal">
+      <Field className="flex items-center justify-center" orientation="horizontal">
         <Button type="button" variant="outline" onClick={() => form.reset()}>
           Reset
         </Button>

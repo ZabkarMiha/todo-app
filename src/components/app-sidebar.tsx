@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Sidebar,
   SidebarContent,
@@ -18,13 +20,14 @@ import {
 } from "./ui/dropdown-menu"
 import AppLogo from "./app-logo"
 import { ThemeToggle } from "./theme-toggle"
-import { auth } from "../lib/auth/auth"
-import { headers } from "next/headers"
+import { authClient } from "../lib/auth/auth-client"
+import { Button } from "./ui/button"
+import { useRouter } from "next/navigation"
 
-export default async function AppSidebar() {
-  const session = await auth.api.getSession({
-    headers: await headers(), // you need to pass the headers object.
-  })
+export default function AppSidebar() {
+  const { data: session } = authClient.useSession()
+
+  const router = useRouter()
 
   return (
     <Sidebar variant="floating" collapsible="offcanvas">
@@ -58,8 +61,22 @@ export default async function AppSidebar() {
                 <DropdownMenuItem>
                   <span>Account</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={async () => {
+                      await authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            router.push("/auth/login")
+                          },
+                        },
+                      })
+                    }}
+                  >
+                    Sign out
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

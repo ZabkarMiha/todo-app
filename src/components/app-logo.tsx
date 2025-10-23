@@ -7,7 +7,7 @@ type AppLogoProps = {
 
 export default function AppLogo({ className }: AppLogoProps) {
   return (
-    <div className={cn("flex flex-row items-center space-x-2", className)}>
+    <div className={cn("flex flex-row items-center w-fit", className)}>
       <svg
         viewBox="0 0 225 45"
         height="100%"
@@ -23,7 +23,7 @@ export default function AppLogo({ className }: AppLogoProps) {
           Todo App
         </text>
       </svg>
-      <Pencil2Icon height="h-full" width="15%"/>
+      <Pencil2Icon height="100%" width="15%"/>
     </div>
   )
 }
