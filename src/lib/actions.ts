@@ -29,20 +29,20 @@ export async function insertTaskFormValues(
   }
 }
 
-export async function getAllTasks(): Promise<
+export async function getAllTasks(userId: string): Promise<
   ActionResponse<Array<typeof task.$inferSelect>>
 > {
   try {
-    const tasks = await db.select().from(task)
+    const tasks = await db.select().from(task).where(eq(task.userId, userId))
     return { data: tasks }
   } catch (e) {
     return { error: "Failed to fetch tasks" }
   }
 }
 
-export async function getTasksCount(): Promise<ActionResponse<number>> {
+export async function getTasksCount(userId: string): Promise<ActionResponse<number>> {
   try {
-    const count = await db.$count(task)
+    const count = await db.$count(task, eq(task.userId, userId))
     return { data: count }
   } catch (e) {
     return { error: "Failed to fetch tasks count" }

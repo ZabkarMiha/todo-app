@@ -87,9 +87,7 @@ export default function RegisterPage() {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="register-form-name">
-                  Name
-                </FieldLabel>
+                <FieldLabel htmlFor="register-form-name">Name</FieldLabel>
                 <Input
                   className="bg-form-input-background border border-form-input-border"
                   {...field}
@@ -176,6 +174,15 @@ export default function RegisterPage() {
           Submit
         </Button>
       </Field>
+      <Button
+        className="pl-0"
+        variant="link"
+        onClick={() => {
+          router.push("/auth/login")
+        }}
+      >
+        Already registered? Login
+      </Button>
     </>
   )
 }

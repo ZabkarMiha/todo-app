@@ -61,22 +61,18 @@ export default function AppSidebar() {
                 <DropdownMenuItem>
                   <span>Account</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={async () => {
-                      await authClient.signOut({
-                        fetchOptions: {
-                          onSuccess: () => {
-                            router.push("/auth/login")
-                          },
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await authClient.signOut({
+                      fetchOptions: {
+                        onSuccess: () => {
+                          router.push("/auth/login")
                         },
-                      })
-                    }}
-                  >
-                    Sign out
-                  </Button>
+                      },
+                    })
+                  }}
+                >
+                  Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

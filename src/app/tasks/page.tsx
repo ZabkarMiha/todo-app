@@ -14,7 +14,6 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
   const searchParams = await props.searchParams
-  const tasksCountResult = await getTasksCount()
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -23,6 +22,8 @@ export default async function Page(props: PageProps) {
   if (!session) {
     redirect('/auth/login')
   }
+
+  const tasksCountResult = await getTasksCount(session!.user.id)
 
   if (tasksCountResult.error) {
     return (
@@ -41,7 +42,7 @@ export default async function Page(props: PageProps) {
     )
   }
 
-  const tasksResult = await getAllTasks()
+  const tasksResult = await getAllTasks(session!.user.id)
   if (tasksResult.error) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
