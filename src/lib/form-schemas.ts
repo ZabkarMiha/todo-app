@@ -68,11 +68,11 @@ export const registerFormSchema = z
     }),
     username: z
       .string()
-      .min(2, {
-        message: "Name must be at least 2 characters.",
+      .min(3, {
+        message: "Username must be at least 3 characters.",
       })
       .max(30, {
-        message: "Name must not exceed 30 characters.",
+        message: "Username must not exceed 30 characters.",
       }),
   })
   .refine((data) => data.password === data.confirmPassword, {

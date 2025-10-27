@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"
-import { ChevronUpIcon } from "@radix-ui/react-icons"
+import { DotsVerticalIcon } from "@radix-ui/react-icons"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +21,11 @@ import {
 import AppLogo from "./app-logo"
 import { ThemeToggle } from "./theme-toggle"
 import { authClient } from "../lib/auth/auth-client"
-import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
+import { Skeleton } from "./ui/skeleton"
 
 export default function AppSidebar() {
-  const { data: session } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
 
   const router = useRouter()
 
@@ -50,8 +50,8 @@ export default function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  {session?.user.username}
-                  <ChevronUpIcon className="ml-auto" />
+                  {isPending ? <Skeleton className="h-full w-full"/> : session?.user.username}
+                  <DotsVerticalIcon className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent

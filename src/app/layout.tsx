@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes"
 export const metadata: Metadata = {
   title: "Todo App",
   description:
-    "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle, Neon",
+    "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle, Neon and BetterAuth",
 }
 
 export default function RootLayout({
