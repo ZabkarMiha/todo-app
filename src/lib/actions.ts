@@ -4,6 +4,7 @@ import { db } from "@/index"
 import { z } from "zod"
 import { insertTaskSchema, taskFormSchema } from "@/lib/form-schemas"
 import { task } from "@/schema/task"
+import { user } from "@/schema/user"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 
@@ -29,9 +30,9 @@ export async function insertTaskFormValues(
   }
 }
 
-export async function getAllTasks(userId: string): Promise<
-  ActionResponse<Array<typeof task.$inferSelect>>
-> {
+export async function getAllTasks(
+  userId: string
+): Promise<ActionResponse<Array<typeof task.$inferSelect>>> {
   try {
     const tasks = await db.select().from(task).where(eq(task.userId, userId))
     return { data: tasks }
@@ -40,7 +41,9 @@ export async function getAllTasks(userId: string): Promise<
   }
 }
 
-export async function getTasksCount(userId: string): Promise<ActionResponse<number>> {
+export async function getTasksCount(
+  userId: string
+): Promise<ActionResponse<number>> {
   try {
     const count = await db.$count(task, eq(task.userId, userId))
     return { data: count }
@@ -106,5 +109,24 @@ export async function completeTaskToggle(
     return { data: undefined }
   } catch (e) {
     return { error: "Failed to update task completion status" }
+  }
+}
+
+export async function isEmailAvailable(
+  email: string
+): Promise<ActionResponse<{available: boolean}>> {
+  var available: boolean = false
+  try {
+    const isEmailAvailable = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1)
+    if(isEmailAvailable.length === 0){
+      available = true
+    }
+    return { data: {available} }
+  } catch (e) {
+    return { error: "Failed to check email availability" }
   }
 }

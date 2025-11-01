@@ -52,12 +52,12 @@ export default function LoginPage() {
   }
 
   return (
-    <>
+    <div className="flex flex-col w-full h-full">
       <p className="text-2xl font-semibold text-center">Login</p>
       <form
         id="login-form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
+        className="mt-8"
       >
         <FieldGroup>
           <Controller
@@ -99,7 +99,7 @@ export default function LoginPage() {
           />
         </FieldGroup>
       </form>
-      <Field className="flex items-center justify-center" orientation="horizontal">
+      <Field className="flex items-center justify-center mt-8" orientation="horizontal">
         <Button type="button" variant="outline" onClick={() => form.reset()}>
           Reset
         </Button>
@@ -108,7 +108,7 @@ export default function LoginPage() {
         </Button>
       </Field>
       <Button
-        className="pl-0"
+        className="pl-0 mt-auto"
         variant="link"
         onClick={() => {
           router.push("/auth/register")
@@ -116,6 +116,6 @@ export default function LoginPage() {
       >
         Don't have an account? Register
       </Button>
-    </>
+    </div>
   )
 }
