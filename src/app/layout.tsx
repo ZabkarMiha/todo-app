@@ -12,9 +12,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={"h-svh"} suppressHydrationWarning>
+    <html lang="en" className={"h-dvh"} suppressHydrationWarning>
       <body
-        className={`font-sans antialiased text-base flex flex-col h-fit md:text-md xl:text-lg`}
+        className={`font-sans antialiased text-base flex flex-col h-full md:text-md xl:text-lg`}
       >
         <ThemeProvider
           attribute="class"

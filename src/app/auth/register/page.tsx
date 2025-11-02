@@ -87,7 +87,7 @@ export default function RegisterPage() {
   }
 
   const handleFirstStep = async () => {
-    const fields = ["name", "password", "confirmPassword"] as const
+    const fields = ["password", "confirmPassword"] as const
     await form.trigger(fields)
     const emailAvailable = await handleAvailableEmail(form.getValues("email"))
     const fieldStates = fields.map((f) => form.getFieldState(f))
@@ -125,7 +125,7 @@ export default function RegisterPage() {
     <div className="flex flex-col w-full h-full">
       <p className="text-2xl font-semibold text-center">Registration</p>
       {form.formState.isSubmitting ? (
-        <div className="flex flex-col justify-center items-center w-full h-full space-y-4">
+        <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
           <Spinner className="size-8" />
           <p>Submitting...</p>
         </div>
@@ -170,25 +170,7 @@ export default function RegisterPage() {
                     </Field>
                   )}
                 />
-                <Controller
-                  name="name"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="register-form-name">Name</FieldLabel>
-                      <Input
-                        className="bg-form-input-background border border-form-input-border"
-                        {...field}
-                        id="register-form-name"
-                        aria-invalid={fieldState.invalid}
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Field className="grid grid-cols-2 gap-4">
+                <Field className="flex flex-row items-start gap-4">
                   <Controller
                     name="password"
                     control={form.control}
@@ -215,7 +197,7 @@ export default function RegisterPage() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="register-form-confirmPassword">
+                        <FieldLabel htmlFor="register-form-confirmPassword" className="whitespace-nowrap  ">
                           Confirm password
                         </FieldLabel>
                         <Input
@@ -268,6 +250,24 @@ export default function RegisterPage() {
             >
               <Field>
                 <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="register-form-name">Name</FieldLabel>
+                      <Input
+                        className="bg-form-input-background border border-form-input-border"
+                        {...field}
+                        id="register-form-name"
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
                   name="username"
                   control={form.control}
                   render={({ field, fieldState }) => (
@@ -317,7 +317,7 @@ export default function RegisterPage() {
         </form>
       )}
       <Button
-        className="pl-0 mt-auto"
+        className="pl-0 mt-10"
         variant="link"
         disabled={form.formState.isSubmitting}
         onClick={() => {

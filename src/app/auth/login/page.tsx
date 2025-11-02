@@ -58,7 +58,7 @@ export default function LoginPage() {
     <div className="flex flex-col w-full h-full">
       <p className="text-2xl font-semibold text-center">Login</p>
       {form.formState.isSubmitting ? (
-        <div className="flex flex-col justify-center items-center w-full h-full space-y-4">
+        <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
           <Spinner className="size-8" />
           <p>Submitting...</p>
         </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
               <FieldError errors={[form.formState.errors.root]} />
             )}
             <Field
-              className="flex items-center justify-center mt-8"
+              className="flex items-center justify-center mt-4"
               orientation="horizontal"
             >
               <Button
@@ -131,7 +131,7 @@ export default function LoginPage() {
         </form>
       )}
       <Button
-        className="pl-0 mt-auto"
+        className="pl-0 mt-10"
         variant="link"
         disabled={form.formState.isSubmitting}
         onClick={() => {
