@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
+import { CheckIcon } from "@radix-ui/react-icons"
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { loginFormSchema } from "@/lib/form-schemas"
@@ -17,8 +18,14 @@ import { z } from "zod"
 
 import { authClient } from "@/lib/auth/auth-client"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function LoginPage() {
+  const router = useRouter()
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSuccess, setIsSuccess] = useState<boolean>(false)
+
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -27,8 +34,6 @@ export default function LoginPage() {
     },
     mode: "onBlur",
   })
-
-  const router = useRouter()
 
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (
     values: z.infer<typeof loginFormSchema>
@@ -40,11 +45,15 @@ export default function LoginPage() {
         callbackURL: "/tasks",
       },
       {
-        onRequest: (ctx) => {},
+        onRequest: (ctx) => {
+          setIsSubmitting(true)
+        },
         onSuccess: (ctx) => {
+          setIsSuccess(true)
           router.push("/tasks")
         },
         onError: (ctx) => {
+          setIsSubmitting(false)
           form.setError("root", {
             type: "manual",
             message: ctx.error.message,
@@ -57,83 +66,93 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col w-full h-full">
       <p className="text-2xl font-semibold text-center">Login</p>
-      {form.formState.isSubmitting ? (
+      {isSuccess ? (
         <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
-          <Spinner className="size-8" />
-          <p>Submitting...</p>
+          <CheckIcon className="size-8 text-green-500" />
+          <p className="text-green-500">Success!</p>
         </div>
       ) : (
-        <form
-          id="login-form"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-8"
-        >
-          <FieldGroup>
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="login-form-email">Email</FieldLabel>
-                  <Input
-                    className="bg-form-input-background border border-form-input-border"
-                    type="email"
-                    {...field}
-                    id="login-form-email"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="login-form-password">
-                    Password
-                  </FieldLabel>
-                  <Input
-                    className="bg-form-input-background border border-form-input-border"
-                    type="password"
-                    {...field}
-                    id="login-form-password"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            {form.formState.errors.root && (
-              <FieldError errors={[form.formState.errors.root]} />
-            )}
-            <Field
-              className="flex items-center justify-center mt-4"
-              orientation="horizontal"
+        <>
+          {isSubmitting ? (
+            <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
+              <Spinner className="size-8" />
+              <p>Submitting...</p>
+            </div>
+          ) : (
+            <form
+              id="login-form"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="mt-8"
             >
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-              <Button type="submit" form="login-form">
-                Submit
-              </Button>
-            </Field>
-          </FieldGroup>
-        </form>
+              <FieldGroup>
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="login-form-email">Email</FieldLabel>
+                      <Input
+                        className="bg-form-input-background border border-form-input-border"
+                        type="email"
+                        {...field}
+                        id="login-form-email"
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="login-form-password">
+                        Password
+                      </FieldLabel>
+                      <Input
+                        className="bg-form-input-background border border-form-input-border"
+                        type="password"
+                        {...field}
+                        id="login-form-password"
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                {form.formState.errors.root && (
+                  <FieldError errors={[form.formState.errors.root]} />
+                )}
+                <Field
+                  className="flex items-center justify-center mt-4"
+                  orientation="horizontal"
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => form.reset()}
+                  >
+                    Reset
+                  </Button>
+                  <Button type="submit" form="login-form">
+                    Submit
+                  </Button>
+                </Field>
+              </FieldGroup>
+            </form>
+          )}
+        </>
       )}
+
       <Button
         className="pl-0 mt-10"
         variant="link"
-        disabled={form.formState.isSubmitting}
+        disabled={isSubmitting}
         onClick={() => {
           router.push("/auth/register")
         }}
