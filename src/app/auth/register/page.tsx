@@ -158,6 +158,7 @@ export default function RegisterPage() {
                       </FieldLabel>
                       <Input
                         className="bg-form-input-background border border-form-input-border"
+                        type="email"
                         {...field}
                         id="register-form-email"
                         aria-invalid={fieldState.invalid}

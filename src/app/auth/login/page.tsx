@@ -77,6 +77,7 @@ export default function LoginPage() {
                   <FieldLabel htmlFor="login-form-email">Email</FieldLabel>
                   <Input
                     className="bg-form-input-background border border-form-input-border"
+                    type="email"
                     {...field}
                     id="login-form-email"
                     aria-invalid={fieldState.invalid}
