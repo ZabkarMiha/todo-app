@@ -24,7 +24,6 @@ import { useState } from "react"
 export default function RegisterPage() {
   const router = useRouter()
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [emailStepComplete, setEmailStepComplete] = useState(false)
   const [checkingEmail, setCheckingEmail] = useState(false)
   const [checkingUsername, setCheckingUsername] = useState(false)
@@ -113,15 +112,11 @@ export default function RegisterPage() {
         callbackURL: "/tasks",
       },
       {
-        onRequest: (ctx) => {
-          setIsSubmitting(true)
-        },
+        onRequest: (ctx) => {},
         onSuccess: (ctx) => {
           router.push("/tasks")
         },
-        onError: (ctx) => {
-          setIsSubmitting(false)
-        },
+        onError: (ctx) => {},
       }
     )
   }
@@ -129,7 +124,7 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col w-full h-full">
       <p className="text-2xl font-semibold text-center">Registration</p>
-      {isSubmitting ? (
+      {form.formState.isSubmitting ? (
         <div className="flex flex-col justify-center items-center w-full h-full space-y-4">
           <Spinner className="size-8" />
           <p>Submitting...</p>
@@ -323,7 +318,7 @@ export default function RegisterPage() {
       <Button
         className="pl-0 mt-auto"
         variant="link"
-        disabled={isSubmitting}
+        disabled={form.formState.isSubmitting}
         onClick={() => {
           router.push("/auth/login")
         }}
