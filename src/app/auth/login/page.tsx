@@ -29,7 +29,7 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
+      emailOrUsername: "",
       password: "",
     },
     mode: "onBlur",
@@ -38,29 +38,50 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (
     values: z.infer<typeof loginFormSchema>
   ) => {
-    const { data, error } = await authClient.signIn.email(
-      {
-        email: values.email,
-        password: values.password,
-        callbackURL: "/tasks",
+    const authValues = {
+      password: values.password,
+      callbackURL: "/tasks",
+    }
+    const authCallbacks = {
+      onRequest: () => setIsSubmitting(true),
+      onSuccess: () => {
+        setIsSuccess(true)
+        router.push("/tasks")
       },
-      {
-        onRequest: (ctx) => {
-          setIsSubmitting(true)
-        },
-        onSuccess: (ctx) => {
-          setIsSuccess(true)
-          router.push("/tasks")
-        },
-        onError: (ctx) => {
-          setIsSubmitting(false)
-          form.setError("root", {
-            type: "manual",
-            message: ctx.error.message,
-          })
-        },
-      }
+      onError: (ctx: { error: { message: string } }) => {
+        setIsSubmitting(false)
+        form.setError("root", {
+          type: "manual",
+          message: ctx.error.message,
+        })
+      },
+    }
+
+    const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
+      values.emailOrUsername
     )
+
+    if (isEmail) {
+      await authClient.signIn.email(
+        {
+          email: values.emailOrUsername,
+          ...authValues,
+        },
+        {
+          ...authCallbacks,
+        }
+      )
+    } else {
+      await authClient.signIn.username(
+        {
+          username: values.emailOrUsername,
+          ...authValues,
+        },
+        {
+          ...authCallbacks,
+        }
+      )
+    }
   }
 
   return (
@@ -86,16 +107,17 @@ export default function LoginPage() {
             >
               <FieldGroup>
                 <Controller
-                  name="email"
+                  name="emailOrUsername"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="login-form-email">Email</FieldLabel>
+                      <FieldLabel htmlFor="login-form-emailOrUsername">
+                        Email or username
+                      </FieldLabel>
                       <Input
                         className="bg-form-input-background border border-form-input-border"
-                        type="email"
                         {...field}
-                        id="login-form-email"
+                        id="login-form-emailOrUsername"
                         aria-invalid={fieldState.invalid}
                       />
                       {fieldState.invalid && (

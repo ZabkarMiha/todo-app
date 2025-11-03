@@ -81,8 +81,6 @@ export const registerFormSchema = z
   })
 
 export const loginFormSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
+  emailOrUsername: z.string(),
   password: z.string(),
 })
