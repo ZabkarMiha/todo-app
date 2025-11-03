@@ -44,58 +44,83 @@ export default function RegisterPage() {
   })
 
   const handleAvailableEmail = async (email: string): Promise<boolean> => {
-    const valid = await form.trigger("email")
-    if (!valid) return false
     setCheckingEmail(true)
-    try {
-      const { data: response } = await isEmailAvailable(email)
-      if (!response?.available) {
-        form.setError("email", {
-          type: "manual",
-          message: "Email is already taken",
-        })
-        return false
-      } else {
-        form.clearErrors("email")
-        return true
-      }
-    } finally {
+
+    const { data, error } = await isEmailAvailable(email)
+
+    if (error) {
+      form.setError("email", {
+        type: "manual",
+        message: error,
+      })
       setCheckingEmail(false)
+      return false
     }
+
+    if (!data) {
+      setCheckingEmail(false)
+      return false
+    }
+
+    if (!data.available) {
+      form.setError("email", {
+        type: "manual",
+        message: "Email is already taken",
+      })
+      setCheckingEmail(false)
+      return false
+    }
+
+    form.clearErrors("email")
+    setCheckingEmail(false)
+    return true
   }
 
   const handleAvailableUsername = async (
     username: string
   ): Promise<boolean> => {
-    const valid = await form.trigger("username")
-    if (!valid) return false
     setCheckingUsername(true)
-    try {
-      const { data: response, error } = await authClient.isUsernameAvailable({
-        username: username,
+    const { data, error } = await authClient.isUsernameAvailable({
+      username: username,
+    })
+
+    if (error) {
+      form.setError("username", {
+        type: "manual",
+        message: error.message,
       })
-      if (!response?.available) {
-        form.setError("username", {
-          type: "manual",
-          message: "Username is already taken",
-        })
-        return false
-      } else {
-        form.clearErrors("username")
-        return true
-      }
-    } finally {
       setCheckingUsername(false)
+      return false
     }
+
+    if (!data) {
+      setCheckingUsername(false)
+      return false
+    }
+
+    if (!data.available) {
+      form.setError("username", {
+        type: "manual",
+        message: "Username is already taken",
+      })
+      setCheckingUsername(false)
+      return false
+    }
+
+    form.clearErrors("username")
+    setCheckingUsername(false)
+    return true
   }
 
   const handleFirstStep = async () => {
-    const fields = ["password", "confirmPassword"] as const
-    await form.trigger(fields)
-    const emailAvailable = await handleAvailableEmail(form.getValues("email"))
-    const fieldStates = fields.map((f) => form.getFieldState(f))
+    const fieldsToTrigger = ["email", "password", "confirmPassword"] as const
+    await form.trigger(fieldsToTrigger)
+    if (!form.getFieldState("email").error) {
+      await handleAvailableEmail(form.getValues("email"))
+    }
+    const fieldStates = fieldsToTrigger.map((f) => form.getFieldState(f))
     const hasErrors = fieldStates.some((s) => !!s.error)
-    if (!hasErrors && emailAvailable) {
+    if (!hasErrors) {
       setTimeout(() => setEmailStepComplete(true), 10)
     }
   }
