@@ -7,6 +7,7 @@ import { task } from "@/schema/task"
 import { user } from "@/schema/user"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
+import { toLowerCase } from "better-auth"
 
 interface ActionResponse<T> {
   data?: T
@@ -120,7 +121,7 @@ export async function isEmailAvailable(
     const isEmailAvailable = await db
       .select()
       .from(user)
-      .where(eq(user.email, email))
+      .where(eq(user.email, email.toLowerCase()))
       .limit(1)
     if(isEmailAvailable.length === 0){
       available = true
