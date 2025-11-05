@@ -2,9 +2,9 @@
 
 import TaskList from "@/components/task-list"
 import AddTask from "@/components/edit-add-task"
-import { getAllTasks, getTasksCount } from "@/lib/actions"
+import { getAllTasks, getTasksCount } from "@/lib/actions/database"
 
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation"
 import { auth } from "../../lib/auth/auth"
 import { headers } from "next/headers"
 
@@ -20,7 +20,7 @@ export default async function Page(props: PageProps) {
   })
 
   if (!session) {
-    redirect('/auth/login')
+    redirect("/auth/login")
   }
 
   const tasksCountResult = await getTasksCount(session!.user.id)

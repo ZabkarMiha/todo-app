@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { insertTaskFormValues, updateTask } from "@/lib/actions"
+import { insertTaskFormValues, updateTask } from "@/lib/actions/database"
 import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"

@@ -5,3 +5,8 @@ export type Task = {
   completed: boolean
   dateAdded: Date
 }
+
+export type ActionResponse<T> = {
+  data?: T
+  error?: string
+}

@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { registerFormSchema } from "@/lib/form-schemas"
 import { z } from "zod"
 
-import { isEmailAvailable } from "@/lib/actions"
+import { isEmailAvailable } from "@/lib/actions/database"
 import { authClient } from "@/lib/auth/auth-client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"

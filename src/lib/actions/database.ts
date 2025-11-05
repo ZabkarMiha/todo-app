@@ -7,12 +7,8 @@ import { task } from "@/schema/task"
 import { user } from "@/schema/user"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
-import { toLowerCase } from "better-auth"
+import { ActionResponse } from "../types"
 
-interface ActionResponse<T> {
-  data?: T
-  error?: string
-}
 
 export async function insertTaskFormValues(
   values: z.infer<typeof insertTaskSchema>
