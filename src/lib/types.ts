@@ -10,3 +10,12 @@ export type ActionResponse<T> = {
   data?: T
   error?: string
 }
+
+export type EmailTemplateProps = {
+  username: string
+}
+
+export type SendEmailProps = {
+  username: string
+  email: string
+}
