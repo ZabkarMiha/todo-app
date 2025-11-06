@@ -50,7 +50,11 @@ export default function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  {isPending ? <Skeleton className="h-full w-full"/> : session?.user.username}
+                  {isPending ? (
+                    <Skeleton className="h-full w-full" />
+                  ) : (
+                    session?.user.username
+                  )}
                   <DotsVerticalIcon className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

@@ -13,7 +13,7 @@ export default async function TasksLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
-      <main className={"h-full w-full"}>
+      <main className={"h-fit min-h-full w-full"}>
         <TopNav />
         <Toaster />
         {children}
