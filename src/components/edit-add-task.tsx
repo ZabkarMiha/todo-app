@@ -28,6 +28,7 @@ import { taskFormSchema } from "@/lib/form-schemas"
 import { cn } from "@/lib/utils"
 import { Task } from "@/lib/types"
 import { authClient } from "../lib/auth/auth-client"
+import { useState } from "react"
 
 type EditAddTaskProps = {
   className?: string
@@ -38,6 +39,8 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
   const { toast } = useToast()
 
   const { data: session, error } = authClient.useSession()
+
+  const [open, setOpen] = useState(false);
 
   const initialValues = taskData
     ? {
@@ -85,10 +88,12 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
     } else {
       form.reset()
     }
+
+    setOpen(false)
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
