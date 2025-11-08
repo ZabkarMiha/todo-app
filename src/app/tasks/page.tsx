@@ -29,7 +29,7 @@ export default async function Page(props: PageProps) {
   if (tasksCountResult.error) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
-        <h1>Error: {tasksCountResult.error}</h1>
+        <h1>Error: {tasksCountResult.error.message}</h1>
       </div>
     )
   }
@@ -47,7 +47,7 @@ export default async function Page(props: PageProps) {
   if (tasksResult.error) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
-        <h1>Error: {tasksResult.error}</h1>
+        <h1>Error: {tasksResult.error.message}</h1>
       </div>
     )
   }

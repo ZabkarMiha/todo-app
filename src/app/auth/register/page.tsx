@@ -51,7 +51,7 @@ export default function RegisterPage() {
     if (error) {
       form.setError("email", {
         type: "manual",
-        message: error,
+        message: error.message,
       })
       setCheckingEmail(false)
       return false

@@ -6,7 +6,12 @@ export type Task = {
   dateAdded: Date
 }
 
+type ErrorData = {
+  message: string,
+  status: number
+}
+
 export type ActionResponse<T> = {
   data?: T
-  error?: string
+  error?: ErrorData
 }

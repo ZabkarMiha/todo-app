@@ -6,7 +6,6 @@ import { completeTaskToggle, deleteTask } from "@/lib/actions/database"
 import { toast } from "@/hooks/use-toast"
 import {
   CheckIcon,
-  DividerHorizontalIcon,
   TrashIcon,
 } from "@radix-ui/react-icons"
 import EditAddTask from "./edit-add-task"
@@ -26,7 +25,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       title: result.error
         ? "Uh oh! Something went wrong."
         : "Task deleted successfully",
-      description: result.error ? result.error : JSON.stringify(result.data),
+      description: result.error ? result.error.message : result.data?.id,
     })
   }
 

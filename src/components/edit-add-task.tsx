@@ -80,7 +80,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       title: result.error
         ? "Uh oh! Something went wrong."
         : `Task ${actionText} successfully`,
-      description: result.error ? result.error : JSON.stringify(result.data),
+      description: result.error ? result.error.message : result.data?.id,
     })
 
     if (taskData) {

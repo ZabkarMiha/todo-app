@@ -9,21 +9,15 @@ import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 import { ActionResponse } from "../types"
 
-
 export async function insertTaskFormValues(
   values: z.infer<typeof insertTaskSchema>
-): Promise<
-  ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
-> {
+): Promise<ActionResponse<{ id: string }>> {
   try {
-    const data = await db.insert(task).values(values).returning({
-      returnedTitle: task.title,
-      returnedDescription: task.description,
-    })
+    const data = await db.insert(task).values(values).returning({ id: task.id })
     revalidatePath("/")
     return { data: data[0] }
   } catch (e) {
-    return { error: "Failed to insert task" }
+    return { error: { message: "Failed to insert task", status: 500 } }
   }
 }
 
@@ -34,7 +28,7 @@ export async function getAllTasks(
     const tasks = await db.select().from(task).where(eq(task.userId, userId))
     return { data: tasks }
   } catch (e) {
-    return { error: "Failed to fetch tasks" }
+    return { error: { message: "Failed to fetch tasks", status: 500 } }
   }
 }
 
@@ -45,73 +39,76 @@ export async function getTasksCount(
     const count = await db.$count(task, eq(task.userId, userId))
     return { data: count }
   } catch (e) {
-    return { error: "Failed to fetch tasks count" }
+    return { error: { message: "Failed to fetch tasks count", status: 500 } }
   }
 }
 
 export async function deleteTask(
   id: string
-): Promise<
-  ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
-> {
+): Promise<ActionResponse<{ id: string }>> {
   if (!id) {
-    return { error: "Invalid task ID" }
+    return { error: { message: "Invalid task ID", status: 400 } }
   }
 
   try {
     const data = await db.delete(task).where(eq(task.id, id)).returning({
-      returnedTitle: task.title,
-      returnedDescription: task.description,
+      id: task.id,
     })
     revalidatePath("/")
     return { data: data[0] }
   } catch (e) {
-    return { error: "Failed to delete task" }
+    return { error: { message: "Failed to delete task", status: 500 } }
   }
 }
 
 export async function updateTask(
   id: string,
   values: z.infer<typeof taskFormSchema>
-): Promise<
-  ActionResponse<{ returnedTitle: string; returnedDescription: string | null }>
-> {
+): Promise<ActionResponse<{ id: string }>> {
   try {
     const data = await db
       .update(task)
       .set(values)
       .where(eq(task.id, id))
       .returning({
-        returnedTitle: task.title,
-        returnedDescription: task.description,
+        id: task.id,
       })
     revalidatePath("/")
     return { data: data[0] }
   } catch (e) {
-    return { error: "Failed to update task" }
+    return { error: { message: "Failed to update task", status: 500 } }
   }
 }
 
 export async function completeTaskToggle(
   id: string,
   completed: boolean
-): Promise<ActionResponse<void>> {
+): Promise<ActionResponse<{ id: string }>> {
   if (!id) {
-    return { error: "Invalid task ID" }
+    return { error: { message: "Invalid task ID", status: 400 } }
   }
 
   try {
-    await db.update(task).set({ completed }).where(eq(task.id, id))
+    const data = await db
+      .update(task)
+      .set({ completed })
+      .where(eq(task.id, id))
+      .returning({ id: task.id })
     revalidatePath("/")
-    return { data: undefined }
+    return { data: data[0] }
   } catch (e) {
-    return { error: "Failed to update task completion status" }
+    return {
+      error: {
+        message: "Failed to update task completion status",
+        status: 500,
+      },
+    }
   }
 }
 
 export async function isEmailAvailable(
   email: string
-): Promise<ActionResponse<{available: boolean}>> {
+): Promise<ActionResponse<{ available: boolean }>> {
   var available: boolean = false
   try {
     const isEmailAvailable = await db
@@ -119,11 +116,13 @@ export async function isEmailAvailable(
       .from(user)
       .where(eq(user.email, email.toLowerCase()))
       .limit(1)
-    if(isEmailAvailable.length === 0){
+    if (isEmailAvailable.length === 0) {
       available = true
     }
-    return { data: {available} }
+    return { data: { available } }
   } catch (e) {
-    return { error: "Failed to check email availability" }
+    return {
+      error: { message: "Failed to check email availability", status: 500 },
+    }
   }
 }
