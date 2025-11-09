@@ -53,29 +53,6 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        container: {
-          DEFAULT: "hsl(var(--container-background))",
-          outline: "hsl(var(--outline))",
-        },
-        button: {
-          DEFAULT: "hsl(var(--button))",
-          hover: "hsl(var(--button-hover))",
-        },
-        task: {
-          background: "hsl(var(--task-background))",
-          outline: "hsl(var(--task-outline))",
-          button: {
-            DEFAULT: "hsl(var(--task-button))",
-            hover: "hsl(var(--task-button-hover))",
-          },
-        },
-        form: {
-          background: "hsl(var(--form-background))",
-          input: {
-            background: "hsl(var(--form-input-background))",
-            border: "hsl(var(--form-input-border))",
-          },
-        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
