@@ -27,7 +27,7 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side="top"
-        className="w-[--radix-popper-anchor-width]"
+        className="w-(--radix-popper-anchor-width)"
       >
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light

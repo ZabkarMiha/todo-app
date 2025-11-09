@@ -34,7 +34,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   }
 
   return (
-    <div className="flex flex-col w-full outline outline-1 outline-task-outline rounded-md p-5 bg-task-background space-y-4 max-h-[500px]">
+    <div className="flex flex-col w-full outline-solid outline-1 outline-task-outline rounded-md p-5 bg-task-background space-y-4 max-h-[500px]">
       <div className="flex flex-row items-center gap-2">
         <span
           className={
