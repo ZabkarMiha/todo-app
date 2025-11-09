@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -40,7 +39,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
 
   const { data: session, error } = authClient.useSession()
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const initialValues = taskData
     ? {

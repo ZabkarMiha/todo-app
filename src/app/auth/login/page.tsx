@@ -19,6 +19,7 @@ import { z } from "zod"
 import { authClient } from "@/lib/auth/auth-client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import Link from "next/link"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -171,15 +172,8 @@ export default function LoginPage() {
         </>
       )}
 
-      <Button
-        className="pl-0 mt-10"
-        variant="link"
-        disabled={isSubmitting}
-        onClick={() => {
-          router.push("/auth/register")
-        }}
-      >
-        Don't have an account? Register
+      <Button className="pl-0 mt-10" variant="link" disabled={isSubmitting}>
+        <Link href={"/auth/register"}>Don't have an account? Register</Link>
       </Button>
     </div>
   )

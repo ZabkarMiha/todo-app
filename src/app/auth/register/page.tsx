@@ -21,6 +21,7 @@ import { isEmailAvailable } from "@/lib/actions/database"
 import { authClient } from "@/lib/auth/auth-client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import Link from "next/link"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -364,15 +365,8 @@ export default function RegisterPage() {
         </>
       )}
 
-      <Button
-        className="pl-0 mt-10"
-        variant="link"
-        disabled={isSubmitting}
-        onClick={() => {
-          router.push("/auth/login")
-        }}
-      >
-        Already registered? Login
+      <Button className="pl-0 mt-10" variant="link" disabled={isSubmitting}>
+        <Link href={"/auth/login"}>Already registered? Login</Link>
       </Button>
     </div>
   )

@@ -10,7 +10,7 @@ type SortTasksProps = {
 }
 
 export default function SortTasks({ className }: SortTasksProps) {
-  const router = useRouter()
+  const { replace } = useRouter()
   const searchParams = useSearchParams()
   const sortOrder = new URLSearchParams(searchParams).get("sort") || "newest"
 
@@ -18,7 +18,7 @@ export default function SortTasks({ className }: SortTasksProps) {
     const params = new URLSearchParams(searchParams)
     const newOrder = sortOrder === "newest" ? "oldest" : "newest"
     params.set("sort", newOrder)
-    router.replace(`?${params.toString()}`)
+    replace(`?${params.toString()}`)
   }
 
   return (
