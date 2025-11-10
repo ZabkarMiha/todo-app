@@ -16,16 +16,18 @@ export default function Dock({
 }: DockProps) {
   return (
     <div className="sticky bottom-4 h-fit outline-solid outline-1 outline-container-outline backdrop-blur-xl p-2 rounded-md md:self-center">
-      <div className="flex flex-col space-x-2 space-y-2 p-1 md:flex-row md:space-y-0">
+      <div className="flex flex-col space-y-2 p-1 md:flex-row md:space-y-0 md:space-x-2">
         <div className="flex flex-row space-x-2 self-center">
-          {filteredTasksLength > tasksPerPage && (
-            <PaginationBar
-              tasksCount={filteredTasksLength}
-              currentPage={currentPage}
-              tasksPerPage={tasksPerPage}
-              className="self-center h-full"
-            />
-          )}
+          <div>
+            {filteredTasksLength > tasksPerPage && (
+              <PaginationBar
+                tasksCount={filteredTasksLength}
+                currentPage={currentPage}
+                tasksPerPage={tasksPerPage}
+                className="self-center h-full"
+              />
+            )}
+          </div>
           <EditAddTask />
         </div>
         <div className="flex flex-row space-x-2">

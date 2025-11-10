@@ -6,7 +6,7 @@ export type Task = {
   dateAdded: Date
 }
 
-type ErrorData = {
+export type ErrorData = {
   message: string,
   status: number
 }

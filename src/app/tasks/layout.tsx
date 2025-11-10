@@ -1,6 +1,6 @@
 import TopNav from "@/components/top-nav"
 import AppSidebar from "@/components/app-sidebar"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { cookies } from "next/headers"
 

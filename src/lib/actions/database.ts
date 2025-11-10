@@ -11,9 +11,9 @@ import { ActionResponse } from "../types"
 
 export async function insertTaskFormValues(
   values: z.infer<typeof insertTaskSchema>
-): Promise<ActionResponse<{ id: string }>> {
+): Promise<ActionResponse<{ title: string }>> {
   try {
-    const data = await db.insert(task).values(values).returning({ id: task.id })
+    const data = await db.insert(task).values(values).returning({ title: task.title })
     revalidatePath("/")
     return { data: data[0] }
   } catch (e) {
@@ -45,14 +45,14 @@ export async function getTasksCount(
 
 export async function deleteTask(
   id: string
-): Promise<ActionResponse<{ id: string }>> {
+): Promise<ActionResponse<{ title: string }>> {
   if (!id) {
     return { error: { message: "Invalid task ID", status: 400 } }
   }
 
   try {
     const data = await db.delete(task).where(eq(task.id, id)).returning({
-      id: task.id,
+      title: task.title,
     })
     revalidatePath("/")
     return { data: data[0] }
@@ -64,14 +64,14 @@ export async function deleteTask(
 export async function updateTask(
   id: string,
   values: z.infer<typeof taskFormSchema>
-): Promise<ActionResponse<{ id: string }>> {
+): Promise<ActionResponse<{ title: string }>> {
   try {
     const data = await db
       .update(task)
       .set(values)
       .where(eq(task.id, id))
       .returning({
-        id: task.id,
+        title: task.title,
       })
     revalidatePath("/")
     return { data: data[0] }

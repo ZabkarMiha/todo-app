@@ -1,13 +1,10 @@
 import { Toggle } from "@/components/ui/toggle"
 import { Label } from "@/components/ui/label"
-import { Task } from "@/lib/types"
+import { ActionResponse, ErrorData, Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { completeTaskToggle, deleteTask } from "@/lib/actions/database"
-import { toast } from "@/hooks/use-toast"
-import {
-  CheckIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons"
+import { toast } from "sonner"
+import { CheckIcon, TrashIcon } from "@radix-ui/react-icons"
 import EditAddTask from "./edit-add-task"
 import { Separator } from "./ui/separator"
 
@@ -19,13 +16,10 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   } as const
 
   const deleteTaskOnClick = async () => {
-    const result = await deleteTask(task.id)
-
-    toast({
-      title: result.error
-        ? "Uh oh! Something went wrong."
-        : "Task deleted successfully",
-      description: result.error ? result.error.message : result.data?.id,
+    toast.promise(deleteTask(task.id), {
+      loading: "Loading...",
+      success: (data) => `${data.data?.title} has been deleted`,
+      error: (error: ErrorData) => `${error.message}, ${error.status}`,
     })
   }
 

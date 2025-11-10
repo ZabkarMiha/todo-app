@@ -18,14 +18,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { insertTaskFormValues, updateTask } from "@/lib/actions/database"
-import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { taskFormSchema } from "@/lib/form-schemas"
 import { cn } from "@/lib/utils"
-import { Task } from "@/lib/types"
+import { ErrorData, Task } from "@/lib/types"
 import { authClient } from "../lib/auth/auth-client"
 import { useState } from "react"
 
@@ -35,8 +35,6 @@ type EditAddTaskProps = {
 }
 
 export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
-  const { toast } = useToast()
-
   const { data: session, error } = authClient.useSession()
 
   const [open, setOpen] = useState(false)
@@ -69,18 +67,17 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       userId: session!.user.id,
     }
 
-    const result = taskData
-      ? await updateTask(taskData!.id, data)
-      : await insertTaskFormValues(completeTaskData)
-
-    const actionText = taskData ? "updated" : "created"
-
-    toast({
-      title: result.error
-        ? "Uh oh! Something went wrong."
-        : `Task ${actionText} successfully`,
-      description: result.error ? result.error.message : result.data?.id,
-    })
+    taskData
+      ? toast.promise(updateTask(taskData!.id, data), {
+          loading: "Loading...",
+          success: (data) => `${data.data?.title} has been updated`,
+          error: (error: ErrorData) => `${error.message}, ${error.status}`,
+        })
+      : toast.promise(insertTaskFormValues(completeTaskData), {
+          loading: "Loading...",
+          success: (data) => `${data.data?.title} has been created`,
+          error: (error: ErrorData) => `${error.message}, ${error.status}`,
+        })
 
     if (taskData) {
       form.reset(data)
