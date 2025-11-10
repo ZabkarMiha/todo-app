@@ -1,6 +1,5 @@
 "use client";
 
-import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,16 +17,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { insertTaskFormValues, updateTask } from "@/lib/actions/database";
-import { z } from "zod";
 import { taskFormSchema } from "@/lib/form-schemas";
-import { cn } from "@/lib/utils";
 import { ErrorData, Task } from "@/lib/types";
-import { authClient } from "../lib/auth/auth-client";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { authClient } from "../lib/auth/auth-client";
 
 type EditAddTaskProps = {
   className?: string;

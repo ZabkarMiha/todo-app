@@ -1,5 +1,5 @@
-import { Task } from "@/lib/types";
 import TodoTaskCard from "@/components/todo-task-card";
+import { Task } from "@/lib/types";
 
 type TasksListProps = {
   paginatedTasks: Task[];

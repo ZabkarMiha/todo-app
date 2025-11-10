@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm/relations";
-import { user } from "./user";
 import { task } from "./task";
+import { user } from "./user";
 
 export const userRelations = relations(user, ({ many }) => ({
   task: many(task),

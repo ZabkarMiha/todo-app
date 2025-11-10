@@ -1,12 +1,4 @@
-import { Toggle } from "@/components/ui/toggle";
-import { Label } from "@/components/ui/label";
-import { ErrorData, Task } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { completeTaskToggle, deleteTask } from "@/lib/actions/database";
-import { toast } from "sonner";
-import { CheckIcon, TrashIcon } from "@radix-ui/react-icons";
-import EditAddTask from "./edit-add-task";
-import { Separator } from "./ui/separator";
 import {
   Card,
   CardAction,
@@ -16,6 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
+import { completeTaskToggle, deleteTask } from "@/lib/actions/database";
+import { ErrorData, Task } from "@/lib/types";
+import { CheckIcon, TrashIcon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
+import EditAddTask from "./edit-add-task";
+import { Separator } from "./ui/separator";
 
 export default function TodoTaskCard({ task }: { task: Task }) {
   const options = {

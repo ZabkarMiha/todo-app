@@ -1,11 +1,9 @@
 "use client";
 
-import TasksList from "./tasks-list";
-import Dock from "./dock";
-
 import { Task } from "@/lib/types";
-
 import { useSearchParams } from "next/navigation";
+import Dock from "./dock";
+import TasksList from "./tasks-list";
 
 type ContentProps = {
   tasks: Task[] | null;

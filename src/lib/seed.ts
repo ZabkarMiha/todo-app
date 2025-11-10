@@ -1,5 +1,5 @@
-import { task } from "@/schema";
 import { db } from "@/index";
+import { task } from "@/schema";
 
 async function Seed() {
   const args = process.argv.slice(2);

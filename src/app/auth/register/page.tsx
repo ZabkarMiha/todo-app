@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
@@ -7,21 +8,18 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Transition } from "@headlessui/react";
-import { CheckIcon } from "@radix-ui/react-icons";
-
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerFormSchema } from "@/lib/form-schemas";
-import { z } from "zod";
-
 import { isEmailAvailable } from "@/lib/actions/database";
 import { authClient } from "@/lib/auth/auth-client";
+import { registerFormSchema } from "@/lib/form-schemas";
+import { Transition } from "@headlessui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function RegisterPage() {
   const router = useRouter();

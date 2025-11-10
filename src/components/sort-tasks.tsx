@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { TriangleUpIcon } from "@radix-ui/react-icons";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type SortTasksProps = {
   className?: string;

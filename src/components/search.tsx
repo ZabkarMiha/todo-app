@@ -1,9 +1,9 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Input } from "./ui/input";
-import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Input } from "./ui/input";
 
 type SearchProps = {
   className?: string;

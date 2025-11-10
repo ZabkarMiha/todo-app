@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
@@ -7,19 +8,16 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { CheckIcon } from "@radix-ui/react-icons";
-
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth/auth-client";
 import { loginFormSchema } from "@/lib/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-import { authClient } from "@/lib/auth/auth-client";
+import { CheckIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
 export default function LoginPage() {
   const router = useRouter();

@@ -1,13 +1,11 @@
 "use server";
 
-import AddTask from "@/components/edit-add-task";
 import Content from "@/components/content";
-
+import AddTask from "@/components/edit-add-task";
 import { getAllTasks, getTasksCount } from "@/lib/actions/database";
-
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "../../lib/auth/auth";
-import { headers } from "next/headers";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

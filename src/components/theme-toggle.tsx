@@ -1,16 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarMenuButton } from "./ui/sidebar";
 import { ChevronUpIcon } from "@radix-ui/react-icons";
 import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { SidebarMenuButton } from "./ui/sidebar";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();

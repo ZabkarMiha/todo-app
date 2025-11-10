@@ -9,19 +9,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { authClient } from "../lib/auth/auth-client";
+import AppLogo from "./app-logo";
+import { ThemeToggle } from "./theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import AppLogo from "./app-logo";
-import { ThemeToggle } from "./theme-toggle";
-import { authClient } from "../lib/auth/auth-client";
-import { useRouter } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
 
 export default function AppSidebar() {

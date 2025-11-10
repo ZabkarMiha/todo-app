@@ -1,10 +1,10 @@
 import {
-  pgTable,
-  index,
-  uuid,
-  text,
   boolean,
+  index,
+  pgTable,
+  text,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
 
