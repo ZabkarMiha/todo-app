@@ -1,12 +1,12 @@
-import "./globals.css"
-import type { Metadata } from "next"
-import { ThemeProvider } from "next-themes"
+import "./globals.css";
+import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Todo App",
   description:
     "Todo App project using Next.js, TypeScript, Shadcn, Tailwind, Drizzle, Neon and BetterAuth",
-}
+};
 
 export default function RootLayout({
   children,
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={"h-dvh"} suppressHydrationWarning>
       <body
-        className={`font-sans antialiased text-base flex flex-col h-full md:text-md xl:text-lg`}
+        className={`md:text-md flex h-full flex-col font-sans text-base antialiased xl:text-lg`}
       >
         <ThemeProvider
           attribute="class"
@@ -26,5 +26,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

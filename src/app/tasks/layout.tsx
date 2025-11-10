@@ -1,14 +1,14 @@
-import TopNav from "@/components/top-nav"
-import AppSidebar from "@/components/app-sidebar"
-import { Toaster } from "@/components/ui/sonner"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { cookies } from "next/headers"
+import TopNav from "@/components/top-nav";
+import AppSidebar from "@/components/app-sidebar";
+import { Toaster } from "@/components/ui/sonner";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 
 export default async function TasksLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
@@ -19,5 +19,5 @@ export default async function TasksLayout({
         {children}
       </main>
     </SidebarProvider>
-  )
+  );
 }

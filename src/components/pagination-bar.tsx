@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Pagination,
@@ -8,16 +8,16 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import { cn } from "@/lib/utils"
-import { useRouter, useSearchParams } from "next/navigation"
+} from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type PaginationBarProps = {
-  tasksCount: number
-  currentPage: number
-  tasksPerPage: number
-  className?: string
-}
+  tasksCount: number;
+  currentPage: number;
+  tasksPerPage: number;
+  className?: string;
+};
 
 export default function PaginationBar({
   tasksCount,
@@ -25,20 +25,20 @@ export default function PaginationBar({
   tasksPerPage,
   className,
 }: PaginationBarProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const maxPreviousPages = 0
-  const maxNextPages = 0
-  const totalPages = Math.ceil(tasksCount / tasksPerPage)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const maxPreviousPages = 0;
+  const maxNextPages = 0;
+  const totalPages = Math.ceil(tasksCount / tasksPerPage);
 
   function handlePageChange(page: number) {
-    const params = new URLSearchParams(searchParams)
-    params.set("page", page.toString())
-    router.push(`?${params.toString()}`)
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`);
   }
 
   return (
-    <Pagination className={cn("w-fit m-0", className)}>
+    <Pagination className={cn("m-0 w-fit", className)}>
       <PaginationContent>
         {currentPage > 1 && (
           <>
@@ -68,7 +68,7 @@ export default function PaginationBar({
               (_, idx) => {
                 const page =
                   currentPage -
-                  (Math.min(maxPreviousPages, currentPage - 1) - idx)
+                  (Math.min(maxPreviousPages, currentPage - 1) - idx);
                 return (
                   <PaginationItem key={page}>
                     <PaginationLink
@@ -78,8 +78,8 @@ export default function PaginationBar({
                       {page}
                     </PaginationLink>
                   </PaginationItem>
-                )
-              }
+                );
+              },
             )}
           </>
         )}
@@ -94,7 +94,7 @@ export default function PaginationBar({
           <>
             {[...Array(Math.min(maxNextPages, totalPages - currentPage))].map(
               (_, idx) => {
-                const page = currentPage + idx + 1
+                const page = currentPage + idx + 1;
                 return (
                   <PaginationItem key={page}>
                     <PaginationLink
@@ -104,8 +104,8 @@ export default function PaginationBar({
                       {page}
                     </PaginationLink>
                   </PaginationItem>
-                )
-              }
+                );
+              },
             )}
 
             {currentPage + maxNextPages < totalPages && (
@@ -136,5 +136,5 @@ export default function PaginationBar({
         )}
       </PaginationContent>
     </Pagination>
-  )
+  );
 }

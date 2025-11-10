@@ -41,7 +41,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       <CardHeader className="grid-rows-1">
         <CardTitle
           className={
-            "overflow-hidden text-2xl font-bold text-ellipsis whitespace-nowrap hover:whitespace-break-spaces hover:overflow-visible xl:text-3xl"
+            "overflow-hidden text-2xl font-bold text-ellipsis whitespace-nowrap hover:overflow-visible hover:whitespace-break-spaces xl:text-3xl"
           }
         >
           {task.title}

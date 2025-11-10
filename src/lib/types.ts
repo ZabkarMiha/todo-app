@@ -1,17 +1,17 @@
 export type Task = {
-  id: string
-  title: string
-  description: string | null
-  completed: boolean
-  dateAdded: Date
-}
+  id: string;
+  title: string;
+  description: string | null;
+  completed: boolean;
+  dateAdded: Date;
+};
 
 export type ErrorData = {
-  message: string,
-  status: number
-}
+  message: string;
+  status: number;
+};
 
 export type ActionResponse<T> = {
-  data?: T
-  error?: ErrorData
-}
+  data?: T;
+  error?: ErrorData;
+};

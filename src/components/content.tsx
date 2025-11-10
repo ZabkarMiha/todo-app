@@ -1,55 +1,55 @@
-"use client"
+"use client";
 
-import TasksList from "./tasks-list"
-import Dock from "./dock"
+import TasksList from "./tasks-list";
+import Dock from "./dock";
 
-import { Task } from "@/lib/types"
+import { Task } from "@/lib/types";
 
-import { useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation";
 
 type ContentProps = {
-  tasks: Task[] | null
-  currentPage: number
-  tasksPerPage: number
-}
+  tasks: Task[] | null;
+  currentPage: number;
+  tasksPerPage: number;
+};
 
 export default function Content({
   tasks,
   currentPage,
   tasksPerPage,
 }: ContentProps) {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   const sortOrder =
     new URLSearchParams(searchParams).get("sort") === "oldest"
       ? "oldest"
-      : "newest"
+      : "newest";
 
   const query =
-    new URLSearchParams(searchParams).get("query")?.toLowerCase() || ""
+    new URLSearchParams(searchParams).get("query")?.toLowerCase() || "";
 
   const filteredTasks = query
     ? tasks!.filter(
         (task) =>
           task.title.toLowerCase().includes(query) ||
-          (task.description?.toLowerCase().includes(query) ?? false)
+          (task.description?.toLowerCase().includes(query) ?? false),
       )
-    : tasks!
+    : tasks!;
 
   const sortedTasks = [...filteredTasks].sort((a, b) => {
-    const dateA = new Date(a.dateAdded).getTime()
-    const dateB = new Date(b.dateAdded).getTime()
-    return sortOrder === "oldest" ? dateA - dateB : dateB - dateA
-  })
+    const dateA = new Date(a.dateAdded).getTime();
+    const dateB = new Date(b.dateAdded).getTime();
+    return sortOrder === "oldest" ? dateA - dateB : dateB - dateA;
+  });
 
-  const startIndex = (currentPage - 1) * tasksPerPage
+  const startIndex = (currentPage - 1) * tasksPerPage;
   const paginatedTasks = sortedTasks.slice(
     startIndex,
-    startIndex + tasksPerPage
-  )
+    startIndex + tasksPerPage,
+  );
 
   return (
-    <div className="flex flex-col mx-5 mb-2 mt-2 md:mx-10 xl:mx-20">
+    <div className="mx-5 mt-2 mb-2 flex flex-col md:mx-10 xl:mx-20">
       <TasksList paginatedTasks={paginatedTasks} />
       <Dock
         filteredTasksLength={filteredTasks.length}
@@ -57,5 +57,5 @@ export default function Content({
         currentPage={currentPage}
       />
     </div>
-  )
+  );
 }

@@ -5,8 +5,8 @@ import {
   text,
   boolean,
   timestamp,
-} from "drizzle-orm/pg-core"
-import { user } from "./user"
+} from "drizzle-orm/pg-core";
+import { user } from "./user";
 
 export const task = pgTable(
   "task",
@@ -24,8 +24,8 @@ export const task = pgTable(
     return {
       titleIdx: index("title__index").using(
         "btree",
-        table.title.asc().nullsLast()
+        table.title.asc().nullsLast(),
       ),
-    }
-  }
-)
+    };
+  },
+);

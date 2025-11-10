@@ -64,9 +64,7 @@
         "task_id_unique": {
           "name": "task_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "policies": {},

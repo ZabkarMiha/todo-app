@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useTheme } from "next-themes"
+import * as React from "react";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { SidebarMenuButton } from "./ui/sidebar"
-import { ChevronUpIcon } from "@radix-ui/react-icons"
-import { Moon, Sun } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { SidebarMenuButton } from "./ui/sidebar";
+import { ChevronUpIcon } from "@radix-ui/react-icons";
+import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -40,5 +40,5 @@ export function ThemeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

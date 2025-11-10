@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
-import { Transition } from "@headlessui/react"
-import { CheckIcon } from "@radix-ui/react-icons"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { Transition } from "@headlessui/react";
+import { CheckIcon } from "@radix-ui/react-icons";
 
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { registerFormSchema } from "@/lib/form-schemas"
-import { z } from "zod"
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerFormSchema } from "@/lib/form-schemas";
+import { z } from "zod";
 
-import { isEmailAvailable } from "@/lib/actions/database"
-import { authClient } from "@/lib/auth/auth-client"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import Link from "next/link"
+import { isEmailAvailable } from "@/lib/actions/database";
+import { authClient } from "@/lib/auth/auth-client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Link from "next/link";
 
 export default function RegisterPage() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [emailStepComplete, setEmailStepComplete] = useState<boolean>(false)
-  const [checkingEmail, setCheckingEmail] = useState<boolean>(false)
-  const [checkingUsername, setCheckingUsername] = useState<boolean>(false)
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [isSuccess, setIsSuccess] = useState<boolean>(false)
+  const [emailStepComplete, setEmailStepComplete] = useState<boolean>(false);
+  const [checkingEmail, setCheckingEmail] = useState<boolean>(false);
+  const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -42,95 +42,95 @@ export default function RegisterPage() {
       confirmPassword: "",
     },
     mode: "onBlur",
-  })
+  });
 
   const handleAvailableEmail = async (email: string): Promise<boolean> => {
-    setCheckingEmail(true)
+    setCheckingEmail(true);
 
-    const { data, error } = await isEmailAvailable(email)
+    const { data, error } = await isEmailAvailable(email);
 
     if (error) {
       form.setError("email", {
         type: "manual",
         message: error.message,
-      })
-      setCheckingEmail(false)
-      return false
+      });
+      setCheckingEmail(false);
+      return false;
     }
 
     if (!data) {
-      setCheckingEmail(false)
-      return false
+      setCheckingEmail(false);
+      return false;
     }
 
     if (!data.available) {
       form.setError("email", {
         type: "manual",
         message: "Email is already taken",
-      })
-      setCheckingEmail(false)
-      return false
+      });
+      setCheckingEmail(false);
+      return false;
     }
 
-    form.clearErrors("email")
-    setCheckingEmail(false)
-    return true
-  }
+    form.clearErrors("email");
+    setCheckingEmail(false);
+    return true;
+  };
 
   const handleAvailableUsername = async (
-    username: string
+    username: string,
   ): Promise<boolean> => {
-    setCheckingUsername(true)
+    setCheckingUsername(true);
     const { data, error } = await authClient.isUsernameAvailable({
       username: username,
-    })
+    });
 
     if (error) {
       form.setError("username", {
         type: "manual",
         message: error.message,
-      })
-      setCheckingUsername(false)
-      return false
+      });
+      setCheckingUsername(false);
+      return false;
     }
 
     if (!data) {
-      setCheckingUsername(false)
-      return false
+      setCheckingUsername(false);
+      return false;
     }
 
     if (!data.available) {
       form.setError("username", {
         type: "manual",
         message: "Username is already taken",
-      })
-      setCheckingUsername(false)
-      return false
+      });
+      setCheckingUsername(false);
+      return false;
     }
 
-    form.clearErrors("username")
-    setCheckingUsername(false)
-    return true
-  }
+    form.clearErrors("username");
+    setCheckingUsername(false);
+    return true;
+  };
 
   const handleFirstStep = async () => {
-    const fieldsToTrigger = ["email", "password", "confirmPassword"] as const
-    await form.trigger(fieldsToTrigger)
+    const fieldsToTrigger = ["email", "password", "confirmPassword"] as const;
+    await form.trigger(fieldsToTrigger);
     if (!form.getFieldState("email").error) {
-      await handleAvailableEmail(form.getValues("email"))
+      await handleAvailableEmail(form.getValues("email"));
     }
-    const fieldStates = fieldsToTrigger.map((f) => form.getFieldState(f))
-    const hasErrors = fieldStates.some((s) => !!s.error)
+    const fieldStates = fieldsToTrigger.map((f) => form.getFieldState(f));
+    const hasErrors = fieldStates.some((s) => !!s.error);
     if (!hasErrors) {
-      setTimeout(() => setEmailStepComplete(true), 10)
+      setTimeout(() => setEmailStepComplete(true), 10);
     }
-  }
+  };
 
   const onSubmit: SubmitHandler<z.infer<typeof registerFormSchema>> = async (
-    values: z.infer<typeof registerFormSchema>
+    values: z.infer<typeof registerFormSchema>,
   ) => {
-    const usernameAvailable = await handleAvailableUsername(values.username)
-    if (!usernameAvailable) return
+    const usernameAvailable = await handleAvailableUsername(values.username);
+    if (!usernameAvailable) return;
 
     const { data, error } = await authClient.signUp.email(
       {
@@ -142,31 +142,31 @@ export default function RegisterPage() {
       },
       {
         onRequest: (ctx) => {
-          setIsSubmitting(true)
+          setIsSubmitting(true);
         },
         onSuccess: (ctx) => {
-          setIsSuccess(true)
-          router.push("/tasks")
+          setIsSuccess(true);
+          router.push("/tasks");
         },
         onError: (ctx) => {
-          setIsSubmitting(false)
+          setIsSubmitting(false);
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <p className="text-2xl font-semibold text-center">Registration</p>
+    <div className="flex h-full w-full flex-col">
+      <p className="text-center text-2xl font-semibold">Registration</p>
       {isSuccess ? (
-        <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
+        <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
           <CheckIcon className="size-8 text-green-500" />
           <p className="text-green-500">Success!</p>
         </div>
       ) : (
         <>
           {isSubmitting ? (
-            <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
+            <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
               <p>Submitting...</p>
             </div>
@@ -198,7 +198,7 @@ export default function RegisterPage() {
                             Email
                           </FieldLabel>
                           <Input
-                            className="bg-form-input-background border border-form-input-border"
+                            className="bg-form-input-background border-form-input-border border"
                             type="email"
                             {...field}
                             id="register-form-email"
@@ -221,7 +221,7 @@ export default function RegisterPage() {
                               Password
                             </FieldLabel>
                             <Input
-                              className="bg-form-input-background border border-form-input-border"
+                              className="bg-form-input-background border-form-input-border border"
                               type="password"
                               {...field}
                               id="register-form-password"
@@ -240,12 +240,12 @@ export default function RegisterPage() {
                           <Field data-invalid={fieldState.invalid}>
                             <FieldLabel
                               htmlFor="register-form-confirmPassword"
-                              className="whitespace-nowrap  "
+                              className="whitespace-nowrap"
                             >
                               Confirm password
                             </FieldLabel>
                             <Input
-                              className="bg-form-input-background border border-form-input-border"
+                              className="bg-form-input-background border-form-input-border border"
                               type="password"
                               {...field}
                               id="register-form-confirmPassword"
@@ -259,7 +259,7 @@ export default function RegisterPage() {
                       />
                     </Field>
                     <Field
-                      className="flex items-center justify-center mt-8"
+                      className="mt-8 flex items-center justify-center"
                       orientation="horizontal"
                     >
                       <Button
@@ -273,7 +273,7 @@ export default function RegisterPage() {
                         type="button"
                         disabled={checkingEmail}
                         onClick={() => {
-                          handleFirstStep()
+                          handleFirstStep();
                         }}
                       >
                         Next
@@ -302,7 +302,7 @@ export default function RegisterPage() {
                             Name
                           </FieldLabel>
                           <Input
-                            className="bg-form-input-background border border-form-input-border"
+                            className="bg-form-input-background border-form-input-border border"
                             {...field}
                             id="register-form-name"
                             aria-invalid={fieldState.invalid}
@@ -322,7 +322,7 @@ export default function RegisterPage() {
                             Username
                           </FieldLabel>
                           <Input
-                            className="bg-form-input-background border border-form-input-border"
+                            className="bg-form-input-background border-form-input-border border"
                             {...field}
                             id="register-form-username"
                             aria-invalid={fieldState.invalid}
@@ -335,7 +335,7 @@ export default function RegisterPage() {
                       )}
                     />
                     <Field
-                      className="flex items-center justify-center mt-8"
+                      className="mt-8 flex items-center justify-center"
                       orientation="horizontal"
                     >
                       <Button
@@ -365,9 +365,9 @@ export default function RegisterPage() {
         </>
       )}
 
-      <Button className="pl-0 mt-10" variant="link" disabled={isSubmitting}>
+      <Button className="mt-10 pl-0" variant="link" disabled={isSubmitting}>
         <Link href={"/auth/login"}>Already registered? Login</Link>
       </Button>
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons"
-import { Button } from "@/components/ui/button"
+import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,35 +9,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { toast } from "sonner"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { insertTaskFormValues, updateTask } from "@/lib/actions/database"
-import { z } from "zod"
-import { taskFormSchema } from "@/lib/form-schemas"
-import { cn } from "@/lib/utils"
-import { ErrorData, Task } from "@/lib/types"
-import { authClient } from "../lib/auth/auth-client"
-import { useState } from "react"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { insertTaskFormValues, updateTask } from "@/lib/actions/database";
+import { z } from "zod";
+import { taskFormSchema } from "@/lib/form-schemas";
+import { cn } from "@/lib/utils";
+import { ErrorData, Task } from "@/lib/types";
+import { authClient } from "../lib/auth/auth-client";
+import { useState } from "react";
 
 type EditAddTaskProps = {
-  className?: string
-  taskData?: Task
-}
+  className?: string;
+  taskData?: Task;
+};
 
 export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
-  const { data: session, error } = authClient.useSession()
+  const { data: session, error } = authClient.useSession();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const initialValues = taskData
     ? {
@@ -49,23 +49,23 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
         title: "",
         description: "",
         completed: false,
-      }
+      };
 
-  const parsed = taskFormSchema.safeParse(initialValues)
-  const defaultValues = parsed.success ? parsed.data : initialValues
+  const parsed = taskFormSchema.safeParse(initialValues);
+  const defaultValues = parsed.success ? parsed.data : initialValues;
 
   const form = useForm<z.infer<typeof taskFormSchema>>({
     resolver: zodResolver(taskFormSchema),
     defaultValues,
-  })
+  });
 
   const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (
-    data: z.infer<typeof taskFormSchema>
+    data: z.infer<typeof taskFormSchema>,
   ) => {
     const completeTaskData = {
       ...data,
       userId: session!.user.id,
-    }
+    };
 
     taskData
       ? toast.promise(updateTask(taskData!.id, data), {
@@ -77,23 +77,23 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           loading: "Loading...",
           success: (data) => `${data.data?.title} has been created`,
           error: (error: ErrorData) => `${error.message}, ${error.status}`,
-        })
+        });
 
     if (taskData) {
-      form.reset(data)
+      form.reset(data);
     } else {
-      form.reset()
+      form.reset();
     }
 
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className={cn("p-2 space-x-0 xl:space-x-2 xl:p-4", className)}
+          className={cn("space-x-0 p-2 xl:space-x-2 xl:p-4", className)}
         >
           {taskData ? (
             <Pencil1Icon className="h-4 w-4" />
@@ -170,5 +170,5 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
         </Field>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

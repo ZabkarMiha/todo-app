@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const taskFormSchema = z.object({
   title: z
@@ -19,7 +19,7 @@ export const taskFormSchema = z.object({
     })
     .optional(),
   completed: z.boolean(),
-})
+});
 
 export const insertTaskSchema = taskFormSchema.extend({
   userId: z.string(),
@@ -34,27 +34,27 @@ const passwordSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Password must contain at least one uppercase letter.",
-      })
+      });
     }
     if (!/[a-z]/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Password must contain at least one lowercase letter.",
-      })
+      });
     }
     if (!/[0-9]/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Password must contain at least one number.",
-      })
+      });
     }
     if (!/[#?!@$%^&*-]/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Password must contain at least one special character.",
-      })
+      });
     }
-  })
+  });
 
 export const registerFormSchema = z
   .object({
@@ -78,9 +78,9 @@ export const registerFormSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
-  })
+  });
 
 export const loginFormSchema = z.object({
   emailOrUsername: z.string(),
   password: z.string(),
-})
+});

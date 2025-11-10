@@ -1,13 +1,13 @@
-import EditAddTask from "./edit-add-task"
-import PaginationBar from "./pagination-bar"
-import Search from "./search"
-import SortTasks from "./sort-tasks"
+import EditAddTask from "./edit-add-task";
+import PaginationBar from "./pagination-bar";
+import Search from "./search";
+import SortTasks from "./sort-tasks";
 
 type DockProps = {
-  filteredTasksLength: number
-  tasksPerPage: number
-  currentPage: number
-}
+  filteredTasksLength: number;
+  tasksPerPage: number;
+  currentPage: number;
+};
 
 export default function Dock({
   filteredTasksLength,
@@ -15,7 +15,7 @@ export default function Dock({
   currentPage,
 }: DockProps) {
   return (
-    <div className="sticky bottom-4 h-fit outline-solid outline-border backdrop-blur-xl p-2 mx-2 rounded-md md:mx-0 md:self-center">
+    <div className="outline-border sticky bottom-4 mx-2 h-fit rounded-md p-2 backdrop-blur-xl outline-solid md:mx-0 md:self-center">
       <div className="flex flex-col space-y-2 p-1 md:flex-row md:space-y-0 md:space-x-2">
         <div className="flex flex-row space-x-2 self-center">
           <div>
@@ -24,7 +24,7 @@ export default function Dock({
                 tasksCount={filteredTasksLength}
                 currentPage={currentPage}
                 tasksPerPage={tasksPerPage}
-                className="self-center h-full"
+                className="h-full self-center"
               />
             )}
           </div>
@@ -36,5 +36,5 @@ export default function Dock({
         </div>
       </div>
     </div>
-  )
+  );
 }

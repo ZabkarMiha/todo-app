@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
-import { CheckIcon } from "@radix-ui/react-icons"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { CheckIcon } from "@radix-ui/react-icons";
 
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
-import { loginFormSchema } from "@/lib/form-schemas"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { loginFormSchema } from "@/lib/form-schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-import { authClient } from "@/lib/auth/auth-client"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import Link from "next/link"
+import { authClient } from "@/lib/auth/auth-client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Link from "next/link";
 
 export default function LoginPage() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [isSuccess, setIsSuccess] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -34,33 +34,33 @@ export default function LoginPage() {
       password: "",
     },
     mode: "onBlur",
-  })
+  });
 
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (
-    values: z.infer<typeof loginFormSchema>
+    values: z.infer<typeof loginFormSchema>,
   ) => {
     const authValues = {
       password: values.password,
       callbackURL: "/tasks",
-    }
+    };
     const authCallbacks = {
       onRequest: () => setIsSubmitting(true),
       onSuccess: () => {
-        setIsSuccess(true)
-        router.push("/tasks")
+        setIsSuccess(true);
+        router.push("/tasks");
       },
       onError: (ctx: { error: { message: string } }) => {
-        setIsSubmitting(false)
+        setIsSubmitting(false);
         form.setError("root", {
           type: "manual",
           message: ctx.error.message,
-        })
+        });
       },
-    }
+    };
 
     const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
-      values.emailOrUsername
-    )
+      values.emailOrUsername,
+    );
 
     if (isEmail) {
       await authClient.signIn.email(
@@ -70,8 +70,8 @@ export default function LoginPage() {
         },
         {
           ...authCallbacks,
-        }
-      )
+        },
+      );
     } else {
       await authClient.signIn.username(
         {
@@ -80,23 +80,23 @@ export default function LoginPage() {
         },
         {
           ...authCallbacks,
-        }
-      )
+        },
+      );
     }
-  }
+  };
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <p className="text-2xl font-semibold text-center">Login</p>
+    <div className="flex h-full w-full flex-col">
+      <p className="text-center text-2xl font-semibold">Login</p>
       {isSuccess ? (
-        <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
+        <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
           <CheckIcon className="size-8 text-green-500" />
           <p className="text-green-500">Success!</p>
         </div>
       ) : (
         <>
           {isSubmitting ? (
-            <div className="flex flex-col justify-center items-center w-full h-full space-y-4 mt-10">
+            <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
               <p>Submitting...</p>
             </div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
                         Email or username
                       </FieldLabel>
                       <Input
-                        className="bg-form-input-background border border-form-input-border"
+                        className="bg-form-input-background border-form-input-border border"
                         {...field}
                         id="login-form-emailOrUsername"
                         aria-invalid={fieldState.invalid}
@@ -136,7 +136,7 @@ export default function LoginPage() {
                         Password
                       </FieldLabel>
                       <Input
-                        className="bg-form-input-background border border-form-input-border"
+                        className="bg-form-input-background border-form-input-border border"
                         type="password"
                         {...field}
                         id="login-form-password"
@@ -152,7 +152,7 @@ export default function LoginPage() {
                   <FieldError errors={[form.formState.errors.root]} />
                 )}
                 <Field
-                  className="flex items-center justify-center mt-4"
+                  className="mt-4 flex items-center justify-center"
                   orientation="horizontal"
                 >
                   <Button
@@ -172,9 +172,9 @@ export default function LoginPage() {
         </>
       )}
 
-      <Button className="pl-0 mt-10" variant="link" disabled={isSubmitting}>
+      <Button className="mt-10 pl-0" variant="link" disabled={isSubmitting}>
         <Link href={"/auth/register"}>Don't have an account? Register</Link>
       </Button>
     </div>
-  )
+  );
 }
