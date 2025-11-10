@@ -1,4 +1,3 @@
-import AppLogo from "@/components/app-logo"
 import { Button } from "@/components/ui/button"
 import { Pencil2Icon } from "@radix-ui/react-icons"
 import Link from "next/link"

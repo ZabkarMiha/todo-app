@@ -34,7 +34,6 @@ export default function AppSidebar() {
       <SidebarHeader className="items-center p-5">
         <AppLogo />
       </SidebarHeader>
-      <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroup />

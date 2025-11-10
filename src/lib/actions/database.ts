@@ -109,7 +109,7 @@ export async function completeTaskToggle(
 export async function isEmailAvailable(
   email: string
 ): Promise<ActionResponse<{ available: boolean }>> {
-  var available: boolean = false
+  let available: boolean = false
   try {
     const isEmailAvailable = await db
       .select()

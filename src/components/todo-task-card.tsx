@@ -1,6 +1,6 @@
 import { Toggle } from "@/components/ui/toggle"
 import { Label } from "@/components/ui/label"
-import { ActionResponse, ErrorData, Task } from "@/lib/types"
+import { ErrorData, Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { completeTaskToggle, deleteTask } from "@/lib/actions/database"
 import { toast } from "sonner"
