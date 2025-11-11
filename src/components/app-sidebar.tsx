@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Skeleton } from "./ui/skeleton";
 
 export default function AppSidebar() {
   const { data: session, isPending } = authClient.useSession();
@@ -43,43 +43,43 @@ export default function AppSidebar() {
             <ThemeToggle />
           </SidebarMenuItem>
         </SidebarMenu>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  {isPending ? (
-                    <Skeleton className="h-full w-full" />
-                  ) : (
-                    session?.user.username
-                  )}
-                  <DotsVerticalIcon className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-(--radix-popper-anchor-width)"
-              >
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={async () => {
-                    await authClient.signOut({
-                      fetchOptions: {
-                        onSuccess: () => {
-                          router.push("/auth/login");
-                        },
-                      },
-                    });
-                  }}
+        {isPending ? (
+          <SidebarMenuSkeleton className="w-full" showIcon={true} />
+        ) : (
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    {session?.user.username}
+                    <DotsVerticalIcon className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-(--radix-popper-anchor-width)"
                 >
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+                  <DropdownMenuItem>
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      await authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            router.push("/auth/login");
+                          },
+                        },
+                      });
+                    }}
+                  >
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
