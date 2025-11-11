@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Pencil2Icon } from "@radix-ui/react-icons";
+import { SquarePen } from "lucide-react";
 
 type AppLogoProps = {
   className?: string;
@@ -23,7 +23,7 @@ export default function AppLogo({ className }: AppLogoProps) {
           Todo App
         </text>
       </svg>
-      <Pencil2Icon height="100%" width="15%" />
+      <SquarePen height="100%" width="15%" />
     </div>
   );
 }

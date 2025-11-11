@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authClient } from "../lib/auth/auth-client";
 import AppLogo from "./app-logo";
@@ -29,10 +29,11 @@ export default function AppSidebar() {
   const router = useRouter();
 
   return (
-    <Sidebar variant="floating" collapsible="offcanvas">
+    <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader className="items-center p-5">
         <AppLogo />
       </SidebarHeader>
+      <SidebarContent></SidebarContent>
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroup />
@@ -52,7 +53,7 @@ export default function AppSidebar() {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
                     {session?.user.username}
-                    <DotsVerticalIcon className="ml-auto" />
+                    <EllipsisVertical className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

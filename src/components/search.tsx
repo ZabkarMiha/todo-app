@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Search as SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "./ui/input";
 
@@ -26,7 +26,7 @@ export default function Search({ className }: SearchProps) {
 
   return (
     <div className={cn("relative flex items-center", className)}>
-      <MagnifyingGlassIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-6 w-6 -translate-y-1/2" />
+      <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-6 w-6 -translate-y-1/2" />
       <Input
         type="text"
         id="search"

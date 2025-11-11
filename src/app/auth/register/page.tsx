@@ -14,7 +14,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/form-schemas";
 import { Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckIcon } from "@radix-ui/react-icons";
+import { Check } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -158,7 +158,7 @@ export default function RegisterPage() {
       <p className="text-center text-2xl font-semibold">Registration</p>
       {isSuccess ? (
         <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
-          <CheckIcon className="size-8 text-green-500" />
+          <Check className="size-8 text-green-500" />
           <p className="text-green-500">Success!</p>
         </div>
       ) : (

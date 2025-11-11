@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { completeTaskToggle, deleteTask } from "@/lib/actions/database";
 import { ErrorData, Task } from "@/lib/types";
-import { CheckIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Check, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import EditAddTask from "./edit-add-task";
 import { Separator } from "./ui/separator";
@@ -61,7 +61,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
             pressed={task.completed}
             onPressedChange={completedToggleOnChange}
           >
-            <CheckIcon />
+            <Check />
           </Toggle>
         </CardAction>
       </CardHeader>
@@ -71,7 +71,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       <Separator className="mt-auto w-full" />
       <CardFooter className="gap-2">
         <Button variant={"destructive"} onClick={deleteTaskOnClick}>
-          <TrashIcon className="h-4 w-4" />
+          <Trash2 className="h-4 w-4" />
         </Button>
         <Label className={"mx-auto text-center"}>
           {task.dateAdded.toLocaleDateString("en-GB", options)}

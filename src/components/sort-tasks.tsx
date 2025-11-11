@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { TriangleUpIcon } from "@radix-ui/react-icons";
+import { Triangle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type SortTasksProps = {
@@ -35,7 +35,7 @@ export default function SortTasks({ className }: SortTasksProps) {
         className="flex w-fit items-center justify-center space-x-0 p-2 xl:space-x-2 xl:p-4"
       >
         <p className="hidden text-sm xl:block">Date</p>
-        <TriangleUpIcon
+        <Triangle
           className={cn(
             "h-6 w-6 transition-transform duration-200",
             sortOrder === "newest" ? "rotate-180" : "rotate-0",

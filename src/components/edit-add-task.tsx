@@ -22,7 +22,7 @@ import { taskFormSchema } from "@/lib/form-schemas";
 import { ErrorData, Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { PencilLine, Plus } from "lucide-react";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -100,9 +100,9 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           className={cn("space-x-0 p-2 xl:space-x-2 xl:p-4", className)}
         >
           {taskData ? (
-            <Pencil1Icon className="h-4 w-4" />
+            <PencilLine className="h-4 w-4" />
           ) : (
-            <PlusIcon className="h-4 w-4" />
+            <Plus className="h-4 w-4" />
           )}
         </Button>
       </DialogTrigger>

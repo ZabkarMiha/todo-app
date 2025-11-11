@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Pencil2Icon } from "@radix-ui/react-icons";
+import { NotebookPen } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
@@ -21,7 +21,7 @@ export default function Page() {
           </Button>
         </div>
         <div className="w-60 flex-none">
-          <Pencil2Icon height="100%" width="100%" />
+          <NotebookPen height="100%" width="100%" />
         </div>
       </div>
     </div>
