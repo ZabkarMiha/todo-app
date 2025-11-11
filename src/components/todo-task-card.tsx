@@ -26,6 +26,8 @@ export default function TodoTaskCard({ task }: { task: Task }) {
 
   const deleteTaskOnClick = async () => {
     toast.promise(deleteTask(task.id), {
+      closeButton: true,
+      position: "top-center",
       loading: "Loading...",
       success: (data) => `${data.data?.title} has been deleted`,
       error: (error: ErrorData) => `${error.message}, ${error.status}`,
@@ -33,7 +35,13 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   };
 
   const completedToggleOnChange = async (completed: boolean) => {
-    await completeTaskToggle(task.id, completed);
+    toast.promise(completeTaskToggle(task.id, completed), {
+      closeButton: true,
+      position: "top-center",
+      loading: "Loading...",
+      success: (data) => `${data.data?.title} completion has been updated`,
+      error: (error: ErrorData) => `${error.message}, ${error.status}`,
+    });
   };
 
   return (

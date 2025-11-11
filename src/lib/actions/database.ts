@@ -86,7 +86,7 @@ export async function updateTask(
 export async function completeTaskToggle(
   id: string,
   completed: boolean,
-): Promise<ActionResponse<{ id: string }>> {
+): Promise<ActionResponse<{ title: string }>> {
   if (!id) {
     return { error: { message: "Invalid task ID", status: 400 } };
   }
@@ -96,7 +96,7 @@ export async function completeTaskToggle(
       .update(task)
       .set({ completed })
       .where(eq(task.id, id))
-      .returning({ id: task.id });
+      .returning({ title: task.title });
     revalidatePath("/");
     return { data: data[0] };
   } catch (e) {

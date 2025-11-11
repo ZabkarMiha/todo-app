@@ -69,11 +69,15 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
 
     taskData
       ? toast.promise(updateTask(taskData!.id, data), {
+          closeButton: true,
+          position: "top-center",
           loading: "Loading...",
           success: (data) => `${data.data?.title} has been updated`,
           error: (error: ErrorData) => `${error.message}, ${error.status}`,
         })
       : toast.promise(insertTaskFormValues(completeTaskData), {
+          closeButton: true,
+          position: "top-center",
           loading: "Loading...",
           success: (data) => `${data.data?.title} has been created`,
           error: (error: ErrorData) => `${error.message}, ${error.status}`,
