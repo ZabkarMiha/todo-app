@@ -15,7 +15,7 @@ export default function Dock({
   currentPage,
 }: DockProps) {
   return (
-    <div className="outline-border sticky bottom-4 mx-2 h-fit rounded-md p-2 backdrop-blur-xl outline-solid md:mx-0 md:self-center">
+    <div className="sticky bottom-4 mx-2 h-fit rounded-md p-2 backdrop-blur-xl outline-1 outline-border  md:mx-0 md:self-center">
       <div className="flex flex-col space-y-2 p-1 md:flex-row md:space-y-0 md:space-x-2">
         <div className="flex flex-row space-x-2 self-center">
           <div>
