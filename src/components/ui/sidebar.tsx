@@ -474,7 +474,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -599,39 +599,58 @@ function SidebarMenuBadge({
   );
 }
 
+const sidebarMenuSkeletonVariants = cva(
+  "flex items-center gap-2 rounded-md px-2 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:gap-0",
+  {
+    variants: {
+      size: {
+        default: "h-8",
+        lg: "h-12 group-data-[collapsible=icon]:p-0!",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  },
+);
+
+const sidebarMenuSkeletonIconVariants = cva("rounded-full", {
+  variants: {
+    size: {
+      default: "size-4",
+      lg: "size-8",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+});
+
 function SidebarMenuSkeleton({
   className,
   showIcon = false,
+  size = "default",
   ...props
 }: React.ComponentProps<"div"> & {
   showIcon?: boolean;
-}) {
-  // Random width between 50 to 90%.
-  /* const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []); */
-
+} & VariantProps<typeof sidebarMenuSkeletonVariants> &
+  VariantProps<typeof sidebarMenuSkeletonIconVariants>) {
   return (
     <div
       data-slot="sidebar-menu-skeleton"
       data-sidebar="menu-skeleton"
-      className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)}
+      className={cn(sidebarMenuSkeletonVariants({ size }), className)}
       {...props}
     >
       {showIcon && (
         <Skeleton
-          className="size-4 rounded-md"
+          className={sidebarMenuSkeletonIconVariants({ size })}
           data-sidebar="menu-skeleton-icon"
         />
       )}
       <Skeleton
-        className="h-4 flex-1"
+        className="h-4 w-full flex-1"
         data-sidebar="menu-skeleton-text"
-        /* style={
-          {
-            "--skeleton-width": width,
-          } as React.CSSProperties
-        } */
       />
     </div>
   );
