@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Field,
   FieldError,
   FieldGroup,
@@ -84,17 +90,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <p className="text-center text-2xl font-semibold">Login</p>
+    <>
+      <CardHeader>
+        <CardTitle className="text-center text-2xl font-semibold">
+          Login
+        </CardTitle>
+      </CardHeader>
       {isSuccess ? (
-        <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
-          <Check className="size-8 text-green-500" />
-          <p className="text-green-500">Success!</p>
-        </div>
+        <CardContent>
+          <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
+            <Check className="size-8 text-green-500" />
+            <p className="text-green-500">Success!</p>
+          </div>
+        </CardContent>
       ) : (
-        <>
+        <CardContent>
           {isSubmitting ? (
-            <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
+            <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
               <p>Submitting...</p>
             </div>
@@ -150,7 +162,7 @@ export default function LoginPage() {
                   <FieldError errors={[form.formState.errors.root]} />
                 )}
                 <Field
-                  className="mt-4 flex items-center justify-center"
+                  className="mt-8 flex items-center justify-center"
                   orientation="horizontal"
                 >
                   <Button
@@ -167,12 +179,13 @@ export default function LoginPage() {
               </FieldGroup>
             </form>
           )}
-        </>
+        </CardContent>
       )}
-
-      <Button className="mt-10 pl-0" variant="link" disabled={isSubmitting}>
-        <Link href={"/auth/register"}>Don't have an account? Register</Link>
-      </Button>
-    </div>
+      <CardFooter className="self-center">
+        <Button variant="link" disabled={isSubmitting}>
+          <Link href={"/auth/register"}>Don't have an account? Register</Link>
+        </Button>
+      </CardFooter>
+    </>
   );
 }
