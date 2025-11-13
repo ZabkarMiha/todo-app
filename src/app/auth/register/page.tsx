@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Field,
   FieldError,
   FieldGroup,
@@ -154,17 +160,23 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <p className="text-center text-2xl font-semibold">Registration</p>
+    <>
+      <CardHeader>
+        <CardTitle className="text-center text-2xl font-semibold">
+          Registration
+        </CardTitle>
+      </CardHeader>
       {isSuccess ? (
-        <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
-          <Check className="size-8 text-green-500" />
-          <p className="text-green-500">Success!</p>
-        </div>
+        <CardContent>
+          <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
+            <Check className="size-8 text-green-500" />
+            <p className="text-green-500">Success!</p>
+          </div>
+        </CardContent>
       ) : (
-        <>
+        <CardContent>
           {isSubmitting ? (
-            <div className="mt-10 flex h-full w-full flex-col items-center justify-center space-y-4">
+            <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
               <p>Submitting...</p>
             </div>
@@ -184,99 +196,97 @@ export default function RegisterPage() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                   as="div"
-                  className="col-start-1 row-start-1 w-full"
+                  className="grid col-start-1 row-start-1 w-full gap-7"
                 >
-                  <Field>
+                  <Controller
+                    name="email"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="register-form-email">
+                          Email
+                        </FieldLabel>
+                        <Input
+                          className="bg-form-input-background border-form-input-border border"
+                          type="email"
+                          {...field}
+                          id="register-form-email"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {checkingEmail && <Spinner />}
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Field className="flex flex-row items-start gap-4">
                     <Controller
-                      name="email"
+                      name="password"
                       control={form.control}
                       render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor="register-form-email">
-                            Email
+                          <FieldLabel htmlFor="register-form-password">
+                            Password
                           </FieldLabel>
                           <Input
                             className="bg-form-input-background border-form-input-border border"
-                            type="email"
+                            type="password"
                             {...field}
-                            id="register-form-email"
+                            id="register-form-password"
                             aria-invalid={fieldState.invalid}
                           />
-                          {checkingEmail && <Spinner />}
                           {fieldState.invalid && (
                             <FieldError errors={[fieldState.error]} />
                           )}
                         </Field>
                       )}
                     />
-                    <Field className="flex flex-row items-start gap-4">
-                      <Controller
-                        name="password"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="register-form-password">
-                              Password
-                            </FieldLabel>
-                            <Input
-                              className="bg-form-input-background border-form-input-border border"
-                              type="password"
-                              {...field}
-                              id="register-form-password"
-                              aria-invalid={fieldState.invalid}
-                            />
-                            {fieldState.invalid && (
-                              <FieldError errors={[fieldState.error]} />
-                            )}
-                          </Field>
-                        )}
-                      />
-                      <Controller
-                        name="confirmPassword"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                          <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel
-                              htmlFor="register-form-confirmPassword"
-                              className="whitespace-nowrap"
-                            >
-                              Confirm password
-                            </FieldLabel>
-                            <Input
-                              className="bg-form-input-background border-form-input-border border"
-                              type="password"
-                              {...field}
-                              id="register-form-confirmPassword"
-                              aria-invalid={fieldState.invalid}
-                            />
-                            {fieldState.invalid && (
-                              <FieldError errors={[fieldState.error]} />
-                            )}
-                          </Field>
-                        )}
-                      />
-                    </Field>
-                    <Field
-                      className="mt-8 flex items-center justify-center"
-                      orientation="horizontal"
+                    <Controller
+                      name="confirmPassword"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel
+                            htmlFor="register-form-confirmPassword"
+                            className="whitespace-nowrap"
+                          >
+                            Confirm password
+                          </FieldLabel>
+                          <Input
+                            className="bg-form-input-background border-form-input-border border"
+                            type="password"
+                            {...field}
+                            id="register-form-confirmPassword"
+                            aria-invalid={fieldState.invalid}
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </Field>
+                  <Field
+                    className="mt-8 flex items-center justify-center"
+                    orientation="horizontal"
+                  >
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => form.reset()}
                     >
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => form.reset()}
-                      >
-                        Reset
-                      </Button>
-                      <Button
-                        type="button"
-                        disabled={checkingEmail}
-                        onClick={() => {
-                          handleFirstStep();
-                        }}
-                      >
-                        Next
-                      </Button>
-                    </Field>
+                      Reset
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={checkingEmail}
+                      onClick={() => {
+                        handleFirstStep();
+                      }}
+                    >
+                      Next
+                    </Button>
                   </Field>
                 </Transition>
                 <Transition
@@ -288,9 +298,9 @@ export default function RegisterPage() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                   as="div"
-                  className="col-start-1 row-start-1 w-full"
+                  className="grid col-start-1 row-start-1 w-full"
                 >
-                  <Field>
+                  <Field className="gap-7">
                     <Controller
                       name="name"
                       control={form.control}
@@ -360,12 +370,13 @@ export default function RegisterPage() {
               </FieldGroup>
             </form>
           )}
-        </>
+        </CardContent>
       )}
-
-      <Button className="mt-10 pl-0" variant="link" disabled={isSubmitting}>
-        <Link href={"/auth/login"}>Already registered? Login</Link>
-      </Button>
-    </div>
+      <CardFooter className="self-center">
+        <Button variant="link" disabled={isSubmitting}>
+          <Link href={"/auth/login"}>Already registered? Login</Link>
+        </Button>
+      </CardFooter>
+    </>
   );
 }

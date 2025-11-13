@@ -1,4 +1,5 @@
 import AppLogo from "@/components/app-logo";
+import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 export default function AuthLayout({
@@ -8,11 +9,11 @@ export default function AuthLayout({
 }) {
   return (
     <main className="flex h-full w-full flex-col items-center justify-center">
-      <div className="bg-form-background flex h-fit w-[90dvw] flex-col space-y-7 rounded-md border p-10 md:w-96">
-        <AppLogo className="h-10 self-center" />
+      <Card className="w-[90dvw] md:w-96">
+        <AppLogo className="h-12 self-center m-2" />
         <Separator />
         {children}
-      </div>
+      </Card>
     </main>
   );
 }
