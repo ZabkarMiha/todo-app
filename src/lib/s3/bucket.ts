@@ -1,6 +1,8 @@
 "use server";
 
 import {
+  GetObjectCommand,
+  GetObjectCommandInput,
   PutObjectCommand,
   PutObjectCommandInput,
   PutObjectCommandOutput,
@@ -35,6 +37,38 @@ export async function uploadImageToS3(
     const response = await s3client.send(command);
 
     return { data: response };
+  } catch (e) {
+    if (e instanceof S3ServiceException) {
+      return {
+        error: { message: e.message, status: e.$response?.statusCode! },
+      };
+    }
+    return {
+      error: { message: "Failed to upload due to unknown error", status: 500 },
+    };
+  }
+}
+
+export async function getImageFromS3(
+  key: string,
+): Promise<ActionResponse<Blob>> {
+  try {
+    const input: GetObjectCommandInput = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    };
+    const command = new GetObjectCommand(input);
+    const response = await s3client.send(command);
+
+    const data = await response.Body?.transformToByteArray();
+
+    const arrayBuffer: ArrayBuffer = new Uint8Array(data!).buffer;
+
+    const blob = new Blob([arrayBuffer], {
+      type: "image",
+    });
+
+    return { data: blob };
   } catch (e) {
     if (e instanceof S3ServiceException) {
       return {

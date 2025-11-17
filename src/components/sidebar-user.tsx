@@ -9,13 +9,13 @@ import {
 import { authClient } from "@/lib/auth/auth-client";
 import { EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import UserAvatar from "./user-avatar";
 
 export default function SidebarUser() {
   const { data: session, isPending } = authClient.useSession();
@@ -46,10 +46,7 @@ export default function SidebarUser() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
-                  <Avatar>
-                    <AvatarImage src={session?.user.image || ""} />
-                    <AvatarFallback>{session?.user.username}</AvatarFallback>
-                  </Avatar>
+                  <UserAvatar imageString={session?.user.image} />
                   <span className="ml-2">{session?.user.username}</span>
                   <EllipsisVertical className="ml-auto size-4" />
                 </SidebarMenuButton>
