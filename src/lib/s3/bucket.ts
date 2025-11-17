@@ -9,6 +9,7 @@ import {
   S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ActionResponse } from "../types";
 
 const s3client = new S3Client({
@@ -51,32 +52,18 @@ export async function uploadImageToS3(
 
 export async function getImageFromS3(
   key: string,
-): Promise<ActionResponse<Blob>> {
+): Promise<ActionResponse<string>> {
   try {
     const input: GetObjectCommandInput = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
     };
     const command = new GetObjectCommand(input);
-    const response = await s3client.send(command);
 
-    const data = await response.Body?.transformToByteArray();
+    const url = await getSignedUrl(s3client, command, { expiresIn: 3600 });
 
-    const arrayBuffer: ArrayBuffer = new Uint8Array(data!).buffer;
-
-    const blob = new Blob([arrayBuffer], {
-      type: "image",
-    });
-
-    return { data: blob };
+    return { data: url };
   } catch (e) {
-    if (e instanceof S3ServiceException) {
-      return {
-        error: { message: e.message, status: e.$response?.statusCode! },
-      };
-    }
-    return {
-      error: { message: "Failed to upload due to unknown error", status: 500 },
-    };
+    return { error: { message: "Failed to get image URL", status: 500 } };
   }
 }

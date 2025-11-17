@@ -14,11 +14,11 @@ export default function UserAvatar({ imageString }: UserAvatarProps) {
   useEffect(() => {
     let isMounted = true;
 
-    if (!imageString) return;
+    if (!imageString || imageString === "") return;
 
     getImageFromS3(imageString).then((data) => {
       if (isMounted) {
-        setImage(URL.createObjectURL(data.data!));
+        setImage(data.data!);
       }
     });
 
