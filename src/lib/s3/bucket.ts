@@ -21,19 +21,39 @@ const s3client = new S3Client({
 });
 
 export async function uploadImageToS3(
-  file: File,
+  dataUri: string,
   username: string,
 ): Promise<ActionResponse<PutObjectCommandOutput>> {
   try {
-    const fileBuffer = Buffer.from(await file.bytes());
-    const extension = file.name.split(".")[1];
-    const finalKey = username + "-avatar." + extension;
+    const match = dataUri.match(/^data:(.+?);base64,(.+)$/);
+
+    if (!match) {
+      throw new Error("Invalid Data URL format");
+    }
+
+    const mimeType = match[1];
+    const base64Data = match[2];
+
+    const fileBuffer = Buffer.from(base64Data, "base64");
+
+    const extension = mimeType.split("/")[1];
+
+    if (!extension) {
+      throw new Error(
+        `Could not determine file extension from MIME type: ${mimeType}`,
+      );
+    }
+
+    const finalKey = `${username}-avatar.${extension}`;
 
     const input: PutObjectCommandInput = {
       Body: fileBuffer,
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: finalKey,
+      ContentType: mimeType,
+      ContentEncoding: "base64",
     };
+
     const command = new PutObjectCommand(input);
     const response = await s3client.send(command);
 
@@ -50,7 +70,7 @@ export async function uploadImageToS3(
   }
 }
 
-export async function getImageFromS3(
+export async function getImageUrlFromS3(
   key: string,
 ): Promise<ActionResponse<string>> {
   try {

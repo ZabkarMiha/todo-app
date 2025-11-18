@@ -1,6 +1,6 @@
 "use client";
 
-import { getImageFromS3 } from "@/lib/s3/bucket";
+import { getImageUrlFromS3 } from "@/lib/s3/bucket";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -16,7 +16,7 @@ export default function UserAvatar({ imageString }: UserAvatarProps) {
 
     if (!imageString || imageString === "") return;
 
-    getImageFromS3(imageString).then((data) => {
+    getImageUrlFromS3(imageString).then((data) => {
       if (isMounted) {
         setImage(data.data!);
       }

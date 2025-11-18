@@ -41,6 +41,7 @@
     "react-dom": "19.1.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.56.3",
+    "react-image-crop": "^11.0.10",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.6.0",
     "ws": "^8.18.3",
