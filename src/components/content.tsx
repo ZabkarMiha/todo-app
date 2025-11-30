@@ -47,7 +47,7 @@ export default function Content({
   );
 
   return (
-    <div className="mx-5 mt-2 mb-2 flex flex-col md:mx-10 xl:mx-20">
+    <div className="mx-5 mt-2 mb-2 flex flex-col sm:mx-10 xl:mx-20">
       <TasksList paginatedTasks={paginatedTasks} />
       <Dock
         filteredTasksLength={filteredTasks.length}

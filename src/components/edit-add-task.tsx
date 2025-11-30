@@ -102,7 +102,10 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
           {taskData ? (
             <PencilLine className="h-4 w-4" />
           ) : (
-            <Plus className="h-4 w-4" />
+            <div className="flex flex-row items-center justify-center gap-1">
+              <Plus className="h-4 w-4" />
+              <p className="hidden sm:block">Add task</p>
+            </div>
           )}
         </Button>
       </DialogTrigger>

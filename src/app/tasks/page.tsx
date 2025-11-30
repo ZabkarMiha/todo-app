@@ -34,8 +34,8 @@ export default async function Page(props: PageProps) {
 
   if (tasksCountResult.data === 0) {
     return (
-      <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center">
-        <h1 className="mb-4 text-5xl font-bold">Add your first task!</h1>
+      <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center gap-4">
+        <p className="text-4xl font-bold text-center">Add your first task!</p>
         <AddTask />
       </div>
     );

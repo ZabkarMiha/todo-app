@@ -32,9 +32,9 @@ export default function SortTasks({ className }: SortTasksProps) {
         variant="outline"
         size="icon"
         onClick={toggleSortOrder}
-        className="flex w-fit items-center justify-center space-x-0 p-2 xl:space-x-2 xl:p-4"
+        className="flex w-fit items-center justify-center space-x-0 p-2 sm:space-x-1 sm:p-2"
       >
-        <p className="hidden text-sm xl:block">Date</p>
+        <p className="hidden text-sm sm:block">Date</p>
         <Triangle
           className={cn(
             "h-6 w-6 transition-transform duration-200",

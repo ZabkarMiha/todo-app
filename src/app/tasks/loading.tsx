@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="mx-5 mt-2 mb-2 flex flex-col md:mx-10 xl:mx-20">
+    <div className="mx-5 mt-2 mb-2 flex flex-col sm:mx-10 xl:mx-20">
       <div className="hidden gap-5 2xl:mx-0 2xl:grid 2xl:grid-cols-4">
         {Array.from({ length: 8 }).map((_, index) => (
           <Skeleton key={index} className="h-[40dvh] w-full rounded-md" />
@@ -13,12 +13,12 @@ export default function Loading() {
           <Skeleton key={index} className="h-[40dvh] w-full rounded-md" />
         ))}
       </div>
-      <div className="hidden gap-5 md:grid md:grid-cols-2 xl:hidden">
+      <div className="hidden gap-5 sm:grid sm:grid-cols-2 xl:hidden">
         {Array.from({ length: 4 }).map((_, index) => (
           <Skeleton key={index} className="h-[40dvh] w-full rounded-md" />
         ))}
       </div>
-      <div className="grid grid-cols-1 gap-5 md:hidden">
+      <div className="grid grid-cols-1 gap-5 sm:hidden">
         {Array.from({ length: 2 }).map((_, index) => (
           <Skeleton key={index} className="h-[40dvh] w-full rounded-md" />
         ))}
