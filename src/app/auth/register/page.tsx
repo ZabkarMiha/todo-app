@@ -424,11 +424,9 @@ export default function RegisterPage() {
                       <Field>
                         <AvatarCropUpload
                           className="p-0"
-                          // Update state with the File object directly
                           onCropComplete={(file) => setAvatarFile(file)}
                         />
 
-                        {/* Check if File exists to enable Continue */}
                         {avatarFile && <Button type="submit">Submit</Button>}
                       </Field>
                       <Button
