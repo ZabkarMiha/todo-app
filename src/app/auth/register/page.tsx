@@ -404,7 +404,7 @@ export default function RegisterPage() {
                         Yes
                       </Button>
                       <Button type="submit" variant="outline">
-                        No, submit and contimue
+                        No, submit and continue
                       </Button>
                       <Button
                         type="button"

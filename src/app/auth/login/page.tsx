@@ -37,13 +37,16 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<z.infer<typeof loginFormSchema>> = async (
     values: z.infer<typeof loginFormSchema>,
   ) => {
+    setIsSubmitting(true);
+
     const authValues = {
       password: values.password,
       callbackURL: "/tasks",
     };
     const authCallbacks = {
-      onRequest: () => setIsSubmitting(true),
+      onRequest: () => {},
       onSuccess: () => {
+        setIsSubmitting(false);
         setIsSuccess(true);
         router.push("/tasks");
       },
