@@ -65,7 +65,8 @@ const getCroppedPngImage = async (
   const scaleX = imageSrc.naturalWidth / imageSrc.width;
   const scaleY = imageSrc.naturalHeight / imageSrc.height;
 
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
   canvas.width = pixelCrop.width;
   canvas.height = pixelCrop.height;
 
@@ -286,6 +287,7 @@ export const ImageCropApply = ({
   const { applyCrop } = useImageCrop();
 
   const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     await applyCrop();
     onClick?.(e);
   };
@@ -318,6 +320,7 @@ export const ImageCropReset = ({
   const { resetCrop } = useImageCrop();
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     resetCrop();
     onClick?.(e);
   };

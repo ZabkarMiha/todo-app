@@ -1,10 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dropzone,
   DropzoneContent,
@@ -16,99 +12,120 @@ import {
   ImageCropContent,
   ImageCropReset,
 } from "@/components/ui/shadcn-io/image-crop";
-import { authClient } from "@/lib/auth/auth-client";
-import { uploadImageToS3 } from "@/lib/s3/bucket";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useState } from "react";
 
-export default function AvatarCropUpload() {
+const dataURLtoFile = (dataurl: string, filename: string): File => {
+  const arr = dataurl.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+};
+
+type AvatarCropUploadProps = {
+  className?: string;
+  onCropComplete: (file: File | null) => void;
+};
+
+export default function AvatarCropUpload({
+  className,
+  onCropComplete,
+}: AvatarCropUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
-  const { data: session } = authClient.useSession();
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileDrop = (files: File[]) => {
     if (files.length > 0) {
       setSelectedFile(files[0]);
-      setCroppedImage(null);
+      setPreview(null);
+      onCropComplete(null);
     }
   };
 
-  const handleCropComplete = (croppedImage: string) => {
-    setCroppedImage(croppedImage);
+  const handleInternalCrop = (croppedUrl: string) => {
+    setPreview(croppedUrl);
+
+    if (selectedFile) {
+      const fileExtension = selectedFile.name.split(".").pop() || "png";
+      const fileName = `avatar.${fileExtension}`;
+      const fileObject = dataURLtoFile(croppedUrl, fileName);
+
+      onCropComplete(fileObject);
+    }
   };
 
-  const handleReset = () => {
+  const handleCancel = () => {
     setSelectedFile(null);
-    setCroppedImage(null);
-  };
-
-  const handleUpload = async () => {
-    console.log(croppedImage);
-
-    const data = await uploadImageToS3(croppedImage!, session?.user.username!);
-
-    console.log("Uploaded: ", data);
+    setPreview(null);
+    onCropComplete(null);
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>Image Upload and Crop</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center gap-6 p-6">
-        {!selectedFile && (
-          <div className="w-full">
-            <Dropzone
-              accept={{ "image/jpeg": [], "image/png": [], "image/webp": [] }}
-              maxFiles={1}
-              onDrop={handleFileDrop}
-            >
-              <DropzoneEmptyState />
-              <DropzoneContent />
-            </Dropzone>
-          </div>
-        )}
-        {!croppedImage && selectedFile && (
-          <div className="flex flex-col items-center gap-4 w-full">
-            <h3 className="text-lg font-medium">Crop Your Image</h3>
-            <ImageCrop
-              file={selectedFile}
-              onCrop={handleCropComplete}
-              aspect={1}
-              circularCrop={true}
-            >
-              <ImageCropContent className="max-w-md" />
-              <div className="flex items-center gap-2 mt-4">
-                <ImageCropApply asChild>
-                  <Button>Apply Crop</Button>
-                </ImageCropApply>
-                <ImageCropReset asChild>
-                  <Button variant="outline">Reset</Button>
-                </ImageCropReset>
-                <Button variant="ghost" onClick={handleReset}>
-                  Cancel
+    <div className={cn("flex flex-col items-center", className)}>
+      {!selectedFile && (
+        <Dropzone
+          accept={{ "image/jpeg": [], "image/png": [], "image/webp": [] }}
+          maxFiles={1}
+          onDrop={handleFileDrop}
+        >
+          <DropzoneEmptyState />
+          <DropzoneContent />
+        </Dropzone>
+      )}
+
+      {!preview && selectedFile && (
+        <div className="flex flex-col items-center gap-4 w-full">
+          <h3 className="text-lg font-medium">Crop Your Image</h3>
+          <ImageCrop
+            file={selectedFile}
+            onCrop={handleInternalCrop}
+            aspect={1}
+            circularCrop={true}
+          >
+            <ImageCropContent className="max-w-md" />
+            <div className="flex items-center gap-2 mt-4">
+              <ImageCropApply asChild>
+                <Button type="button">Apply Crop</Button>
+              </ImageCropApply>
+              <ImageCropReset asChild>
+                <Button variant="outline" type="button">
+                  Reset
                 </Button>
-              </div>
-            </ImageCrop>
-          </div>
-        )}
-        {croppedImage && selectedFile && (
-          <div className="flex flex-col items-center gap-4">
-            <h3 className="text-lg font-medium">Your Cropped Image:</h3>
-            <Image
-              src={croppedImage}
-              alt="Cropped preview"
-              width={200}
-              height={200}
-              className="rounded-lg border"
-            />
-            <Button variant="outline" onClick={handleReset}>
-              Upload Another Image
-            </Button>
-            <Button variant="outline" onClick={handleUpload}>
-              Use image
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              </ImageCropReset>
+              <Button variant="ghost" type="button" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </div>
+          </ImageCrop>
+        </div>
+      )}
+
+      {preview && selectedFile && (
+        <div className="flex flex-col items-center gap-4">
+          <h3 className="text-lg font-medium">Your Cropped Image:</h3>
+          <Image
+            src={preview}
+            alt="Cropped preview"
+            width={200}
+            height={200}
+            className="rounded-full border object-cover"
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            type="button"
+            onClick={handleCancel}
+          >
+            Change Image
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }

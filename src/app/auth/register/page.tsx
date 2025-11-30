@@ -1,12 +1,7 @@
 "use client";
 
+import AvatarCropUpload from "@/components/avatar-crop-upload";
 import { Button } from "@/components/ui/button";
-import {
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -18,13 +13,14 @@ import { Spinner } from "@/components/ui/spinner";
 import { isEmailAvailable } from "@/lib/actions/database";
 import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/form-schemas";
-import { Transition } from "@headlessui/react";
+import { uploadImageToS3 } from "@/lib/s3/bucket";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export default function RegisterPage() {
@@ -32,7 +28,13 @@ export default function RegisterPage() {
 
   const [emailStepComplete, setEmailStepComplete] = useState<boolean>(false);
   const [checkingEmail, setCheckingEmail] = useState<boolean>(false);
+  const [usernameStepComplete, setUsernameStepComplete] =
+    useState<boolean>(false);
   const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
+
+  const [showAvatarStep, setShowAvatarStep] = useState<boolean>(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
@@ -85,6 +87,7 @@ export default function RegisterPage() {
     username: string,
   ): Promise<boolean> => {
     setCheckingUsername(true);
+
     const { data, error } = await authClient.isUsernameAvailable({
       username: username,
     });
@@ -117,7 +120,7 @@ export default function RegisterPage() {
     return true;
   };
 
-  const handleFirstStep = async () => {
+  const handleEmailStep = async () => {
     const fieldsToTrigger = ["email", "password", "confirmPassword"] as const;
     await form.trigger(fieldsToTrigger);
     if (!form.getFieldState("email").error) {
@@ -130,11 +133,43 @@ export default function RegisterPage() {
     }
   };
 
+  const handleUsernameStep = async () => {
+    const fieldsToTrigger = ["name", "username"] as const;
+    await form.trigger(fieldsToTrigger);
+    if (!form.getFieldState("username").error) {
+      await handleAvailableUsername(form.getValues("username"));
+    }
+    const fieldStates = fieldsToTrigger.map((f) => form.getFieldState(f));
+    const hasErrors = fieldStates.some((s) => !!s.error);
+    if (!hasErrors) {
+      setTimeout(() => setUsernameStepComplete(true), 10);
+    }
+  };
+
   const onSubmit: SubmitHandler<z.infer<typeof registerFormSchema>> = async (
-    values: z.infer<typeof registerFormSchema>,
+    values,
   ) => {
-    const usernameAvailable = await handleAvailableUsername(values.username);
-    if (!usernameAvailable) return;
+    setIsSubmitting(true);
+
+    let imageKey: string | undefined = undefined;
+
+    try {
+      if (avatarFile) {
+        const filenamePrefix = values.username || "user-avatar";
+
+        const response = await uploadImageToS3(avatarFile, filenamePrefix);
+
+        if (response.data?.key) {
+          imageKey = response.data.key;
+        }
+      }
+    } catch (error) {
+      console.error(
+        "Avatar upload failed, continuing with registration:",
+        error,
+      );
+      toast.error("Could not upload avatar.");
+    }
 
     const { data, error } = await authClient.signUp.email(
       {
@@ -142,17 +177,18 @@ export default function RegisterPage() {
         password: values.password,
         name: values.name,
         username: values.username,
+        image: imageKey,
         callbackURL: "/tasks",
       },
       {
-        onRequest: (ctx) => {
-          setIsSubmitting(true);
-        },
-        onSuccess: (ctx) => {
+        onRequest: () => {},
+        onSuccess: () => {
+          setIsSubmitting(false);
           setIsSuccess(true);
           router.push("/tasks");
         },
         onError: (ctx) => {
+          console.error(ctx.error.message);
           setIsSubmitting(false);
         },
       },
@@ -161,43 +197,34 @@ export default function RegisterPage() {
 
   return (
     <>
-      <CardHeader>
-        <CardTitle className="text-center text-2xl font-semibold">
-          Registration
-        </CardTitle>
-      </CardHeader>
-      {isSuccess ? (
-        <CardContent>
-          <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
-            <Check className="size-8 text-green-500" />
-            <p className="text-green-500">Success!</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent>
-          {isSubmitting ? (
-            <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
-              <Spinner className="size-8" />
-              <p>Submitting...</p>
-            </div>
-          ) : (
-            <form
-              id="register-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="mt-8"
-            >
-              <FieldGroup className="grid">
-                <Transition
-                  show={!emailStepComplete}
-                  enter="transition-opacity duration-500 ease-in-out"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="transition-opacity duration-500 ease-in-out"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  as="div"
-                  className="grid col-start-1 row-start-1 w-full gap-7"
-                >
+      <p className="text-center text-3xl font-semibold">Registration</p>
+
+      {isSuccess && (
+        <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
+          <Check className="size-8 text-green-500" />
+          <p className="text-green-500">Success!</p>
+        </div>
+      )}
+
+      {isSubmitting && (
+        <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
+          <Spinner className="size-8" />
+          <p>Submitting...</p>
+        </div>
+      )}
+
+      {!isSuccess && !isSubmitting && (
+        <div className="flex-1 content-center">
+          <form
+            id="register-form"
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="h-full"
+          >
+            <FieldGroup className="grid grid-cols-1 grid-rows-1 h-full">
+              <div
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${!emailStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+              >
+                <Field className="gap-7 h-full justify-center">
                   <Controller
                     name="email"
                     control={form.control}
@@ -268,7 +295,7 @@ export default function RegisterPage() {
                     />
                   </Field>
                   <Field
-                    className="mt-8 flex items-center justify-center"
+                    className="flex items-center justify-center"
                     orientation="horizontal"
                   >
                     <Button
@@ -282,101 +309,155 @@ export default function RegisterPage() {
                       type="button"
                       disabled={checkingEmail}
                       onClick={() => {
-                        handleFirstStep();
+                        handleEmailStep();
                       }}
                     >
                       Next
                     </Button>
                   </Field>
-                </Transition>
-                <Transition
-                  show={emailStepComplete}
-                  enter="transition-opacity duration-500 ease-in-out"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="transition-opacity duration-500 ease-in-out"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                  as="div"
-                  className="grid col-start-1 row-start-1 w-full"
-                >
-                  <Field className="gap-7">
-                    <Controller
-                      name="name"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor="register-form-name">
-                            Name
-                          </FieldLabel>
-                          <Input
-                            className="bg-form-input-background border-form-input-border border"
-                            {...field}
-                            id="register-form-name"
-                            aria-invalid={fieldState.invalid}
-                          />
-                          {fieldState.invalid && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
-                      )}
-                    />
-                    <Controller
-                      name="username"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor="register-form-username">
-                            Username
-                          </FieldLabel>
-                          <Input
-                            className="bg-form-input-background border-form-input-border border"
-                            {...field}
-                            id="register-form-username"
-                            aria-invalid={fieldState.invalid}
-                          />
-                          {checkingUsername && <Spinner />}
-                          {fieldState.invalid && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
-                      )}
-                    />
-                    <Field
-                      className="mt-8 flex items-center justify-center"
-                      orientation="horizontal"
+                </Field>
+              </div>
+              <div
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${emailStepComplete && !usernameStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+              >
+                <Field className="gap-7 h-full justify-center">
+                  <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="register-form-name">
+                          Name
+                        </FieldLabel>
+                        <Input
+                          className="bg-form-input-background border-form-input-border border"
+                          {...field}
+                          id="register-form-name"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="username"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="register-form-username">
+                          Username
+                        </FieldLabel>
+                        <Input
+                          className="bg-form-input-background border-form-input-border border"
+                          {...field}
+                          id="register-form-username"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        {checkingUsername && <Spinner />}
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Field
+                    className="flex items-center justify-center"
+                    orientation="horizontal"
+                  >
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={checkingUsername}
+                      onClick={() =>
+                        setTimeout(() => setEmailStepComplete(false), 10)
+                      }
                     >
+                      Back
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={checkingUsername}
+                      onClick={() => {
+                        handleUsernameStep();
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </Field>
+                </Field>
+              </div>
+              <div
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${usernameStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+              >
+                <Field className="gap-7 h-full justify-center">
+                  {!showAvatarStep && (
+                    <Field className="flex items-center justify-center gap-7">
+                      <span className="text-center">
+                        Do you wish to add a profile picture?
+                      </span>
                       <Button
                         type="button"
-                        variant="outline"
-                        disabled={checkingUsername}
+                        onClick={() => setShowAvatarStep(true)}
+                      >
+                        Yes
+                      </Button>
+                      <Button type="submit" variant="outline">
+                        No, submit and contimue
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="secondary"
                         onClick={() =>
-                          setTimeout(() => setEmailStepComplete(false), 10)
+                          setTimeout(() => {
+                            setUsernameStepComplete(false);
+                          }, 10)
                         }
                       >
                         Back
                       </Button>
+                    </Field>
+                  )}
+                  {showAvatarStep && (
+                    <Field className="gap-7">
+                      <Field>
+                        <AvatarCropUpload
+                          className="p-0"
+                          // Update state with the File object directly
+                          onCropComplete={(file) => setAvatarFile(file)}
+                        />
+
+                        {/* Check if File exists to enable Continue */}
+                        {avatarFile && <Button type="submit">Submit</Button>}
+                      </Field>
                       <Button
-                        type="submit"
-                        form="register-form"
-                        disabled={checkingUsername}
-                        className="self-center"
+                        type="button"
+                        variant="secondary"
+                        className=""
+                        onClick={() =>
+                          setTimeout(() => {
+                            setShowAvatarStep(false);
+                            setAvatarFile(null);
+                          }, 10)
+                        }
                       >
-                        Submit
+                        Back
                       </Button>
                     </Field>
-                  </Field>
-                </Transition>
-              </FieldGroup>
-            </form>
-          )}
-        </CardContent>
+                  )}
+                </Field>
+              </div>
+            </FieldGroup>
+          </form>
+        </div>
       )}
-      <CardFooter className="self-center">
+
+      <div className="self-center mt-auto">
         <Button variant="link" disabled={isSubmitting}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>
-      </CardFooter>
+      </div>
     </>
   );
 }
