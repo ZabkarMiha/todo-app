@@ -179,7 +179,7 @@ export default function LoginPage() {
       )}
 
       <div className="self-center mt-auto">
-        <Button variant="link" disabled={isSubmitting}>
+        <Button variant="link" disabled={isSubmitting || isSuccess}>
           <Link href={"/auth/register"}>Don't have an account? Register</Link>
         </Button>
       </div>

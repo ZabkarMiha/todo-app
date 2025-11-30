@@ -452,7 +452,7 @@ export default function RegisterPage() {
       )}
 
       <div className="self-center mt-auto">
-        <Button variant="link" disabled={isSubmitting}>
+        <Button variant="link" disabled={isSubmitting || isSuccess}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>
       </div>
