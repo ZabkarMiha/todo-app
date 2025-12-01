@@ -8,10 +8,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { SidebarMenuButton } from "./ui/sidebar";
+import { SidebarMenuButton, useSidebar } from "./ui/sidebar";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();
+  const { open } = useSidebar();
 
   return (
     <DropdownMenu>
@@ -24,8 +25,10 @@ export function ThemeToggle() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        side="top"
+        side={`${open ? "top" : "right"}`}
         className="w-(--radix-popper-anchor-width)"
+        align="end"
+        sideOffset={open ? 5 : 15}
       >
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
