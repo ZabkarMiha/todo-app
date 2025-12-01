@@ -33,7 +33,7 @@ export default function Search({ className }: SearchProps) {
         placeholder="Search tasks..."
         onChange={(e) => handleSearch(e.target.value)}
         className="pl-10 text-base"
-        value={searchParams.get("query") || ""}
+        defaultValue={searchParams.get("query") || ""}
       />
     </div>
   );
