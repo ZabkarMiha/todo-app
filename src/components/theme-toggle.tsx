@@ -12,7 +12,7 @@ import { SidebarMenuButton, useSidebar } from "./ui/sidebar";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();
-  const { open } = useSidebar();
+  const { open, isMobile } = useSidebar();
 
   return (
     <DropdownMenu>
@@ -25,10 +25,10 @@ export function ThemeToggle() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        side={`${open ? "top" : "right"}`}
+        side={`${isMobile ? "top" : open ? "top" : "right"}`}
         className="w-(--radix-popper-anchor-width)"
         align="end"
-        sideOffset={open ? 5 : 15}
+        sideOffset={isMobile ? 5 : open ? 5 : 15}
       >
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light

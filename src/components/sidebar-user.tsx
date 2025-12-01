@@ -21,7 +21,7 @@ import UserAvatar from "./user-avatar";
 export default function SidebarUser() {
   const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
-  const { open } = useSidebar();
+  const { open, isMobile } = useSidebar();
 
   const handleUserSignOut = async () => {
     await authClient.signOut({
@@ -53,10 +53,10 @@ export default function SidebarUser() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                side={`${open ? "top" : "right"}`}
+                side={`${isMobile ? "top" : open ? "top" : "right"}`}
                 className="w-(--radix-popper-anchor-width)"
                 align="end"
-                sideOffset={open ? 5 : 15}
+                sideOffset={isMobile ? 5 : open ? 5 : 15}
               >
                 <DropdownMenuItem>
                   <span>Account</span>
