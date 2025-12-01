@@ -7,7 +7,7 @@ export default function TopNav() {
         "sticky top-0 flex w-full flex-row items-center pt-5 pr-7 pb-2 pl-7 backdrop-blur-xl"
       }
     >
-      <SidebarTrigger className="size-6" />
+      <SidebarTrigger className="size-6 block md:hidden" />
     </div>
   );
 }
