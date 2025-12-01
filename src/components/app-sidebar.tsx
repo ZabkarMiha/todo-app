@@ -8,6 +8,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import SidebarUser from "./sidebar-user";
 import { ThemeToggle } from "./theme-toggle";
@@ -15,7 +16,9 @@ import { ThemeToggle } from "./theme-toggle";
 export default function AppSidebar() {
   return (
     <Sidebar variant="floating" collapsible="icon">
-      <SidebarHeader></SidebarHeader>
+      <SidebarHeader className="">
+        <SidebarTrigger className={`size-6 hidden md:block ml-auto mr-1`} />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroup />
