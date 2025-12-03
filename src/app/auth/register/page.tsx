@@ -159,8 +159,8 @@ export default function RegisterPage() {
 
         const response = await uploadImageToS3(avatarFile, filenamePrefix);
 
-        if (response.data?.key) {
-          imageKey = response.data.key;
+        if (response.data?.url) {
+          imageKey = response.data.url;
         }
       }
     } catch (error) {

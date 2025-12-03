@@ -70,7 +70,8 @@ const passwordSchema = z
     }
   });
 
-export const registerFormSchema = userFormSchema.extend({
+export const registerFormSchema = userFormSchema
+  .extend({
     password: passwordSchema,
     confirmPassword: z.string(),
     name: z.string().min(2, {

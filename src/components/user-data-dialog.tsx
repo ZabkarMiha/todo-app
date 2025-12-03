@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -61,65 +60,69 @@ export default function UserDataDialog() {
 
         <div className="flex flex-col gap-7 md:flex-row">
           <div className="flex flex-row gap-4 justify-center items-center md:flex-col">
-            <UserAvatar className="size-auto" imageString={user?.image}></UserAvatar>
+            <UserAvatar
+              className="size-auto"
+              imageString={user?.image}
+            ></UserAvatar>
             <Button variant="ghost">Change image</Button>
           </div>
-          
+
           <form
-          id="edit-user-form"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 flex-1"
-        >
-          <FieldGroup>
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="edit-user-form-email">Email</FieldLabel>
-                  <Input
-                    {...field}
-                    id="edit-user-form-email"
-                    aria-invalid={fieldState.invalid}
-                    disabled={edit}
-                    className="disabled:opacity-100 disabled:border-input/30 disabled:bg-input/30"
-                  />
-                  {/* <FieldDescription>Your email</FieldDescription> */}
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="username"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="edit-user-form-username">
-                    Username
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="edit-user-form-username"
-                    aria-invalid={fieldState.invalid}
-                    disabled={edit}
-                    className="disabled:opacity-100 disabled:border-input/30 disabled:bg-input/30"
-                  />
-                  {/* <FieldDescription>
+            id="edit-user-form"
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 flex-1"
+          >
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-user-form-email">
+                      Email
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-user-form-email"
+                      aria-invalid={fieldState.invalid}
+                      disabled={edit}
+                      className="disabled:opacity-100 disabled:border-input/30 disabled:bg-input/30"
+                    />
+                    {/* <FieldDescription>Your email</FieldDescription> */}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="username"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-user-form-username">
+                      Username
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-user-form-username"
+                      aria-invalid={fieldState.invalid}
+                      disabled={edit}
+                      className="disabled:opacity-100 disabled:border-input/30 disabled:bg-input/30"
+                    />
+                    {/* <FieldDescription>
                     Your username
                   </FieldDescription> */}
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </form>
-
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
         </div>
-        
+
         <Field orientation="horizontal" className="justify-end">
           {edit ? (
             <Button onClick={() => isEdit(false)}>Edit</Button>

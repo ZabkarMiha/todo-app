@@ -22,7 +22,7 @@ const s3client = new S3Client({
 
 type uploadImageToS3Return = {
   putObjectCommandOutput: PutObjectCommandOutput;
-  key: string;
+  url: string;
 };
 
 export async function uploadImageToS3(
@@ -44,7 +44,9 @@ export async function uploadImageToS3(
     const command = new PutObjectCommand(input);
     const response = await s3client.send(command);
 
-    return { data: { putObjectCommandOutput: response, key: finalKey } };
+    const url = `https://${process.env.CLOUDFRONT_DOMAIN_NAME}/${finalKey}`;
+
+    return { data: { putObjectCommandOutput: response, url: url } };
   } catch (e) {
     if (e instanceof S3ServiceException) {
       return {
@@ -59,17 +61,20 @@ export async function uploadImageToS3(
 
 export async function getImageUrlFromS3(
   key: string,
-): Promise<ActionResponse<string>> {
+): Promise<ActionResponse<{ imageUrl: string; expiry: number }>> {
   try {
     const input: GetObjectCommandInput = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: key,
     };
+
+    const expiresIn = 3600;
+
     const command = new GetObjectCommand(input);
 
-    const url = await getSignedUrl(s3client, command, { expiresIn: 3600 });
+    const url = await getSignedUrl(s3client, command, { expiresIn: expiresIn });
 
-    return { data: url };
+    return { data: { imageUrl: url, expiry: expiresIn } };
   } catch (e) {
     return { error: { message: "Failed to get image URL", status: 500 } };
   }
