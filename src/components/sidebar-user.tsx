@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
+import UserDataDialog from "./user-data-dialog";
 
 export default function SidebarUser() {
   const { data: session, isPending } = authClient.useSession();
@@ -58,8 +59,8 @@ export default function SidebarUser() {
                 align="end"
                 sideOffset={isMobile ? 5 : open ? 5 : 15}
               >
-                <DropdownMenuItem>
-                  <span>Account</span>
+                <DropdownMenuItem asChild>
+                  <UserDataDialog />
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
