@@ -155,7 +155,7 @@ export default function RegisterPage() {
 
     try {
       if (avatarFile) {
-        const filenamePrefix = values.username || "user-avatar";
+        const filenamePrefix = values.username.toLowerCase() || "user-avatar";
 
         const response = await uploadImageToS3(avatarFile, filenamePrefix);
 

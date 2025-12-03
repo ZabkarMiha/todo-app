@@ -29,6 +29,13 @@
       "when": 1760735288999,
       "tag": "0003_military_colleen_wing",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1764718825269,
+      "tag": "0004_first_shadowcat",
+      "breakpoints": true
     }
   ]
 }
