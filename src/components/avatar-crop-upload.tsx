@@ -117,13 +117,42 @@ export default function AvatarCropUpload({
     }, 2000);
   };
 
-  const handleCancel = () => {
-    setSelectedFile(null);
-    setPreview(null);
-    setAvatarFile(null);
+  const handleAvatarDeletion = async () => {
+    setIsSubmitting(true);
+
+    if (imageString) {
+      const url = new URL(imageString);
+      const result = url.pathname.substring(1);
+
+      await deleteImageFromS3(result);
+    }
+
+    const { data, error } = await authClient.updateUser({ image: null });
+
+    if (error) {
+      toast.error(error.message);
+      setIsSubmitting(false);
+      return;
+    }
 
     setIsSubmitting(false);
-    setIsSuccess(false);
+    setIsSuccess(true);
+
+    setTimeout(() => {
+      handleCancel();
+      onOpenChange?.(false);
+    }, 2000);
+  };
+
+  const handleCancel = async () => {
+    setTimeout(() => {
+      setSelectedFile(null);
+      setPreview(null);
+      setAvatarFile(null);
+
+      setIsSubmitting(false);
+      setIsSuccess(false);
+    }, 100);
   };
 
   return (
@@ -136,7 +165,14 @@ export default function AvatarCropUpload({
         onOpenChange?.(open);
       }}
     >
-      <DialogContent>
+      <DialogContent
+        onInteractOutside={(e) => {
+          if (isSubmitting || isSuccess) {
+            e.preventDefault();
+          }
+        }}
+        showCloseButton={!isSubmitting && !isSuccess}
+      >
         <DialogHeader>
           <DialogTitle>
             {!selectedFile
@@ -163,15 +199,26 @@ export default function AvatarCropUpload({
             </div>
           )}
 
-          {!selectedFile && (
-            <Dropzone
-              accept={{ "image/jpeg": [], "image/png": [], "image/webp": [] }}
-              maxFiles={1}
-              onDrop={handleFileDrop}
-            >
-              <DropzoneEmptyState />
-              <DropzoneContent />
-            </Dropzone>
+          {!selectedFile && !isSubmitting && !isSuccess && (
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Dropzone
+                accept={{ "image/jpeg": [], "image/png": [], "image/webp": [] }}
+                maxFiles={1}
+                onDrop={handleFileDrop}
+              >
+                <DropzoneEmptyState />
+                <DropzoneContent />
+              </Dropzone>
+              <span>or</span>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  handleAvatarDeletion();
+                }}
+              >
+                Remove your profile picture
+              </Button>
+            </div>
           )}
 
           {!preview && selectedFile && (
