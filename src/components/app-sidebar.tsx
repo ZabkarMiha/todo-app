@@ -8,6 +8,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import SidebarUser from "./sidebar-user";
@@ -31,6 +32,7 @@ export default function AppSidebar() {
         </SidebarMenu>
         <SidebarUser />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
