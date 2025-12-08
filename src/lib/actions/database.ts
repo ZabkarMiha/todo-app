@@ -114,12 +114,12 @@ export async function isEmailAvailable(
 ): Promise<ActionResponse<{ available: boolean }>> {
   let available: boolean = false;
   try {
-    const isEmailAvailable = await db
+    const data = await db
       .select()
       .from(user)
       .where(eq(user.email, email.toLowerCase()))
       .limit(1);
-    if (isEmailAvailable.length === 0) {
+    if (data.length === 0) {
       available = true;
     }
     return { data: { available } };

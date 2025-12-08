@@ -6,6 +6,9 @@ import {
   PutObjectCommand,
   PutObjectCommandInput,
   PutObjectCommandOutput,
+  DeleteObjectCommand,
+  DeleteObjectCommandInput,
+  DeleteObjectCommandOutput,
   S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
@@ -20,6 +23,26 @@ const s3client = new S3Client({
   },
 });
 
+export async function deleteImageFromS3(
+  key: string,
+): Promise<ActionResponse<DeleteObjectCommandOutput>> {
+  try {
+    const input: DeleteObjectCommandInput = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    };
+
+    const command = new DeleteObjectCommand(input);
+    const response = await s3client.send(command);
+
+    return { data: response };
+  } catch {
+    return {
+      error: { message: "Failed to delete due to unknown error", status: 500 },
+    };
+  }
+}
+
 type uploadImageToS3Return = {
   putObjectCommandOutput: PutObjectCommandOutput;
   url: string;
@@ -27,12 +50,12 @@ type uploadImageToS3Return = {
 
 export async function uploadImageToS3(
   file: File,
-  username: string,
+  userId: string,
 ): Promise<ActionResponse<uploadImageToS3Return>> {
   try {
     const fileBuffer = Buffer.from(await file.bytes());
     const extension = file.name.split(".")[1];
-    const finalKey = username + "-avatar." + extension;
+    const finalKey = userId + "-" + Date.now() + "-avatar." + extension;
 
     const input: PutObjectCommandInput = {
       Body: fileBuffer,

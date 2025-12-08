@@ -1,6 +1,5 @@
 "use client";
 
-import AvatarCropUpload from "@/components/avatar-crop-upload";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -10,17 +9,15 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import UserAvatar from "@/components/user-avatar";
 import { isEmailAvailable } from "@/lib/actions/database";
 import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/form-schemas";
-import { uploadImageToS3 } from "@/lib/s3/bucket";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 export default function RegisterPage() {
@@ -28,15 +25,15 @@ export default function RegisterPage() {
 
   const [emailStepComplete, setEmailStepComplete] = useState<boolean>(false);
   const [checkingEmail, setCheckingEmail] = useState<boolean>(false);
-  const [usernameStepComplete, setUsernameStepComplete] =
-    useState<boolean>(false);
-  const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
 
-  const [showAvatarStep, setShowAvatarStep] = useState<boolean>(false);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+  const [showAvatarStep, setShowAvatarStep] = useState<boolean>(false);
+
+  const [loading, isLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -133,51 +130,20 @@ export default function RegisterPage() {
     }
   };
 
-  const handleUsernameStep = async () => {
-    const fieldsToTrigger = ["name", "username"] as const;
-    await form.trigger(fieldsToTrigger);
-    if (!form.getFieldState("username").error) {
-      await handleAvailableUsername(form.getValues("username"));
-    }
-    const fieldStates = fieldsToTrigger.map((f) => form.getFieldState(f));
-    const hasErrors = fieldStates.some((s) => !!s.error);
-    if (!hasErrors) {
-      setTimeout(() => setUsernameStepComplete(true), 10);
-    }
-  };
-
   const onSubmit: SubmitHandler<z.infer<typeof registerFormSchema>> = async (
     values,
   ) => {
+    const usernameAvailable = await handleAvailableUsername(values.username);
+    if (!usernameAvailable) return;
+
     setIsSubmitting(true);
 
-    let imageKey: string | undefined = undefined;
-
-    try {
-      if (avatarFile) {
-        const filenamePrefix = values.username.toLowerCase() || "user-avatar";
-
-        const response = await uploadImageToS3(avatarFile, filenamePrefix);
-
-        if (response.data?.url) {
-          imageKey = response.data.url;
-        }
-      }
-    } catch (error) {
-      console.error(
-        "Avatar upload failed, continuing with registration:",
-        error,
-      );
-      toast.error("Could not upload avatar.");
-    }
-
-    const { data, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email: values.email,
         password: values.password,
         name: values.name,
         username: values.username,
-        image: imageKey,
         callbackURL: "/tasks",
       },
       {
@@ -185,7 +151,6 @@ export default function RegisterPage() {
         onSuccess: () => {
           setIsSubmitting(false);
           setIsSuccess(true);
-          router.push("/tasks");
         },
         onError: (ctx) => {
           console.error(ctx.error.message);
@@ -198,13 +163,6 @@ export default function RegisterPage() {
   return (
     <>
       <p className="text-center text-3xl font-semibold">Registration</p>
-
-      {isSuccess && (
-        <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
-          <Check className="size-8 text-green-500" />
-          <p className="text-green-500">Success!</p>
-        </div>
-      )}
 
       {isSubmitting && (
         <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
@@ -318,7 +276,7 @@ export default function RegisterPage() {
                 </Field>
               </div>
               <div
-                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${emailStepComplete && !usernameStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${emailStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
               >
                 <Field className="gap-7 h-full justify-center">
                   <Controller
@@ -377,73 +335,14 @@ export default function RegisterPage() {
                       Back
                     </Button>
                     <Button
-                      type="button"
+                      type="submit"
+                      form="register-form"
                       disabled={checkingUsername}
-                      onClick={() => {
-                        handleUsernameStep();
-                      }}
+                      className="self-center"
                     >
-                      Next
+                      Submit
                     </Button>
                   </Field>
-                </Field>
-              </div>
-              <div
-                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${usernameStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-              >
-                <Field className="gap-7 h-full justify-center">
-                  {!showAvatarStep && (
-                    <Field className="flex items-center justify-center gap-7">
-                      <span className="text-center">
-                        Do you wish to add a profile picture?
-                      </span>
-                      <Button
-                        type="button"
-                        onClick={() => setShowAvatarStep(true)}
-                      >
-                        Yes
-                      </Button>
-                      <Button type="submit" variant="outline">
-                        No, submit and continue
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={() =>
-                          setTimeout(() => {
-                            setUsernameStepComplete(false);
-                          }, 10)
-                        }
-                      >
-                        Back
-                      </Button>
-                    </Field>
-                  )}
-                  {showAvatarStep && (
-                    <Field className="gap-7">
-                      <Field>
-                        <AvatarCropUpload
-                          className="p-0"
-                          onCropComplete={(file) => setAvatarFile(file)}
-                        />
-
-                        {avatarFile && <Button type="submit">Submit</Button>}
-                      </Field>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        className=""
-                        onClick={() =>
-                          setTimeout(() => {
-                            setShowAvatarStep(false);
-                            setAvatarFile(null);
-                          }, 10)
-                        }
-                      >
-                        Back
-                      </Button>
-                    </Field>
-                  )}
                 </Field>
               </div>
             </FieldGroup>
@@ -451,8 +350,76 @@ export default function RegisterPage() {
         </div>
       )}
 
+      {isSuccess && (
+        <Field className="gap-7 h-full justify-center">
+          {loading && (
+            <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
+              <Spinner className="size-8" />
+              <p>Loading...</p>
+            </div>
+          )}
+
+          {!showAvatarStep && !loading && (
+            <Field className="flex items-center justify-center gap-7">
+              <span className="text-center">
+                Do you wish to add a profile picture?
+              </span>
+              <Button
+                onClick={() => {
+                  setShowAvatarStep(true);
+                }}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  isLoading(true);
+                  router.push("/tasks");
+                }}
+              >
+                No, continue
+              </Button>
+            </Field>
+          )}
+
+          {showAvatarStep && !loading && (
+            <div className="flex flex-col gap-7 h-full items-center justify-center">
+              <div className="flex h-[35%] aspect-square items-center justify-center">
+                <UserAvatar className="size-full" editable={true} />
+              </div>
+              <Field
+                className="flex items-center justify-center"
+                orientation="horizontal"
+              >
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className=""
+                  onClick={() =>
+                    setTimeout(() => {
+                      setShowAvatarStep(false);
+                    }, 10)
+                  }
+                >
+                  Back
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    router.push("/tasks");
+                  }}
+                >
+                  Submit
+                </Button>
+              </Field>
+            </div>
+          )}
+        </Field>
+      )}
+
       <div className="self-center mt-auto">
-        <Button variant="link" disabled={isSubmitting || isSuccess}>
+        <Button variant="link" disabled={isSubmitting || !isSuccess}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>
       </div>
