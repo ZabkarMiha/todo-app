@@ -8,11 +8,11 @@ export default function AuthLayout({
 }) {
   return (
     <main className="flex h-full w-full items-center justify-center">
-      <Card className="w-[90dvw] h-[90dvh] md:w-2xl md:max-h-160 md:min-h-20 md:flex-row md:px-6 md:mx-4 overflow-auto">
-        <CardHeader className="md:w-[35%] grid-rows-1">
+      <Card className="h-[90dvh] w-[90dvw] overflow-auto md:mx-4 md:max-h-160 md:min-h-20 md:w-2xl md:flex-row md:px-6">
+        <CardHeader className="grid-rows-1 md:w-[35%]">
           <AppLogo className="self-center justify-self-center" />
         </CardHeader>
-        <CardContent className="flex flex-col flex-1">{children}</CardContent>
+        <CardContent className="flex flex-1 flex-col">{children}</CardContent>
       </Card>
     </main>
   );

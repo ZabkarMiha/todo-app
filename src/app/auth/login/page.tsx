@@ -112,7 +112,7 @@ export default function LoginPage() {
             className="h-full py-3"
           >
             <FieldGroup className="h-full">
-              <Field className="gap-7 h-full justify-center">
+              <Field className="h-full justify-center gap-7">
                 <Controller
                   name="emailOrUsername"
                   control={form.control}
@@ -178,7 +178,7 @@ export default function LoginPage() {
         </div>
       )}
 
-      <div className="self-center mt-auto">
+      <div className="mt-auto self-center">
         <Button variant="link" disabled={isSubmitting || isSuccess}>
           <Link href={"/auth/register"}>Don't have an account? Register</Link>
         </Button>

@@ -17,7 +17,7 @@ export default function AppSidebar() {
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader className="">
-        <SidebarTrigger className={`size-6 hidden md:block ml-auto mr-1`} />
+        <SidebarTrigger className={`mr-1 ml-auto hidden size-6 md:block`} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />

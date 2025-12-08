@@ -15,8 +15,8 @@ export default function Dock({
   currentPage,
 }: DockProps) {
   return (
-    <div className="sticky bottom-4 mx-2 h-fit rounded-md p-2 backdrop-blur-xl outline-1 outline-border sm:mx-0 sm:self-center">
-      <div className="flex flex-col space-y-2 p-1 ">
+    <div className="outline-border sticky bottom-4 mx-2 h-fit rounded-md p-2 outline-1 backdrop-blur-xl sm:mx-0 sm:self-center">
+      <div className="flex flex-col space-y-2 p-1">
         <div className="flex flex-row space-x-2 self-center">
           <div>
             {filteredTasksLength > tasksPerPage && (

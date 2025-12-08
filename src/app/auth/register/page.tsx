@@ -178,11 +178,11 @@ export default function RegisterPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="h-full"
           >
-            <FieldGroup className="grid grid-cols-1 grid-rows-1 h-full">
+            <FieldGroup className="grid h-full grid-cols-1 grid-rows-1">
               <div
-                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${!emailStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${!emailStepComplete ? "opacity-100" : "pointer-events-none opacity-0"}`}
               >
-                <Field className="gap-7 h-full justify-center">
+                <Field className="h-full justify-center gap-7">
                   <Controller
                     name="email"
                     control={form.control}
@@ -276,9 +276,9 @@ export default function RegisterPage() {
                 </Field>
               </div>
               <div
-                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${emailStepComplete ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`col-start-1 row-start-1 h-full w-full transition-opacity duration-500 ease-in-out ${emailStepComplete ? "opacity-100" : "pointer-events-none opacity-0"}`}
               >
-                <Field className="gap-7 h-full justify-center">
+                <Field className="h-full justify-center gap-7">
                   <Controller
                     name="name"
                     control={form.control}
@@ -351,7 +351,7 @@ export default function RegisterPage() {
       )}
 
       {isSuccess && (
-        <Field className="gap-7 h-full justify-center">
+        <Field className="h-full justify-center gap-7">
           {loading && (
             <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
@@ -384,8 +384,8 @@ export default function RegisterPage() {
           )}
 
           {showAvatarStep && !loading && (
-            <div className="flex flex-col gap-7 h-full items-center justify-center">
-              <div className="flex h-[35%] aspect-square items-center justify-center">
+            <div className="flex h-full flex-col items-center justify-center gap-7">
+              <div className="flex aspect-square h-[35%] items-center justify-center">
                 <UserAvatar className="size-full" editable={true} />
               </div>
               <Field
@@ -418,7 +418,7 @@ export default function RegisterPage() {
         </Field>
       )}
 
-      <div className="self-center mt-auto">
+      <div className="mt-auto self-center">
         <Button variant="link" disabled={isSubmitting || !isSuccess}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>

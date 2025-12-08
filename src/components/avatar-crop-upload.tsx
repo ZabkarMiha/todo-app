@@ -183,7 +183,7 @@ export default function AvatarCropUpload({
                 circularCrop={true}
               >
                 <ImageCropContent className="max-w-sm" />
-                <div className="flex items-center gap-2 mt-4">
+                <div className="mt-4 flex items-center gap-2">
                   <Button variant="ghost" type="button" onClick={handleCancel}>
                     Cancel
                   </Button>
@@ -216,7 +216,7 @@ export default function AvatarCropUpload({
               >
                 Change Image
               </Button>
-              <div className="flex flex-row gap-4 w-full items-center justify-center">
+              <div className="flex w-full flex-row items-center justify-center gap-4">
                 <DialogClose asChild>
                   <Button variant="outline" onClick={() => handleCancel()}>
                     Cancel
