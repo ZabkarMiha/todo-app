@@ -15,10 +15,9 @@ export default function Dock({
   currentPage,
 }: DockProps) {
   return (
-    <div className="outline-border sticky bottom-4 mx-2 h-fit rounded-md p-2 outline-1 backdrop-blur-xl sm:mx-0 sm:self-center">
-      <div className="flex flex-col space-y-2 p-1">
-        <div className="flex flex-row space-x-2 self-center">
-          <div>
+    <div className="outline-border sticky bottom-4 mx-2 rounded-md p-2 outline-1 backdrop-blur-xl sm:mx-0 sm:self-center">
+      <div className="flex flex-col p-1">
+        <div className="self-center mb-2">
             {filteredTasksLength > tasksPerPage && (
               <PaginationBar
                 tasksCount={filteredTasksLength}
@@ -27,9 +26,8 @@ export default function Dock({
                 className="h-full self-center"
               />
             )}
-          </div>
         </div>
-        <div className="flex flex-row space-x-2">
+        <div className="flex flex-row gap-2">
           <SortTasks className="h-full" />
           <Search className="h-full w-full" />
           <EditAddTask />
