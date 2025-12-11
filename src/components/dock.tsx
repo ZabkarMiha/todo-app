@@ -15,17 +15,15 @@ export default function Dock({
   currentPage,
 }: DockProps) {
   return (
-    <div className="outline-border sticky bottom-4 mx-2 rounded-md p-2 outline-1 backdrop-blur-xl sm:mx-0 sm:self-center">
+    <div className="outline-border fixed bottom-2 self-center rounded-md p-2 outline-1 mx-2 backdrop-blur-xl">
       <div className="flex flex-col p-1">
-        <div className="self-center mb-2">
-            {filteredTasksLength > tasksPerPage && (
-              <PaginationBar
-                tasksCount={filteredTasksLength}
-                currentPage={currentPage}
-                tasksPerPage={tasksPerPage}
-                className="h-full self-center"
-              />
-            )}
+        <div className="mb-2 self-center">
+          <PaginationBar
+            tasksCount={filteredTasksLength}
+            currentPage={currentPage}
+            tasksPerPage={tasksPerPage}
+            className="h-full self-center"
+          />
         </div>
         <div className="flex flex-row gap-2">
           <SortTasks className="h-full" />

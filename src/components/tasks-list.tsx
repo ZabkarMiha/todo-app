@@ -7,7 +7,7 @@ type TasksListProps = {
 
 export default function TasksList({ paginatedTasks }: TasksListProps) {
   return (
-    <div className="mb-4 grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2 xl:mx-0 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:mx-0 xl:grid-cols-3 2xl:grid-cols-4">
       {paginatedTasks.map((tasks) => (
         <TodoTaskCard key={tasks.id} task={tasks} />
       ))}

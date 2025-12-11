@@ -13,10 +13,10 @@ export default async function TasksLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
-      <main className={"h-fit min-h-full w-full"}>
+      <main className={"flex h-full w-full flex-col"}>
         <TopNav />
         <Toaster />
-        {children}
+        <div className="flex-1 overflow-auto">{children}</div>
       </main>
     </SidebarProvider>
   );

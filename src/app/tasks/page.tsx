@@ -52,10 +52,12 @@ export default async function Page(props: PageProps) {
 
   const currentPage = Number(searchParams?.page) || 1;
   return (
-    <Content
-      tasks={tasksResult.data || null}
-      currentPage={currentPage}
-      tasksPerPage={6}
-    />
+    <div className="pt-16 pb-28 md:pt-0">
+      <Content
+        tasks={tasksResult.data || null}
+        currentPage={currentPage}
+        tasksPerPage={20}
+      />
+    </div>
   );
 }
