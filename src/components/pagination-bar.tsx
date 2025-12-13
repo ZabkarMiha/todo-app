@@ -10,7 +10,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
 
 type PaginationBarProps = {
   tasksCount: number;
@@ -25,16 +24,14 @@ export default function PaginationBar({
   tasksPerPage,
   className,
 }: PaginationBarProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const maxPreviousPages = 0;
   const maxNextPages = 0;
   const totalPages = Math.ceil(tasksCount / tasksPerPage);
 
-  function handlePageChange(page: number) {
-    const params = new URLSearchParams(searchParams);
+  function getPageUrl(page: number) {
+    const params = new URLSearchParams(window.location.search);
     params.set("page", page.toString());
-    router.push(`?${params.toString()}`);
+    return `?${params.toString()}`;
   }
 
   return (
@@ -43,18 +40,13 @@ export default function PaginationBar({
         {currentPage > 1 && (
           <>
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() => handlePageChange(currentPage - 1)}
-                href="#"
-              />
+              <PaginationPrevious href={getPageUrl(currentPage - 1)} />
             </PaginationItem>
 
             {currentPage > maxPreviousPages + 1 && (
               <>
                 <PaginationItem>
-                  <PaginationLink onClick={() => handlePageChange(1)} href="#">
-                    1
-                  </PaginationLink>
+                  <PaginationLink href={getPageUrl(1)}>1</PaginationLink>
                 </PaginationItem>
                 {currentPage > maxPreviousPages + 2 && (
                   <PaginationItem>
@@ -71,10 +63,7 @@ export default function PaginationBar({
                   (Math.min(maxPreviousPages, currentPage - 1) - idx);
                 return (
                   <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(page)}
-                      href="#"
-                    >
+                    <PaginationLink href={getPageUrl(page)}>
                       {page}
                     </PaginationLink>
                   </PaginationItem>
@@ -97,10 +86,7 @@ export default function PaginationBar({
                 const page = currentPage + idx + 1;
                 return (
                   <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(page)}
-                      href="#"
-                    >
+                    <PaginationLink href={getPageUrl(page)}>
                       {page}
                     </PaginationLink>
                   </PaginationItem>
@@ -116,10 +102,7 @@ export default function PaginationBar({
                   </PaginationItem>
                 )}
                 <PaginationItem>
-                  <PaginationLink
-                    onClick={() => handlePageChange(totalPages)}
-                    href="#"
-                  >
+                  <PaginationLink href={getPageUrl(totalPages)}>
                     {totalPages}
                   </PaginationLink>
                 </PaginationItem>
@@ -127,10 +110,7 @@ export default function PaginationBar({
             )}
 
             <PaginationItem>
-              <PaginationNext
-                onClick={() => handlePageChange(currentPage + 1)}
-                href="#"
-              />
+              <PaginationNext href={getPageUrl(currentPage + 1)} />
             </PaginationItem>
           </>
         )}

@@ -2,19 +2,19 @@
 
 import { cn } from "@/lib/utils";
 import { Search as SearchIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 
 type SearchProps = {
   className?: string;
+  query: string | null;
 };
 
-export default function Search({ className }: SearchProps) {
-  const searchParams = useSearchParams();
+export default function Search({ className, query }: SearchProps) {
   const { replace } = useRouter();
 
   function handleSearch(term: string) {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(window.location.search);
     if (term) {
       params.set("query", term);
     } else {
@@ -33,7 +33,7 @@ export default function Search({ className }: SearchProps) {
         placeholder="Search tasks..."
         onChange={(e) => handleSearch(e.target.value)}
         className="pl-10 text-base"
-        defaultValue={searchParams.get("query") || ""}
+        defaultValue={query || ""}
       />
     </div>
   );

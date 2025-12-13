@@ -50,7 +50,7 @@ export default async function Page(props: PageProps) {
 
   const tasksPerPage = Number(searchParams?.tasksPerPage) || 6;
 
-  const sortOrder = searchParams?.sortOrder || null;
+  const sortOrder = searchParams?.sortOrder || "newest";
 
   const query = searchParams?.query || null;
 
@@ -89,6 +89,8 @@ export default async function Page(props: PageProps) {
           tasksCount={tasksCount.data!}
           tasksPerPage={tasksPerPage}
           currentPage={currentPage}
+          query={query}
+          sortOrder={sortOrder}
         />
       </div>
     </div>

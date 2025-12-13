@@ -7,12 +7,16 @@ type DockProps = {
   tasksCount: number;
   tasksPerPage: number;
   currentPage: number;
+  query: string | null;
+  sortOrder: string;
 };
 
 export default function Dock({
   tasksCount,
   tasksPerPage,
   currentPage,
+  query,
+  sortOrder,
 }: DockProps) {
   return (
     <div className="outline-border fixed bottom-2 mx-2 self-center rounded-md p-2 outline-1 backdrop-blur-xl">
@@ -26,8 +30,8 @@ export default function Dock({
           />
         </div>
         <div className="flex flex-row gap-2">
-          <SortTasks className="h-full" />
-          <Search className="h-full w-full" />
+          <SortTasks sortOrder={sortOrder} className="h-full" />
+          <Search query={query} className="h-full w-full" />
           <EditAddTask />
         </div>
       </div>

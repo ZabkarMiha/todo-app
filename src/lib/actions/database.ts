@@ -4,7 +4,7 @@ import { db } from "@/index";
 import { insertTaskSchema, taskFormSchema } from "@/lib/form-schemas";
 import { task } from "@/schema/task";
 import { user } from "@/schema/user";
-import { and, asc, eq, ilike, SQL } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, SQL } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ActionResponse } from "../types";
@@ -70,7 +70,7 @@ export async function getPaginatedQueriedSortedTasks(
       .select()
       .from(task)
       .where(and(eq(task.userId, userId), ...filters))
-      .orderBy(asc(task.dateAdded))
+      .orderBy(sort === "newest" ? asc(task.dateAdded) : desc(task.dateAdded))
       .limit(tasksPerPage)
       .offset((currentPage - 1) * tasksPerPage);
     return { data: data };
