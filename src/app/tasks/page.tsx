@@ -1,14 +1,19 @@
 "use server";
 
-import Content from "@/components/content";
+import Dock from "@/components/dock";
 import AddTask from "@/components/edit-add-task";
-import { getAllTasks, getTasksCount } from "@/lib/actions/database";
+import TasksList from "@/components/tasks-list";
+import {
+  getPaginatedQueriedSortedTasks,
+  getQueriedTasksCount,
+  isTasks,
+} from "@/lib/actions/database";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "../../lib/auth/auth";
 
 type PageProps = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 export default async function Page(props: PageProps) {
@@ -22,17 +27,17 @@ export default async function Page(props: PageProps) {
     redirect("/auth/login");
   }
 
-  const tasksCountResult = await getTasksCount(session!.user.id);
+  const isTasksResult = await isTasks(session!.user.id);
 
-  if (tasksCountResult.error) {
+  if (isTasksResult.error) {
     return (
       <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center">
-        <h1>Error: {tasksCountResult.error.message}</h1>
+        <h1>Error: {isTasksResult.error.message}</h1>
       </div>
     );
   }
 
-  if (tasksCountResult.data === 0) {
+  if (isTasksResult.data === 0) {
     return (
       <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center gap-4">
         <p className="text-center text-4xl font-bold">Add your first task!</p>
@@ -41,23 +46,51 @@ export default async function Page(props: PageProps) {
     );
   }
 
-  const tasksResult = await getAllTasks(session!.user.id);
-  if (tasksResult.error) {
+  const currentPage = Number(searchParams?.page) || 1;
+
+  const tasksPerPage = Number(searchParams?.tasksPerPage) || 6;
+
+  const sortOrder = searchParams?.sortOrder || null;
+
+  const query = searchParams?.query || null;
+
+  const [tasks, tasksCount] = await Promise.all([
+    getPaginatedQueriedSortedTasks(
+      session!.user.id,
+      currentPage,
+      tasksPerPage,
+      query,
+      sortOrder,
+    ),
+    getQueriedTasksCount(session!.user.id, query),
+  ]);
+
+  if (tasks.error) {
     return (
       <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center">
-        <h1>Error: {tasksResult.error.message}</h1>
+        <h1>Error: {tasks.error.message}</h1>
       </div>
     );
   }
 
-  const currentPage = Number(searchParams?.page) || 1;
+  if (tasksCount.error) {
+    return (
+      <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center">
+        <h1>Error: {tasksCount.error.message}</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-16 pb-28 md:pt-0">
-      <Content
-        tasks={tasksResult.data || null}
-        currentPage={currentPage}
-        tasksPerPage={20}
-      />
+      <div className="mx-5 flex h-full flex-col py-2 sm:mx-10 xl:mx-20">
+        <TasksList tasks={tasks.data!} />
+        <Dock
+          tasksCount={tasksCount.data!}
+          tasksPerPage={tasksPerPage}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 }

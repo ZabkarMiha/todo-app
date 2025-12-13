@@ -4,22 +4,22 @@ import Search from "./search";
 import SortTasks from "./sort-tasks";
 
 type DockProps = {
-  filteredTasksLength: number;
+  tasksCount: number;
   tasksPerPage: number;
   currentPage: number;
 };
 
 export default function Dock({
-  filteredTasksLength,
+  tasksCount,
   tasksPerPage,
   currentPage,
 }: DockProps) {
   return (
-    <div className="outline-border fixed bottom-2 self-center rounded-md p-2 outline-1 mx-2 backdrop-blur-xl">
+    <div className="outline-border fixed bottom-2 mx-2 self-center rounded-md p-2 outline-1 backdrop-blur-xl">
       <div className="flex flex-col p-1">
         <div className="mb-2 self-center">
           <PaginationBar
-            tasksCount={filteredTasksLength}
+            tasksCount={tasksCount}
             currentPage={currentPage}
             tasksPerPage={tasksPerPage}
             className="h-full self-center"

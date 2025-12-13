@@ -4,7 +4,7 @@ import { db } from "@/index";
 import { insertTaskSchema, taskFormSchema } from "@/lib/form-schemas";
 import { task } from "@/schema/task";
 import { user } from "@/schema/user";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, ilike, SQL } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ActionResponse } from "../types";
@@ -35,12 +35,58 @@ export async function getAllTasks(
   }
 }
 
-export async function getTasksCount(
+export async function getQueriedTasksCount(
   userId: string,
+  query: string | null,
 ): Promise<ActionResponse<number>> {
+  const filters: SQL[] = [];
+
+  if (query) filters.push(ilike(task.title, `%${query}%`));
+
   try {
-    const count = await db.$count(task, eq(task.userId, userId));
+    const count = await db.$count(
+      task,
+      and(eq(task.userId, userId), ...filters),
+    );
     return { data: count };
+  } catch (e) {
+    return { error: { message: "Failed to fetch tasks count", status: 500 } };
+  }
+}
+
+export async function getPaginatedQueriedSortedTasks(
+  userId: string,
+  currentPage: number,
+  tasksPerPage: number,
+  query: string | null,
+  sort: string | null,
+): Promise<ActionResponse<Array<typeof task.$inferSelect>>> {
+  const filters: SQL[] = [];
+
+  if (query) filters.push(ilike(task.title, `%${query}%`));
+
+  try {
+    const data = await db
+      .select()
+      .from(task)
+      .where(and(eq(task.userId, userId), ...filters))
+      .orderBy(asc(task.dateAdded))
+      .limit(tasksPerPage)
+      .offset((currentPage - 1) * tasksPerPage);
+    return { data: data };
+  } catch (e) {
+    return { error: { message: "Failed to fetch tasks", status: 500 } };
+  }
+}
+
+export async function isTasks(userId: string): Promise<ActionResponse<number>> {
+  try {
+    const count = await db
+      .select()
+      .from(task)
+      .where(eq(task.userId, userId))
+      .limit(1);
+    return { data: count.length };
   } catch (e) {
     return { error: { message: "Failed to fetch tasks count", status: 500 } };
   }
