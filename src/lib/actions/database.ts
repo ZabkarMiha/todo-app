@@ -70,7 +70,7 @@ export async function getPaginatedQueriedSortedTasks(
       .select()
       .from(task)
       .where(and(eq(task.userId, userId), ...filters))
-      .orderBy(sort === "newest" ? asc(task.dateAdded) : desc(task.dateAdded))
+      .orderBy(sort === "newest" ? desc(task.dateAdded) : asc(task.dateAdded))
       .limit(tasksPerPage)
       .offset((currentPage - 1) * tasksPerPage);
     return { data: data };
