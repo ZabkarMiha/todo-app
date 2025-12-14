@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 type PaginationBarProps = {
   tasksCount: number;
@@ -28,8 +29,10 @@ export default function PaginationBar({
   const maxNextPages = 0;
   const totalPages = Math.ceil(tasksCount / tasksPerPage);
 
+  const searchParams = useSearchParams();
+
   function getPageUrl(page: number) {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
     return `?${params.toString()}`;
   }
