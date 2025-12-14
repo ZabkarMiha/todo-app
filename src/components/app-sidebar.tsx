@@ -11,6 +11,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import SidebarTasksPerPage from "./sidebar-tasks-per-page";
 import SidebarUser from "./sidebar-user";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -26,6 +27,9 @@ export default function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarTasksPerPage />
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <ThemeToggle />
           </SidebarMenuItem>

@@ -50,7 +50,7 @@ export default function SidebarUser() {
                 <SidebarMenuButton size="lg">
                   <UserAvatar editable={false} />
                   <span className="ml-2">{session?.user.username}</span>
-                  <EllipsisVertical className="ml-auto size-4" />
+                  <EllipsisVertical className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
