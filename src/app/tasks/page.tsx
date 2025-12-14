@@ -10,6 +10,7 @@ import {
 } from "@/lib/actions/database";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { auth } from "../../lib/auth/auth";
 
 type PageProps = {
@@ -85,13 +86,13 @@ export default async function Page(props: PageProps) {
     <div className="pt-16 pb-28 md:pt-0">
       <div className="mx-5 flex h-full flex-col py-2 sm:mx-10 xl:mx-20">
         <TasksList tasks={tasks.data!} />
-        <Dock
-          tasksCount={tasksCount.data!}
-          tasksPerPage={tasksPerPage}
-          currentPage={currentPage}
-          query={query}
-          sortOrder={sortOrder}
-        />
+        <Suspense fallback={null}>
+          <Dock
+            tasksCount={tasksCount.data!}
+            tasksPerPage={tasksPerPage}
+            currentPage={currentPage}
+          />
+        </Suspense>
       </div>
     </div>
   );

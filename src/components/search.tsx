@@ -2,27 +2,30 @@
 
 import { cn } from "@/lib/utils";
 import { Search as SearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "./ui/input";
 
 type SearchProps = {
   className?: string;
-  query: string | null;
 };
 
-export default function Search({ className, query }: SearchProps) {
+export default function Search({ className }: SearchProps) {
   const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const handleSearch = useDebouncedCallback((term: string) => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams);
+
     if (term) {
       params.set("query", term);
     } else {
       params.delete("query");
     }
     params.set("page", "1");
-    replace(`?${params.toString()}`);
+
+    replace(`${pathname}?${params.toString()}`);
   }, 300);
 
   return (
@@ -34,7 +37,7 @@ export default function Search({ className, query }: SearchProps) {
         placeholder="Search tasks..."
         onChange={(e) => handleSearch(e.target.value)}
         className="pl-10 text-base"
-        defaultValue={query || ""}
+        defaultValue={searchParams.get("query")?.toString()}
       />
     </div>
   );

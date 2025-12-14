@@ -3,21 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Triangle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type SortTasksProps = {
   className?: string;
-  sortOrder: string;
 };
 
-export default function SortTasks({ className, sortOrder }: SortTasksProps) {
+export default function SortTasks({ className }: SortTasksProps) {
   const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const sortOrder = searchParams.get("sortOrder") || "newest";
 
   function toggleSortOrder() {
-    const params = new URLSearchParams(window.location.search);
-    const sort = sortOrder === "newest" ? "oldest" : "newest";
-    params.set("sortOrder", sort);
-    replace(`?${params.toString()}`);
+    const params = new URLSearchParams(searchParams);
+    const newSort = sortOrder === "newest" ? "oldest" : "newest";
+
+    params.set("sortOrder", newSort);
+    params.set("page", "1");
+
+    replace(`${pathname}?${params.toString()}`);
   }
 
   return (
