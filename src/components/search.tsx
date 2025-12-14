@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Search as SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 import { Input } from "./ui/input";
 
 type SearchProps = {
@@ -13,7 +14,7 @@ type SearchProps = {
 export default function Search({ className, query }: SearchProps) {
   const { replace } = useRouter();
 
-  function handleSearch(term: string) {
+  const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(window.location.search);
     if (term) {
       params.set("query", term);
@@ -22,7 +23,7 @@ export default function Search({ className, query }: SearchProps) {
     }
     params.set("page", "1");
     replace(`?${params.toString()}`);
-  }
+  }, 300);
 
   return (
     <div className={cn("relative flex items-center", className)}>
