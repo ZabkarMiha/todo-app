@@ -5,7 +5,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -49,11 +48,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle
-          className={
-            "overflow-hidden text-2xl font-bold text-ellipsis whitespace-nowrap hover:overflow-visible hover:whitespace-break-spaces xl:text-3xl"
-          }
-        >
+        <CardTitle className={"text-wrap text-2xl font-bold xl:text-3xl"}>
           {task.title}
         </CardTitle>
         <CardAction>
@@ -68,16 +63,21 @@ export default function TodoTaskCard({ task }: { task: Task }) {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <CardDescription>{task.description}</CardDescription>
+        <p className="opacity-80 font-extralight">{task.description}</p>
       </CardContent>
       <Separator className="mt-auto w-full" />
       <CardFooter className="gap-2">
         <Button variant={"destructive"} onClick={deleteTaskOnClick}>
           <Trash2 className="h-4 w-4" />
         </Button>
-        <Label className={"mx-auto text-center"}>
-          {task.dateAdded.toLocaleDateString("en-GB", options)}
-        </Label>
+        <div
+          className={
+            "mx-auto flex flex-col items-center justify-center gap-1 text-center"
+          }
+        >
+          <Label>{task.dateAdded.toLocaleDateString("en-GB", options)}</Label>
+          <Label>{task.dateAdded.toLocaleTimeString("en-GB")}</Label>
+        </div>
         <EditAddTask taskData={task} />
       </CardFooter>
     </Card>
