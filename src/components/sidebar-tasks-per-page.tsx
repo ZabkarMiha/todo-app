@@ -25,7 +25,7 @@ export default function SidebarTasksPerPage() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton size="lg">
+        <SidebarMenuButton>
           <Hash />
           <span className="text-nowrap">Tasks per page</span>
           <ChevronUp className="ml-auto" />
