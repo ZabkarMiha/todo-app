@@ -1,85 +1,89 @@
 import { z } from "zod";
 
-export const taskFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, {
-      message: "Title must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Title must not exceed 30 characters.",
-    }),
-  description: z
-    .string()
-    .min(2, {
-      message: "Description must be at least 3 characters.",
-    })
-    .max(300, {
-      message: "Description must not exceed 300 characters.",
-    })
-    .optional(),
-  completed: z.boolean(),
-});
+export const taskFormSchema = z
+  .object({
+    title: z
+      .string()
+      .min(2, {
+        error: "Title must be at least 2 characters.",
+      })
+      .max(30, {
+        error: "Title must not exceed 30 characters.",
+      }),
+    description: z
+      .string()
+      .min(2, {
+        error: "Description must be at least 3 characters.",
+      })
+      .max(300, {
+        error: "Description must not exceed 300 characters.",
+      })
+      .optional(),
 
-export const insertTaskSchema = taskFormSchema.extend({
+    dueDate: z.date().optional().nullable(),
+
+    completed: z.boolean(),
+  });
+
+export const insertTaskSchema = taskFormSchema.safeExtend({
   userId: z.string(),
 });
 
 export const userFormSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email address.",
+  email: z.email({
+    error: "Invalid email address.",
   }),
   username: z
     .string()
     .min(2, {
-      message: "Username must be at least 3 characters.",
+      error: "Username must be at least 3 characters.",
     })
     .max(30, {
-      message: "Username must not exceed 30 characters.",
+      error: "Username must not exceed 30 characters.",
     }),
 });
 
 const passwordSchema = z
   .string()
-  .min(8, { message: "Password must be at least 8 characters." })
-  .max(100, { message: "Password must not exceed 100 characters." })
+  .min(8, { error: "Password must be at least 8 characters." })
+  .max(100, { error: "Password must not exceed 100 characters." })
   .superRefine((val, ctx) => {
     if (!/[A-Z]/.test(val)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Password must contain at least one uppercase letter.",
+        code: "custom",
+        error: "Password must contain at least one uppercase letter.",
       });
     }
     if (!/[a-z]/.test(val)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Password must contain at least one lowercase letter.",
+        code: "custom",
+        error: "Password must contain at least one lowercase letter.",
       });
     }
     if (!/[0-9]/.test(val)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Password must contain at least one number.",
+        code: "custom",
+        error: "Password must contain at least one number.",
       });
     }
     if (!/[#?!@$%^&*-]/.test(val)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Password must contain at least one special character.",
+        code: "custom",
+        error: "Password must contain at least one special character.",
       });
     }
   });
 
 export const registerFormSchema = userFormSchema
-  .extend({
+  .safeExtend({
     password: passwordSchema,
     confirmPassword: z.string(),
     name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
+      error: "Name must be at least 2 characters.",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    error: "Passwords don't match",
     path: ["confirmPassword"],
   });
 

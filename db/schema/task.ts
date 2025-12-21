@@ -18,14 +18,8 @@ export const task = pgTable(
     title: text().notNull(),
     description: text(),
     completed: boolean().notNull(),
+    dueDate: timestamp({ withTimezone: true }),
     dateAdded: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => {
-    return {
-      titleIdx: index("title__index").using(
-        "btree",
-        table.title.asc().nullsLast(),
-      ),
-    };
-  },
+  (table) => [index("title_index").on(table.title)],
 );

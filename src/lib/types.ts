@@ -3,6 +3,7 @@ export type Task = {
   title: string;
   description: string | null;
   completed: boolean;
+  dueDate: Date;
   dateAdded: Date;
 };
 

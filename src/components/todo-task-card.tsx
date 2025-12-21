@@ -48,7 +48,7 @@ export default function TodoTaskCard({ task }: { task: Task }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className={"text-wrap text-2xl font-bold xl:text-3xl"}>
+        <CardTitle className={"text-2xl font-bold text-wrap xl:text-3xl"}>
           {task.title}
         </CardTitle>
         <CardAction>
@@ -62,8 +62,9 @@ export default function TodoTaskCard({ task }: { task: Task }) {
           </Toggle>
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <p className="opacity-80 font-extralight">{task.description}</p>
+      <CardContent className="space-y-2">
+        <p className="font-extralight opacity-80">{task.description}</p>
+        <p>Due Date: {!task.dueDate ? "None" : task.dueDate.toLocaleDateString()}</p>
       </CardContent>
       <Separator className="mt-auto w-full" />
       <CardFooter className="gap-2">
