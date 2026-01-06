@@ -4,8 +4,7 @@ CREATE TABLE "task" (
 	"title" text NOT NULL,
 	"description" text,
 	"completed" boolean NOT NULL,
-	"startDate" timestamp with time zone,
-	"endDate" timestamp with time zone,
+	"dueDate" timestamp with time zone,
 	"dateAdded" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "task_id_unique" UNIQUE("id")
 );

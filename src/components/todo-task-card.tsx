@@ -64,7 +64,9 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="font-extralight opacity-80">{task.description}</p>
-        <p>Due Date: {!task.dueDate ? "None" : task.dueDate.toLocaleDateString()}</p>
+        {task.dueDate && (
+          <p>Due Date: {task.dueDate.toLocaleDateString()}</p>
+        )}
       </CardContent>
       <Separator className="mt-auto w-full" />
       <CardFooter className="gap-2">
