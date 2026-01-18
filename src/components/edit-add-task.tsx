@@ -16,7 +16,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { insertTaskFormValues, updateTask } from "@/lib/actions/database";
+import { insertTask, updateTask } from "@/lib/actions/database";
 import { taskFormSchema } from "@/lib/form-schemas";
 import { Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -85,7 +85,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
 
     const result = taskData
       ? await updateTask(taskData.id, completeTaskData)
-      : await insertTaskFormValues(completeTaskData);
+      : await insertTask(completeTaskData);
 
     if (result?.error) {
       toast.error(result.error.message, {

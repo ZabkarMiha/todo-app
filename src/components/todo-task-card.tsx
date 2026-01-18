@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { completeTaskToggle, deleteTask } from "@/lib/actions/database";
 import { ErrorData, Task } from "@/lib/types";
@@ -64,9 +63,6 @@ export default function TodoTaskCard({ task }: { task: Task }) {
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="font-extralight opacity-80">{task.description}</p>
-        {task.dueDate && (
-          <p>Due Date: {task.dueDate.toLocaleDateString()}</p>
-        )}
       </CardContent>
       <Separator className="mt-auto w-full" />
       <CardFooter className="gap-2">
@@ -78,8 +74,9 @@ export default function TodoTaskCard({ task }: { task: Task }) {
             "mx-auto flex flex-col items-center justify-center gap-1 text-center"
           }
         >
-          <Label>{task.dateAdded.toLocaleDateString("en-GB", options)}</Label>
-          <Label>{task.dateAdded.toLocaleTimeString("en-GB")}</Label>
+          {task.dueDate && (
+            <p>Due Date: {task.dueDate.toLocaleDateString("en-GB")}</p>
+          )}
         </div>
         <EditAddTask taskData={task} />
       </CardFooter>

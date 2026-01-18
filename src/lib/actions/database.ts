@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ActionResponse } from "../types";
 
-export async function insertTaskFormValues(
+export async function insertTask(
   values: z.infer<typeof insertTaskSchema>,
 ): Promise<ActionResponse<{ title: string }>> {
   try {
