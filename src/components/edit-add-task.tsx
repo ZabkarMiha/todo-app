@@ -136,7 +136,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="space-y-6 sm:max-w-[500px]"
+        className="sm:max-w-[500px]"
         onInteractOutside={(e) => {
           if (isSubmitting) {
             e.preventDefault();

@@ -1,29 +1,28 @@
 import { z } from "zod";
 
-export const taskFormSchema = z
-  .object({
-    title: z
-      .string()
-      .min(2, {
-        error: "Title must be at least 2 characters.",
-      })
-      .max(30, {
-        error: "Title must not exceed 30 characters.",
-      }),
-    description: z
-      .string()
-      .min(2, {
-        error: "Description must be at least 3 characters.",
-      })
-      .max(300, {
-        error: "Description must not exceed 300 characters.",
-      })
-      .optional(),
+export const taskFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, {
+      error: "Title must be at least 2 characters.",
+    })
+    .max(30, {
+      error: "Title must not exceed 30 characters.",
+    }),
+  description: z
+    .string()
+    .min(2, {
+      error: "Description must be at least 3 characters.",
+    })
+    .max(300, {
+      error: "Description must not exceed 300 characters.",
+    })
+    .optional(),
 
-    dueDate: z.date().optional().nullable(),
+  dueDate: z.date().optional().nullable(),
 
-    completed: z.boolean(),
-  });
+  completed: z.boolean(),
+});
 
 export const insertTaskSchema = taskFormSchema.safeExtend({
   userId: z.string(),

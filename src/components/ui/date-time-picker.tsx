@@ -33,7 +33,7 @@ export function DateTimePicker({
             variant="outline"
             className={cn("w-fit justify-between font-normal", className)}
           >
-            <Calendar1/>
+            <Calendar1 />
             {value ? value.toLocaleDateString() : "Select due date"}
             <ChevronDownIcon
               className={`ml-2 h-4 w-4 ${open && "rotate-180"} transition-all duration-500`}
