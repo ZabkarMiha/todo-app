@@ -1,5 +1,6 @@
 "use server";
 
+import { FEATURE_FLAGS } from "@/lib/features";
 import {
   DeleteObjectCommand,
   DeleteObjectCommandInput,
@@ -26,6 +27,15 @@ const s3client = new S3Client({
 export async function deleteImageFromS3(
   key: string,
 ): Promise<ActionResponse<DeleteObjectCommandOutput>> {
+  if (!FEATURE_FLAGS.isAvatarUploadEnabled) {
+    return {
+      error: {
+        message: "Avatar service is currently disabled.",
+        status: 503,
+      },
+    };
+  }
+
   try {
     const input: DeleteObjectCommandInput = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -52,6 +62,15 @@ export async function uploadImageToS3(
   file: File,
   userId: string,
 ): Promise<ActionResponse<uploadImageToS3Return>> {
+  if (!FEATURE_FLAGS.isAvatarUploadEnabled) {
+    return {
+      error: {
+        message: "Avatar service is currently disabled.",
+        status: 503,
+      },
+    };
+  }
+
   try {
     const fileBuffer = Buffer.from(await file.bytes());
     const extension = file.name.split(".")[1];
@@ -82,9 +101,23 @@ export async function uploadImageToS3(
   }
 }
 
+type getImageFromS3Return = {
+  imageUrl: string;
+  expiry: number;
+};
+
 export async function getImageUrlFromS3(
   key: string,
-): Promise<ActionResponse<{ imageUrl: string; expiry: number }>> {
+): Promise<ActionResponse<getImageFromS3Return>> {
+  if (!FEATURE_FLAGS.isAvatarUploadEnabled) {
+    return {
+      error: {
+        message: "Avatar service is currently disabled.",
+        status: 503,
+      },
+    };
+  }
+
   try {
     const input: GetObjectCommandInput = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
