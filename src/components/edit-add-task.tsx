@@ -48,7 +48,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       return {
         title: taskData.title ?? "",
         description: taskData.description ?? "",
-        completed: Boolean(taskData.completed),
+        completed: taskData.completed,
         dueDate: taskData.dueDate ?? undefined,
       };
     }
