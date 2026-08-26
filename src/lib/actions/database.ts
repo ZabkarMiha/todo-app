@@ -24,6 +24,7 @@ export async function insertTask(
   }
 }
 
+//Currently not in use (maybe later???)
 export async function getAllTasks(
   userId: string,
 ): Promise<ActionResponse<Array<typeof task.$inferSelect>>> {
@@ -79,7 +80,10 @@ export async function getPaginatedQueriedSortedTasks(
   }
 }
 
-export async function isTasks(userId: string): Promise<ActionResponse<number>> {
+//Checks if the user has any tasks
+export async function userHasTasks(
+  userId: string,
+): Promise<ActionResponse<number>> {
   try {
     const count = await db
       .select()

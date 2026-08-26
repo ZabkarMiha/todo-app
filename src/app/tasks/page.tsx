@@ -6,7 +6,7 @@ import TasksList from "@/components/tasks-list";
 import {
   getPaginatedQueriedSortedTasks,
   getQueriedTasksCount,
-  isTasks,
+  userHasTasks,
 } from "@/lib/actions/database";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -28,17 +28,17 @@ export default async function Page(props: PageProps) {
     redirect("/auth/login");
   }
 
-  const isTasksResult = await isTasks(session!.user.id);
+  const userHasTasksResult = await userHasTasks(session!.user.id);
 
-  if (isTasksResult.error) {
+  if (userHasTasksResult.error) {
     return (
       <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center">
-        <h1>Error: {isTasksResult.error.message}</h1>
+        <h1>Error: {userHasTasksResult.error.message}</h1>
       </div>
     );
   }
 
-  if (isTasksResult.data === 0) {
+  if (userHasTasksResult.data === 0) {
     return (
       <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center gap-4">
         <p className="text-center text-4xl font-bold">Add your first task!</p>

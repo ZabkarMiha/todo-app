@@ -18,12 +18,6 @@ import EditAddTask from "./edit-add-task";
 import { Separator } from "./ui/separator";
 
 export default function TodoTaskCard({ task }: { task: Task }) {
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  } as const;
-
   const deleteTaskOnClick = async () => {
     toast.promise(deleteTask(task.id), {
       closeButton: true,
@@ -74,9 +68,9 @@ export default function TodoTaskCard({ task }: { task: Task }) {
             "mx-auto flex flex-col items-center justify-center gap-1 text-center"
           }
         >
-          {task.dueDate && (
+          {task.dueDate ? (
             <p>Due Date: {task.dueDate.toLocaleDateString("en-GB")}</p>
-          )}
+          ) : null}
         </div>
         <EditAddTask taskData={task} />
       </CardFooter>
