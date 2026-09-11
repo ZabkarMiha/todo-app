@@ -76,10 +76,10 @@ export default function SidebarUser() {
                   <>
                     <DropdownMenuItem
                       onClick={() => {
-                        router.push("/auth/login");
+                        router.push("/auth/register");
                       }}
                     >
-                      Login
+                      Register
                     </DropdownMenuItem>
                   </>
                 )}
