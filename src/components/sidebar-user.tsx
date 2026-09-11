@@ -59,16 +59,30 @@ export default function SidebarUser() {
                 align="end"
                 sideOffset={isMobile ? 5 : open ? 5 : 15}
               >
-                <DropdownMenuItem asChild>
-                  <UserDataDialog />
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    handleUserSignOut();
-                  }}
-                >
-                  Sign out
-                </DropdownMenuItem>
+                {session ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <UserDataDialog />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        handleUserSignOut();
+                      }}
+                    >
+                      Sign out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push("/auth/login");
+                      }}
+                    >
+                      Login
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
