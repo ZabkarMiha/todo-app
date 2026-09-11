@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx --require dotenv/config ./src/lib/seed.ts",
-    "prettify": "npx prettier . --write",
+    "prettify": "npx prettier . --write --end-of-line lf",
     "drizzle-push": "npx drizzle-kit push",
     "drizzle-generate": "npx drizzle-kit generate",
     "drizzle-migrate": "npx drizzle-kit migrate"
@@ -80,6 +80,7 @@
     "@types/react-dom": "19.1.6"
   },
   "prettier": {
+    "endOfLine": "lf",
     "plugins": [
       "prettier-plugin-organize-imports",
       "prettier-plugin-tailwindcss"
