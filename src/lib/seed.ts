@@ -1,5 +1,5 @@
-import { db } from "@/index";
-import { task } from "@/schema/task";
+import { db } from "../../db/drizzle";
+import { task } from "../../db/drizzle/schema";
 
 async function Seed() {
   const args = process.argv;
@@ -11,7 +11,7 @@ async function Seed() {
       title: `title${i}`,
       description: `description${i}`,
       completed: false,
-      userId: "" //add user id for which tasks are being added
+      userId: "", //add user id for which tasks are being added
     });
   }
 }
