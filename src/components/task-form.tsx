@@ -1,91 +1,63 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { insertTask, updateTask } from "@/lib/actions/database";
-import { taskFormSchema } from "@/lib/form-schemas";
-import { Task } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { PencilLine, Plus } from "lucide-react";
-import { useMemo, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { authClient } from "../lib/auth/auth-client";
-import { DateTimePicker } from "./ui/date-time-picker";
-import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Spinner } from "./ui/spinner";
-import { Switch } from "./ui/switch";
+import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+import { DateTimePicker } from "./ui/date-time-picker";
+import { useState } from "react";
+import { insertUpdateTaskSchema } from "@/lib/form-schemas";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
+import { ActionResponse, InsertUpdateTask } from "@/lib/types";
+import { toast } from "sonner";
 
-type EditAddTaskProps = {
-  className?: string;
-  taskData?: Task;
-};
+type TaskFormProps = {
+    className?: string,
+    defaultValues: z.infer<typeof insertUpdateTaskSchema>,
+    onSubmitFunction(data: InsertUpdateTask): Promise<ActionResponse<{ title: string }>>,
+    editMode: boolean
+}
 
-export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
-  const { data: session } = authClient.useSession();
-  const [open, setOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function TaskForm({className, defaultValues, editMode, onSubmitFunction} : TaskFormProps) {
 
-  const defaultValues = useMemo(() => {
-    if (taskData) {
-      return {
-        title: taskData.title ?? "",
-        description: taskData.description ?? "",
-        completed: taskData.completed,
-        dueDate: taskData.dueDate ?? undefined,
-      };
-    }
-    return {
-      title: "",
-      description: "",
-      completed: false,
-      dueDate: undefined,
-    };
-  }, [taskData]);
+      const [open, setOpen] = useState(false);
+      const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [isDate, setIsDate] = useState(!!defaultValues.dueDate);
+      const [isDate, setIsDate] = useState(!!defaultValues.dueDate);
 
-  const form = useForm<z.infer<typeof taskFormSchema>>({
-    resolver: zodResolver(taskFormSchema),
-    defaultValues,
-  });
+      const form = useForm<z.infer<typeof insertUpdateTaskSchema>>({
+          resolver: zodResolver(insertUpdateTaskSchema),
+          defaultValues,
+        });
 
-  const onSubmit: SubmitHandler<z.infer<typeof taskFormSchema>> = async (
-    data,
+
+
+
+
+         const onSubmit: SubmitHandler<z.infer<typeof insertUpdateTaskSchema>> = async (
+    formData,
   ) => {
-    if (isDate && data.dueDate === undefined) {
+    if (isDate && formData.dueDate === null) {
       form.setError("dueDate", { message: "Select a date" });
       return;
     }
 
     setIsSubmitting(true);
 
-    const completeTaskData = {
-      ...data,
-      dueDate: isDate ? data.dueDate : null,
-      userId: session!.user.id,
+    const completeTaskData: InsertUpdateTask = {
+      ...formData,
+      dueDate: isDate ? formData.dueDate : null,
     };
 
-    const result = taskData
-      ? await updateTask(taskData.id, completeTaskData)
-      : await insertTask(completeTaskData);
+    const result = await onSubmitFunction(completeTaskData)
 
     if (result?.error) {
       toast.error(result.error.message, {
@@ -93,10 +65,13 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
         position: "top-center",
       });
 
+      setIsSubmitting(false);
+      setOpen(false);
+
       return;
     }
 
-    toast.success(taskData ? "Task updated" : "Task created", {
+    toast.success(editMode ? `${result.data?.title} updated` : `${result.data?.title} created`, {
       closeButton: true,
       position: "top-center",
     });
@@ -104,7 +79,9 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
     setOpen(false);
   };
 
-  const handleOpenChange = (isOpen: boolean) => {
+
+
+    const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (isOpen) {
       form.reset(defaultValues);
@@ -118,14 +95,15 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
     setIsDate(!!defaultValues.dueDate);
   };
 
-  return (
+
+    return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           className={cn("space-x-0 p-2 xl:space-x-2 xl:p-4", className)}
         >
-          {taskData ? (
+          {editMode ? (
             <PencilLine className="h-4 w-4" />
           ) : (
             <div className="flex flex-row items-center justify-center gap-1">
@@ -146,10 +124,10 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
       >
         <DialogHeader>
           <DialogTitle>
-            {taskData ? "Edit task" : "Create new task"}
+            {editMode ? "Edit task" : "Create new task"}
           </DialogTitle>
           <DialogDescription>
-            {taskData
+            {editMode
               ? "Make changes to your task here."
               : "Fill in the details for your new task."}
           </DialogDescription>
@@ -196,6 +174,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                       <Textarea
                         className="h-24 resize-none"
                         {...field}
+                        value={field.value ?? ""}
                         id="task-form-description"
                         placeholder="Milk, Eggs, Bread..."
                         aria-invalid={fieldState.invalid}
@@ -222,7 +201,7 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                       onCheckedChange={(checked) => {
                         setIsDate(checked);
                         if (!checked) {
-                          form.setValue("dueDate", undefined, {
+                          form.setValue("dueDate", null, {
                             shouldDirty: true,
                           });
                         }
@@ -255,12 +234,12 @@ export default function EditAddTask({ className, taskData }: EditAddTaskProps) {
                 Reset
               </Button>
               <Button type="submit" form="task-form">
-                {taskData ? "Save Changes" : "Create Task"}
+                {editMode ? "Save Changes" : "Create Task"}
               </Button>
             </div>
           </div>
         )}
       </DialogContent>
     </Dialog>
-  );
+    )
 }

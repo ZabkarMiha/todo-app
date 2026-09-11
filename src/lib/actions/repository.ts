@@ -1,38 +1,36 @@
 "use server";
 
-import { db } from "@/index";
-import { insertTaskSchema, taskFormSchema } from "@/lib/form-schemas";
-import { task } from "@/schema/task";
-import { user } from "@/schema/user";
+import { db } from "@/drizzle/index";
+import { task, user } from "@/drizzle/schema";
 import { and, asc, desc, eq, ilike, SQL } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-import { ActionResponse } from "../types";
-
-export async function insertTask(
-  values: z.infer<typeof insertTaskSchema>,
-): Promise<ActionResponse<{ title: string }>> {
-  try {
-    const data = await db
-      .insert(task)
-      .values(values)
-      .returning({ title: task.title });
-    revalidatePath("/");
-    return { data: data[0] };
-  } catch (e) {
-    return { error: { message: "Failed to insert task", status: 500 } };
-  }
-}
+import { ActionResponse, InsertUpdateTask, ReturnTask } from "../types";
 
 //Currently not in use (maybe later???)
 export async function getAllTasks(
   userId: string,
-): Promise<ActionResponse<Array<typeof task.$inferSelect>>> {
+): Promise<ActionResponse<Array<ReturnTask>>> {
   try {
     const tasks = await db.select().from(task).where(eq(task.userId, userId));
     return { data: tasks };
-  } catch (e) {
+  } catch {
     return { error: { message: "Failed to fetch tasks", status: 500 } };
+  }
+}
+
+export async function insertTask(
+  userId: string,
+  values: InsertUpdateTask
+): Promise<ActionResponse<{ title: string }>> {
+  try {
+    const data = await db
+      .insert(task)
+      .values({ ...values, userId })
+      .returning({ title: task.title });
+    revalidatePath("/");
+    return { data: data[0] };
+  } catch {
+    return { error: { message: "Failed to insert task", status: 500 } };
   }
 }
 
@@ -50,7 +48,7 @@ export async function getQueriedTasksCount(
       and(eq(task.userId, userId), ...filters),
     );
     return { data: count };
-  } catch (e) {
+  } catch {
     return { error: { message: "Failed to fetch tasks count", status: 500 } };
   }
 }
@@ -61,7 +59,7 @@ export async function getPaginatedQueriedSortedTasks(
   tasksPerPage: number,
   query: string | null,
   sort: string | null,
-): Promise<ActionResponse<Array<typeof task.$inferSelect>>> {
+): Promise<ActionResponse<Array<ReturnTask>>> {
   const filters: SQL[] = [];
 
   if (query) filters.push(ilike(task.title, `%${query}%`));
@@ -75,12 +73,11 @@ export async function getPaginatedQueriedSortedTasks(
       .limit(tasksPerPage)
       .offset((currentPage - 1) * tasksPerPage);
     return { data: data };
-  } catch (e) {
+  } catch {
     return { error: { message: "Failed to fetch tasks", status: 500 } };
   }
 }
 
-//Checks if the user has any tasks
 export async function userHasTasks(
   userId: string,
 ): Promise<ActionResponse<number>> {
@@ -91,7 +88,7 @@ export async function userHasTasks(
       .where(eq(task.userId, userId))
       .limit(1);
     return { data: count.length };
-  } catch (e) {
+  } catch {
     return { error: { message: "Failed to fetch tasks count", status: 500 } };
   }
 }
@@ -109,14 +106,15 @@ export async function deleteTask(
     });
     revalidatePath("/");
     return { data: data[0] };
-  } catch (e) {
-    return { error: { message: "Failed to delete task", status: 500 } };
+  } catch {
+    return { error: { message: "Failed to delete task", status: 500
+     } };
   }
 }
 
 export async function updateTask(
   id: string,
-  values: z.infer<typeof taskFormSchema>,
+  values: InsertUpdateTask,
 ): Promise<ActionResponse<{ title: string }>> {
   try {
     const data = await db
@@ -149,13 +147,8 @@ export async function completeTaskToggle(
       .returning({ title: task.title });
     revalidatePath("/");
     return { data: data[0] };
-  } catch (e) {
-    return {
-      error: {
-        message: "Failed to update task completion status",
-        status: 500,
-      },
-    };
+  } catch {
+    return { error: { message: "Failed to update task completion status", status: 500 } };
   }
 }
 
@@ -173,9 +166,7 @@ export async function isEmailAvailable(
       available = true;
     }
     return { data: { available } };
-  } catch (e) {
-    return {
-      error: { message: "Failed to check email availability", status: 500 },
-    };
+  } catch {
+    return { error: { message: "Failed to check email availability", status: 500 } };
   }
 }

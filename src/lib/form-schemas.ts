@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const taskFormSchema = z.object({
+export const insertUpdateTaskSchema = z.object({
   title: z
     .string()
     .min(2, {
@@ -11,21 +11,14 @@ export const taskFormSchema = z.object({
     }),
   description: z
     .string()
-    .min(2, {
-      error: "Description must be at least 3 characters.",
-    })
     .max(300, {
       error: "Description must not exceed 300 characters.",
     })
-    .optional(),
+    .nullable(),
 
-  dueDate: z.date().optional().nullable(),
+  dueDate: z.date().nullable(),
 
   completed: z.boolean(),
-});
-
-export const insertTaskSchema = taskFormSchema.safeExtend({
-  userId: z.string(),
 });
 
 export const userFormSchema = z.object({
@@ -40,7 +33,7 @@ export const userFormSchema = z.object({
     .max(30, {
       error: "Username must not exceed 30 characters.",
     }),
-});
+})
 
 const passwordSchema = z
   .string()

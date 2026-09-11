@@ -1,11 +1,11 @@
-export type Task = {
-  id: string;
-  title: string;
-  description: string | null;
-  completed: boolean;
-  dueDate: Date | null;
-  dateAdded: Date;
-};
+import { InferSelectModel } from "drizzle-orm";
+import { task } from "../../db/drizzle/schema";
+
+type Task = InferSelectModel<typeof task>;
+
+export type InsertUpdateTask = Omit<Task, "id" | "dateAdded" | "userId">;
+
+export type ReturnTask = Omit<Task, "userId">;
 
 export type ErrorData = {
   message: string;
@@ -15,4 +15,14 @@ export type ErrorData = {
 export type ActionResponse<T> = {
   data?: T;
   error?: ErrorData;
+};
+
+export type TasksWrapperProps = {
+  userId: string;
+  searchParams: {
+    page?: string;
+    tasksPerPage?: string;
+    sortOrder?: string;
+    query?: string;
+  };
 };

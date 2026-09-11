@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import UserAvatar from "@/components/user-avatar";
-import { isEmailAvailable } from "@/lib/actions/database";
+import { isEmailAvailable } from "@/lib/actions/repository";
 import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
+import { FEATURE_FLAGS } from "@/lib/features";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -365,6 +366,7 @@ export default function RegisterPage() {
                 Do you wish to add a profile picture?
               </span>
               <Button
+                  disabled={!FEATURE_FLAGS.isAvatarUploadEnabled}
                 onClick={() => {
                   setShowAvatarStep(true);
                 }}
@@ -419,7 +421,7 @@ export default function RegisterPage() {
       )}
 
       <div className="mt-auto self-center">
-        <Button variant="link" disabled={isSubmitting || !isSuccess}>
+        <Button variant="link" disabled={isSubmitting || isSuccess}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>
       </div>
