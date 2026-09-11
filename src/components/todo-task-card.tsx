@@ -76,7 +76,7 @@ export default function TodoTaskCard({
         </CardTitle>
         <CardAction>
           <Toggle
-            className="ml-auto"
+            className={`ml-auto ${task.completed && "bg-check-completed!"}`}
             variant={"outline"}
             pressed={task.completed}
             onPressedChange={completedToggleOnChange}
