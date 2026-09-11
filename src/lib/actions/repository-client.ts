@@ -61,8 +61,8 @@ export async function getPaginatedQueriedSortedTasks(
     }
 
     const sorted = await data
-      .limit(tasksPerPage)
       .offset((currentPage - 1) * tasksPerPage)
+      .limit(tasksPerPage)
       .toArray();
 
     return { data: sorted };
