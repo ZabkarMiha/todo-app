@@ -24,12 +24,14 @@ export default async function Page({
     headers: await headers(),
   });
 
-  return (session ? (
+  return session ? (
     <TasksWrapperServer
       userId={session.user.id}
       searchParams={searchParamsResult}
     />
   ) : (
-    <TasksErrorBoundaryClient><TasksWrapperClient searchParams={searchParamsResult} /></TasksErrorBoundaryClient> 
-  ))
+    <TasksErrorBoundaryClient>
+      <TasksWrapperClient searchParams={searchParamsResult} />
+    </TasksErrorBoundaryClient>
+  );
 }

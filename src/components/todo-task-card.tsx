@@ -10,27 +10,44 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Toggle } from "@/components/ui/toggle";
-import { ActionResponse, ErrorData, InsertUpdateTask, ReturnTask } from "@/lib/types";
+import {
+  ActionResponse,
+  ErrorData,
+  InsertUpdateTask,
+  ReturnTask,
+} from "@/lib/types";
 import { Check, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import EditTask from "./edit-task";
 import { Separator } from "./ui/separator";
 
 type TodoTaskCardProps = {
-  task: ReturnTask
-  deleteTask(taskId: string): Promise<ActionResponse<{
-    title: string;
-}>>
-  completeTaskToggle(id: string, completed: boolean): Promise<ActionResponse<{
-    title: string;
-}>>,
-updateFunction(
-  id: string,
-  values: InsertUpdateTask,
-): Promise<ActionResponse<{ title: string }>>,
-}
+  task: ReturnTask;
+  deleteTask(taskId: string): Promise<
+    ActionResponse<{
+      title: string;
+    }>
+  >;
+  completeTaskToggle(
+    id: string,
+    completed: boolean,
+  ): Promise<
+    ActionResponse<{
+      title: string;
+    }>
+  >;
+  updateFunction(
+    id: string,
+    values: InsertUpdateTask,
+  ): Promise<ActionResponse<{ title: string }>>;
+};
 
-export default function TodoTaskCard({ task, deleteTask, completeTaskToggle, updateFunction }: TodoTaskCardProps) {
+export default function TodoTaskCard({
+  task,
+  deleteTask,
+  completeTaskToggle,
+  updateFunction,
+}: TodoTaskCardProps) {
   const deleteTaskOnClick = async () => {
     toast.promise(deleteTask(task.id), {
       closeButton: true,
@@ -85,7 +102,10 @@ export default function TodoTaskCard({ task, deleteTask, completeTaskToggle, upd
             <p>Due Date: {task.dueDate.toLocaleDateString("en-GB")}</p>
           ) : null}
         </div>
-        <EditTask taskData={task} updateFunction={(data) => updateFunction(task.id, data)} />
+        <EditTask
+          taskData={task}
+          updateFunction={(data) => updateFunction(task.id, data)}
+        />
       </CardFooter>
     </Card>
   );

@@ -1,50 +1,59 @@
-'use client'
+"use client";
 
-import { PencilLine, Plus } from "lucide-react";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Spinner } from "./ui/spinner";
-import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
-import { DateTimePicker } from "./ui/date-time-picker";
-import { useState } from "react";
 import { insertUpdateTaskSchema } from "@/lib/form-schemas";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
 import { ActionResponse, InsertUpdateTask } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PencilLine, Plus } from "lucide-react";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
+import { Button } from "./ui/button";
+import { DateTimePicker } from "./ui/date-time-picker";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Spinner } from "./ui/spinner";
+import { Switch } from "./ui/switch";
+import { Textarea } from "./ui/textarea";
 
 type TaskFormProps = {
-    className?: string,
-    defaultValues: z.infer<typeof insertUpdateTaskSchema>,
-    onSubmitFunction(data: InsertUpdateTask): Promise<ActionResponse<{ title: string }>>,
-    editMode: boolean
-}
+  className?: string;
+  defaultValues: z.infer<typeof insertUpdateTaskSchema>;
+  onSubmitFunction(
+    data: InsertUpdateTask,
+  ): Promise<ActionResponse<{ title: string }>>;
+  editMode: boolean;
+};
 
-export default function TaskForm({className, defaultValues, editMode, onSubmitFunction} : TaskFormProps) {
+export default function TaskForm({
+  className,
+  defaultValues,
+  editMode,
+  onSubmitFunction,
+}: TaskFormProps) {
+  const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-      const [open, setOpen] = useState(false);
-      const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDate, setIsDate] = useState(!!defaultValues.dueDate);
 
-      const [isDate, setIsDate] = useState(!!defaultValues.dueDate);
+  const form = useForm<z.infer<typeof insertUpdateTaskSchema>>({
+    resolver: zodResolver(insertUpdateTaskSchema),
+    defaultValues,
+  });
 
-      const form = useForm<z.infer<typeof insertUpdateTaskSchema>>({
-          resolver: zodResolver(insertUpdateTaskSchema),
-          defaultValues,
-        });
-
-
-
-
-
-         const onSubmit: SubmitHandler<z.infer<typeof insertUpdateTaskSchema>> = async (
-    formData,
-  ) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof insertUpdateTaskSchema>
+  > = async (formData) => {
     if (isDate && formData.dueDate === null) {
       form.setError("dueDate", { message: "Select a date" });
       return;
@@ -57,7 +66,7 @@ export default function TaskForm({className, defaultValues, editMode, onSubmitFu
       dueDate: isDate ? formData.dueDate : null,
     };
 
-    const result = await onSubmitFunction(completeTaskData)
+    const result = await onSubmitFunction(completeTaskData);
 
     if (result?.error) {
       toast.error(result.error.message, {
@@ -71,17 +80,20 @@ export default function TaskForm({className, defaultValues, editMode, onSubmitFu
       return;
     }
 
-    toast.success(editMode ? `${result.data?.title} updated` : `${result.data?.title} created`, {
-      closeButton: true,
-      position: "top-center",
-    });
+    toast.success(
+      editMode
+        ? `${result.data?.title} updated`
+        : `${result.data?.title} created`,
+      {
+        closeButton: true,
+        position: "top-center",
+      },
+    );
 
     setOpen(false);
   };
 
-
-
-    const handleOpenChange = (isOpen: boolean) => {
+  const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (isOpen) {
       form.reset(defaultValues);
@@ -95,8 +107,7 @@ export default function TaskForm({className, defaultValues, editMode, onSubmitFu
     setIsDate(!!defaultValues.dueDate);
   };
 
-
-    return (
+  return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
@@ -241,5 +252,5 @@ export default function TaskForm({className, defaultValues, editMode, onSubmitFu
         )}
       </DialogContent>
     </Dialog>
-    )
+  );
 }

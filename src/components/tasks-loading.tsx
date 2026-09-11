@@ -1,7 +1,8 @@
 import { Skeleton } from "./ui/skeleton";
 
 export default function TasksLoading() {
-    return (<div className="mx-5 mt-2 mb-2 flex flex-col sm:mx-10 xl:mx-20">
+  return (
+    <div className="mx-5 mt-2 mb-2 flex flex-col sm:mx-10 xl:mx-20">
       <div className="hidden gap-5 2xl:mx-0 2xl:grid 2xl:grid-cols-4">
         {Array.from({ length: 8 }).map((_, index) => (
           <Skeleton key={index} className="h-[40dvh] w-full rounded-md" />
@@ -25,5 +26,6 @@ export default function TasksLoading() {
       <div className="sticky bottom-4 mx-2 h-fit rounded-md p-2 backdrop-blur-xl md:mx-0 md:self-center">
         <Skeleton className="h-24 w-full md:h-12 md:w-lg" />
       </div>
-    </div>)
+    </div>
+  );
 }

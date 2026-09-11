@@ -1,3 +1,3 @@
-import Schema from "./schema"
+import Schema from "./schema";
 
-export const db = new Schema()
+export const db = new Schema();

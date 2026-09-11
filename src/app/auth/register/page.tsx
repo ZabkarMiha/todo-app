@@ -12,6 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 import UserAvatar from "@/components/user-avatar";
 import { isEmailAvailable } from "@/lib/actions/repository";
 import { authClient } from "@/lib/auth/auth-client";
+import { FEATURE_FLAGS } from "@/lib/features";
 import { registerFormSchema } from "@/lib/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -19,7 +20,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { FEATURE_FLAGS } from "@/lib/features";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -366,7 +366,7 @@ export default function RegisterPage() {
                 Do you wish to add a profile picture?
               </span>
               <Button
-                  disabled={!FEATURE_FLAGS.isAvatarUploadEnabled}
+                disabled={!FEATURE_FLAGS.isAvatarUploadEnabled}
                 onClick={() => {
                   setShowAvatarStep(true);
                 }}

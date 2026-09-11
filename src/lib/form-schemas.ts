@@ -33,7 +33,7 @@ export const userFormSchema = z.object({
     .max(30, {
       error: "Username must not exceed 30 characters.",
     }),
-})
+});
 
 const passwordSchema = z
   .string()

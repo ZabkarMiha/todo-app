@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { NotebookPen } from "lucide-react";
-import Link from "next/link";
-import { auth } from "../lib/auth/auth";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { auth } from "../lib/auth/auth";
 
 export default async function Page() {
   const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    headers: await headers(),
+  });
 
   if (session) {
     redirect("/tasks");

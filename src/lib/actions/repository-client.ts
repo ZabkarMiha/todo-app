@@ -4,25 +4,23 @@ import { db } from "../../../db/dexie/index";
 import { ActionResponse, InsertUpdateTask, ReturnTask } from "../types";
 
 export async function insertTask(
-  values: InsertUpdateTask
+  values: InsertUpdateTask,
 ): Promise<ActionResponse<{ title: string }>> {
-
   try {
-      await db.tasks.add({
-    ...values,
-    dateAdded: new Date(),
-  });
-      return { data: {title: values.title} };
-    } catch {
-      return { error: { message: "Failed to insert task", status: 500 } };
-    }
+    await db.tasks.add({
+      ...values,
+      dateAdded: new Date(),
+    });
+    return { data: { title: values.title } };
+  } catch {
+    return { error: { message: "Failed to insert task", status: 500 } };
+  }
 }
 
 export async function getQueriedTasksCount(
   query: string | null,
 ): Promise<ActionResponse<number>> {
   try {
-
     let data = db.tasks.toCollection();
 
     if (query) {
@@ -47,9 +45,7 @@ export async function getPaginatedQueriedSortedTasks(
   query: string | null,
   sort: string | null,
 ): Promise<ActionResponse<Array<ReturnTask>>> {
-
   try {
-
     let data = db.tasks.orderBy("dateAdded");
 
     if (sort === "newest") {
@@ -75,8 +71,7 @@ export async function getPaginatedQueriedSortedTasks(
   }
 }
 
-export async function userHasTasks(
-): Promise<ActionResponse<number>> {
+export async function userHasTasks(): Promise<ActionResponse<number>> {
   try {
     const count = await db.tasks.limit(1).count();
     return { data: count };
@@ -155,12 +150,12 @@ export async function completeTaskToggle(
         return null;
       }
 
-        await db.tasks.update(id, { completed: completed });
+      await db.tasks.update(id, { completed: completed });
 
-        return { title: record.title };
+      return { title: record.title };
     });
 
-if (!data) {
+    if (!data) {
       return { error: { message: "Task not found", status: 404 } };
     }
 

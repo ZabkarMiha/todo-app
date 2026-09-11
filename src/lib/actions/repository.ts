@@ -20,7 +20,7 @@ export async function getAllTasks(
 
 export async function insertTask(
   userId: string,
-  values: InsertUpdateTask
+  values: InsertUpdateTask,
 ): Promise<ActionResponse<{ title: string }>> {
   try {
     const data = await db
@@ -107,8 +107,7 @@ export async function deleteTask(
     revalidatePath("/");
     return { data: data[0] };
   } catch {
-    return { error: { message: "Failed to delete task", status: 500
-     } };
+    return { error: { message: "Failed to delete task", status: 500 } };
   }
 }
 
@@ -148,7 +147,12 @@ export async function completeTaskToggle(
     revalidatePath("/");
     return { data: data[0] };
   } catch {
-    return { error: { message: "Failed to update task completion status", status: 500 } };
+    return {
+      error: {
+        message: "Failed to update task completion status",
+        status: 500,
+      },
+    };
   }
 }
 
@@ -167,6 +171,8 @@ export async function isEmailAvailable(
     }
     return { data: { available } };
   } catch {
-    return { error: { message: "Failed to check email availability", status: 500 } };
+    return {
+      error: { message: "Failed to check email availability", status: 500 },
+    };
   }
 }

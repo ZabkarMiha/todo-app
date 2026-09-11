@@ -8,7 +8,9 @@ type DockProps = {
   tasksCount: number;
   tasksPerPage: number;
   currentPage: number;
-  insertFunction(data: InsertUpdateTask): Promise<ActionResponse<{ title: string }>>,
+  insertFunction(
+    data: InsertUpdateTask,
+  ): Promise<ActionResponse<{ title: string }>>;
 };
 
 export default function Dock({
@@ -16,7 +18,6 @@ export default function Dock({
   tasksPerPage,
   currentPage,
   insertFunction,
-
 }: DockProps) {
   return (
     <div className="outline-border fixed bottom-2 mx-2 self-center rounded-md p-2 outline-1 backdrop-blur-xl">
@@ -32,7 +33,7 @@ export default function Dock({
         <div className="flex flex-row gap-2">
           <SortTasks className="h-full" />
           <Search className="h-full w-full" />
-          <AddTask insertFunction={insertFunction}/>
+          <AddTask insertFunction={insertFunction} />
         </div>
       </div>
     </div>
