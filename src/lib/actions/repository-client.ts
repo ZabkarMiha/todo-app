@@ -19,7 +19,6 @@ export async function insertTask(
 ): Promise<ActionResponse<{ title: string }>> {
   try {
     await db.tasks.add({
-      id: crypto.randomUUID(),
       ...values,
       dateAdded: new Date(),
     });

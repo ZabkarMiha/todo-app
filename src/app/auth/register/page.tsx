@@ -163,8 +163,7 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
 
-    const tasks: ReturnTask[] = userLocalTasks.data.map((task) => ({
-      id: task.id,
+    const tasks: Omit<ReturnTask, "id">[] = userLocalTasks.data.map((task) => ({
       title: task.title,
       description: task.description,
       completed: task.completed,

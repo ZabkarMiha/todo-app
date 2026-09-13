@@ -36,7 +36,7 @@ export async function insertTask(
 
 export async function insertUserClientTasks(
   userId: string,
-  values: ReturnTask[],
+  values: Omit<ReturnTask, "id">[],
 ): Promise<ActionResponse<{ title: string }[]>> {
   try {
     const data = await db
