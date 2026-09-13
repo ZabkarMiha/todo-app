@@ -34,6 +34,29 @@ export async function insertTask(
   }
 }
 
+export async function insertUserClientTasks(
+  userId: string,
+  values: ReturnTask[],
+): Promise<ActionResponse<{ title: string }[]>> {
+  try {
+    const data = await db
+      .insert(task)
+      .values(
+        values.map((value) => ({
+          ...value,
+          userId,
+        })),
+      )
+      .returning({ title: task.title });
+    revalidatePath("/");
+    return { data: data };
+  } catch (error) {
+    return {
+      error: { message: "Failed to insert client tasks " + error, status: 500 },
+    };
+  }
+}
+
 export async function getQueriedTasksCount(
   userId: string,
   query: string | null,

@@ -3,11 +3,23 @@
 import { db } from "../../../db/dexie/index";
 import { ActionResponse, InsertUpdateTask, ReturnTask } from "../types";
 
+export async function getAllTasks(): Promise<
+  ActionResponse<Array<ReturnTask>>
+> {
+  try {
+    const tasks = await db.tasks.toArray();
+    return { data: tasks };
+  } catch {
+    return { error: { message: "Failed to fetch tasks", status: 500 } };
+  }
+}
+
 export async function insertTask(
   values: InsertUpdateTask,
 ): Promise<ActionResponse<{ title: string }>> {
   try {
     await db.tasks.add({
+      id: crypto.randomUUID(),
       ...values,
       dateAdded: new Date(),
     });

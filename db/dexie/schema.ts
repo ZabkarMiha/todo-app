@@ -7,7 +7,7 @@ export default class Schema extends Dexie {
   constructor() {
     super("TasksDB");
     this.version(1).stores({
-      tasks: "++id, title, description, dateAdded",
+      tasks: "id, title, description, dateAdded",
     });
     this.tasks.mapToClass(Task);
   }

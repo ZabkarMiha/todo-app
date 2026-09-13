@@ -10,11 +10,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import UserAvatar from "@/components/user-avatar";
-import { isEmailAvailable } from "@/lib/actions/repository";
+import {
+  insertUserClientTasks,
+  isEmailAvailable,
+} from "@/lib/actions/repository";
+import { getAllTasks } from "@/lib/actions/repository-client";
 import { authClient } from "@/lib/auth/auth-client";
 import { FEATURE_FLAGS } from "@/lib/features";
 import { registerFormSchema } from "@/lib/form-schemas";
+import { ReturnTask } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLiveQuery } from "dexie-react-hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,17 +30,22 @@ import { z } from "zod";
 export default function RegisterPage() {
   const router = useRouter();
 
+  const [step, setStep] = useState<
+    "registrationStep" | "avatarStep" | "clientTasksStep"
+  >("registrationStep");
+
   const [emailStepComplete, setEmailStepComplete] = useState<boolean>(false);
   const [checkingEmail, setCheckingEmail] = useState<boolean>(false);
 
   const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const [showAvatarStep, setShowAvatarStep] = useState<boolean>(false);
 
-  const [loading, isLoading] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
+
+  const userLocalTasks = useLiveQuery(() => getAllTasks());
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -131,6 +142,47 @@ export default function RegisterPage() {
     }
   };
 
+  const handleTasksToUserStep = () => {
+    if (userLocalTasks === undefined) {
+      return;
+    }
+
+    if ((userLocalTasks.data?.length ?? 0) === 0) {
+      router.push("/tasks");
+      return;
+    }
+
+    setStep("clientTasksStep");
+  };
+
+  const addTasksToUser = async () => {
+    if (!userLocalTasks?.data?.length) {
+      router.push("/tasks");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const tasks: ReturnTask[] = userLocalTasks.data.map((task) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+      dueDate: task.dueDate,
+      dateAdded: task.dateAdded,
+    }));
+
+    const result = await insertUserClientTasks(userId, tasks);
+
+    if (result.error) {
+      console.error(result.error.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    router.push("/tasks");
+  };
+
   const onSubmit: SubmitHandler<z.infer<typeof registerFormSchema>> = async (
     values,
   ) => {
@@ -139,19 +191,18 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
 
-    await authClient.signUp.email(
+    const { data } = await authClient.signUp.email(
       {
         email: values.email,
         password: values.password,
         name: values.name,
         username: values.username,
-        callbackURL: "/tasks",
       },
       {
         onRequest: () => {},
-        onSuccess: () => {
+        onSuccess: (ctx) => {
           setIsSubmitting(false);
-          setIsSuccess(true);
+          setStep("avatarStep");
         },
         onError: (ctx) => {
           console.error(ctx.error.message);
@@ -159,6 +210,10 @@ export default function RegisterPage() {
         },
       },
     );
+
+    if (data) {
+      setUserId(data.user.id);
+    }
   };
 
   return (
@@ -172,7 +227,7 @@ export default function RegisterPage() {
         </div>
       )}
 
-      {!isSuccess && !isSubmitting && (
+      {step === "registrationStep" && !isSubmitting && (
         <div className="flex-1 content-center">
           <form
             id="register-form"
@@ -351,16 +406,16 @@ export default function RegisterPage() {
         </div>
       )}
 
-      {isSuccess && (
+      {step === "avatarStep" && !isSubmitting && (
         <Field className="h-full justify-center gap-7">
-          {loading && (
+          {/* {loading && (
             <div className="flex h-full w-full flex-col items-center justify-center space-y-4">
               <Spinner className="size-8" />
               <p>Loading...</p>
             </div>
-          )}
+          )} */}
 
-          {!showAvatarStep && !loading && (
+          {!showAvatarStep && (
             <Field className="flex items-center justify-center gap-7">
               <span className="text-center">
                 Do you wish to add a profile picture?
@@ -376,8 +431,8 @@ export default function RegisterPage() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  isLoading(true);
-                  router.push("/tasks");
+                  handleTasksToUserStep();
+                  //router.push("/tasks");
                 }}
               >
                 No, continue
@@ -385,7 +440,7 @@ export default function RegisterPage() {
             </Field>
           )}
 
-          {showAvatarStep && !loading && (
+          {showAvatarStep && (
             <div className="flex h-full flex-col items-center justify-center gap-7">
               <div className="flex aspect-square h-[35%] items-center justify-center">
                 <UserAvatar className="size-full" editable={true} />
@@ -409,7 +464,9 @@ export default function RegisterPage() {
                 <Button
                   type="button"
                   onClick={() => {
-                    router.push("/tasks");
+                    handleTasksToUserStep();
+                    setShowAvatarStep(false);
+                    /* router.push("/tasks"); */
                   }}
                 >
                   Submit
@@ -420,8 +477,38 @@ export default function RegisterPage() {
         </Field>
       )}
 
+      {userLocalTasks !== undefined &&
+        userLocalTasks.data?.length !== 0 &&
+        step === "clientTasksStep" &&
+        !isSubmitting && (
+          <Field className="h-full justify-center gap-7">
+            <span className="text-center">
+              Looks like you added some tasks while you were in guest mode. Add
+              them to your new online account?
+            </span>
+            <Field
+              className="flex items-center justify-center"
+              orientation="horizontal"
+            >
+              <Button
+                type="button"
+                variant="secondary"
+                className=""
+                onClick={() => {
+                  router.push("/tasks");
+                }}
+              >
+                No
+              </Button>
+              <Button type="button" onClick={addTasksToUser}>
+                Yes
+              </Button>
+            </Field>
+          </Field>
+        )}
+
       <div className="mt-auto self-center">
-        <Button variant="link" disabled={isSubmitting || isSuccess}>
+        <Button variant="link" disabled={isSubmitting}>
           <Link href={"/auth/login"}>Already registered? Login</Link>
         </Button>
       </div>
