@@ -18,27 +18,24 @@ import Dock from "./dock";
 import TasksList from "./tasks-list";
 
 export default function TasksWrapperClient({
-  searchParams,
+  page,
+  tasksPerPage,
+  sortKey,
+  sortOrder,
+  query,
 }: Omit<TasksWrapperProps, "userId">) {
-  const currentPage = Number(searchParams.page) || 1;
-
-  const tasksPerPage = Number(searchParams.tasksPerPage) || 6;
-
-  const sortOrder = searchParams.sortOrder || "newest";
-
-  const query = searchParams.query || null;
-
   const userHasTasksResult = useLiveQuery(() => userHasTasks());
 
   const tasks = useLiveQuery(
     () =>
       getPaginatedQueriedSortedTasks(
-        currentPage,
+        page,
         tasksPerPage,
-        query,
+        sortKey,
         sortOrder,
+        query,
       ),
-    [currentPage, tasksPerPage, query, sortOrder],
+    [page, tasksPerPage, query, sortKey, sortOrder],
   );
 
   const tasksCount = useLiveQuery(() => getQueriedTasksCount(query), [query]);
@@ -101,7 +98,7 @@ export default function TasksWrapperClient({
           <Dock
             tasksCount={tasksCount.data!}
             tasksPerPage={tasksPerPage}
-            currentPage={currentPage}
+            page={page}
             insertFunction={insertTask}
           />
         </Suspense>

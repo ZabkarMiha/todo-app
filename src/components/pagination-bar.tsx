@@ -13,17 +13,17 @@ import { cn } from "@/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
 
 type PaginationBarProps = {
+  className?: string;
   tasksCount: number;
   tasksPerPage: number;
-  currentPage: number;
-  className?: string;
+  page: number;
 };
 
 export default function PaginationBar({
+  className,
   tasksCount,
   tasksPerPage,
-  currentPage,
-  className,
+  page,
 }: PaginationBarProps) {
   const maxPreviousPages = 0;
   const maxNextPages = 0;
@@ -41,18 +41,18 @@ export default function PaginationBar({
   return (
     <Pagination className={cn("m-0 w-fit", className)}>
       <PaginationContent>
-        {currentPage > 1 && (
+        {page > 1 && (
           <>
             <PaginationItem>
-              <PaginationPrevious href={getPageUrl(currentPage - 1)} />
+              <PaginationPrevious href={getPageUrl(page - 1)} />
             </PaginationItem>
 
-            {currentPage > maxPreviousPages + 1 && (
+            {page > maxPreviousPages + 1 && (
               <>
                 <PaginationItem>
                   <PaginationLink href={getPageUrl(1)}>1</PaginationLink>
                 </PaginationItem>
-                {currentPage > maxPreviousPages + 2 && (
+                {page > maxPreviousPages + 2 && (
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
@@ -60,47 +60,44 @@ export default function PaginationBar({
               </>
             )}
 
-            {[...Array(Math.min(maxPreviousPages, currentPage - 1))].map(
-              (_, idx) => {
-                const page =
-                  currentPage -
-                  (Math.min(maxPreviousPages, currentPage - 1) - idx);
-                return (
-                  <PaginationItem key={page}>
-                    <PaginationLink href={getPageUrl(page)}>
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              },
-            )}
+            {[...Array(Math.min(maxPreviousPages, page - 1))].map((_, idx) => {
+              const pageItem =
+                page - (Math.min(maxPreviousPages, page - 1) - idx);
+              return (
+                <PaginationItem key={pageItem}>
+                  <PaginationLink href={getPageUrl(pageItem)}>
+                    {pageItem}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
           </>
         )}
 
         <PaginationItem>
           <PaginationLink href="#" isActive>
-            {currentPage}
+            {page}
           </PaginationLink>
         </PaginationItem>
 
-        {tasksCount - currentPage * tasksPerPage > 0 && (
+        {tasksCount - page * tasksPerPage > 0 && (
           <>
-            {[...Array(Math.min(maxNextPages, totalPages - currentPage))].map(
+            {[...Array(Math.min(maxNextPages, totalPages - page))].map(
               (_, idx) => {
-                const page = currentPage + idx + 1;
+                const pageItem = page + idx + 1;
                 return (
-                  <PaginationItem key={page}>
-                    <PaginationLink href={getPageUrl(page)}>
-                      {page}
+                  <PaginationItem key={pageItem}>
+                    <PaginationLink href={getPageUrl(pageItem)}>
+                      {pageItem}
                     </PaginationLink>
                   </PaginationItem>
                 );
               },
             )}
 
-            {currentPage + maxNextPages < totalPages && (
+            {page + maxNextPages < totalPages && (
               <>
-                {currentPage + maxNextPages + 1 < totalPages && (
+                {page + maxNextPages + 1 < totalPages && (
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
@@ -114,7 +111,7 @@ export default function PaginationBar({
             )}
 
             <PaginationItem>
-              <PaginationNext href={getPageUrl(currentPage + 1)} />
+              <PaginationNext href={getPageUrl(page + 1)} />
             </PaginationItem>
           </>
         )}

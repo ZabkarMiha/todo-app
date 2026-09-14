@@ -17,7 +17,11 @@ import { Suspense } from "react";
 
 export default async function TasksWrapperServer({
   userId,
-  searchParams,
+  page,
+  tasksPerPage,
+  sortKey,
+  sortOrder,
+  query,
 }: TasksWrapperProps) {
   const userHasTasksResult = await userHasTasks(userId);
 
@@ -38,21 +42,14 @@ export default async function TasksWrapperServer({
     );
   }
 
-  const currentPage = Number(searchParams.page) || 1;
-
-  const tasksPerPage = Number(searchParams.tasksPerPage) || 6;
-
-  const sortOrder = searchParams.sortOrder || "newest";
-
-  const query = searchParams.query || null;
-
   const [tasks, tasksCount] = await Promise.all([
     getPaginatedQueriedSortedTasks(
       userId,
-      currentPage,
+      page,
       tasksPerPage,
-      query,
+      sortKey,
       sortOrder,
+      query,
     ),
     getQueriedTasksCount(userId, query),
   ]);
@@ -86,7 +83,7 @@ export default async function TasksWrapperServer({
           <Dock
             tasksCount={tasksCount.data!}
             tasksPerPage={tasksPerPage}
-            currentPage={currentPage}
+            page={page}
             insertFunction={insertTask.bind(null, userId)}
           />
         </Suspense>

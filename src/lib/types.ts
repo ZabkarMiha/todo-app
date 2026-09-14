@@ -19,10 +19,13 @@ export type ActionResponse<T> = {
 
 export type TasksWrapperProps = {
   userId: string;
-  searchParams: {
-    page?: string;
-    tasksPerPage?: string;
-    sortOrder?: string;
-    query?: string;
-  };
+  page: number;
+  tasksPerPage: number;
+  sortKey: SortKeys;
+  sortOrder: SortOrders;
+  query: string | null;
 };
+
+export type SortKeys = "dateAdded" | "completed" | "dueDate";
+
+export type SortOrders = "ascending" | "descending";

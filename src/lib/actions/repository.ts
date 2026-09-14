@@ -4,7 +4,13 @@ import { db } from "@/drizzle/index";
 import { task, user } from "@/drizzle/schema";
 import { and, asc, desc, eq, ilike, SQL } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { ActionResponse, InsertUpdateTask, ReturnTask } from "../types";
+import {
+  ActionResponse,
+  InsertUpdateTask,
+  ReturnTask,
+  SortKeys,
+  SortOrders,
+} from "../types";
 
 //Currently not in use (maybe later???)
 export async function getAllTasks(
@@ -78,10 +84,11 @@ export async function getQueriedTasksCount(
 
 export async function getPaginatedQueriedSortedTasks(
   userId: string,
-  currentPage: number,
+  page: number,
   tasksPerPage: number,
+  sortKey: SortKeys,
+  sortOrder: SortOrders,
   query: string | null,
-  sort: string | null,
 ): Promise<ActionResponse<Array<ReturnTask>>> {
   const filters: SQL[] = [];
 
@@ -92,9 +99,11 @@ export async function getPaginatedQueriedSortedTasks(
       .select()
       .from(task)
       .where(and(eq(task.userId, userId), ...filters))
-      .orderBy(sort === "newest" ? desc(task.dateAdded) : asc(task.dateAdded))
+      .orderBy(
+        sortOrder === "descending" ? desc(task[sortKey]) : asc(task[sortKey]),
+      )
       .limit(tasksPerPage)
-      .offset((currentPage - 1) * tasksPerPage);
+      .offset((page - 1) * tasksPerPage);
     return { data: data };
   } catch {
     return { error: { message: "Failed to fetch tasks", status: 500 } };

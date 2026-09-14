@@ -7,7 +7,7 @@ import SortTasks from "./sort-tasks";
 type DockProps = {
   tasksCount: number;
   tasksPerPage: number;
-  currentPage: number;
+  page: number;
   insertFunction(
     data: InsertUpdateTask,
   ): Promise<ActionResponse<{ title: string }>>;
@@ -16,7 +16,7 @@ type DockProps = {
 export default function Dock({
   tasksCount,
   tasksPerPage,
-  currentPage,
+  page,
   insertFunction,
 }: DockProps) {
   return (
@@ -26,14 +26,14 @@ export default function Dock({
           <PaginationBar
             tasksCount={tasksCount}
             tasksPerPage={tasksPerPage}
-            currentPage={currentPage}
+            page={page}
             className="h-full self-center"
           />
         </div>
         <div className="flex flex-row gap-2">
-          <SortTasks className="h-full" />
-          <Search className="h-full w-full" />
           <AddTask insertFunction={insertFunction} />
+          <Search className="h-full w-full" />
+          <SortTasks className="h-full" />
         </div>
       </div>
     </div>

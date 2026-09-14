@@ -1,7 +1,13 @@
 "use client";
 
 import { db } from "../../../db/dexie/index";
-import { ActionResponse, InsertUpdateTask, ReturnTask } from "../types";
+import {
+  ActionResponse,
+  InsertUpdateTask,
+  ReturnTask,
+  SortKeys,
+  SortOrders,
+} from "../types";
 
 export async function getAllTasks(): Promise<
   ActionResponse<Array<ReturnTask>>
@@ -51,17 +57,14 @@ export async function getQueriedTasksCount(
 }
 
 export async function getPaginatedQueriedSortedTasks(
-  currentPage: number,
+  page: number,
   tasksPerPage: number,
+  sortKey: SortKeys,
+  sortOrder: SortOrders,
   query: string | null,
-  sort: string | null,
 ): Promise<ActionResponse<Array<ReturnTask>>> {
   try {
-    let data = db.tasks.orderBy("dateAdded");
-
-    if (sort === "newest") {
-      data = data.reverse();
-    }
+    let data = db.tasks.toCollection();
 
     if (query) {
       const normalizedQuery = query.toLowerCase();
@@ -71,10 +74,32 @@ export async function getPaginatedQueriedSortedTasks(
       );
     }
 
+    if (sortKey === "completed") {
+      const tasks = await data.toArray();
+
+      const completed = tasks.filter((task) => task.completed);
+      const incomplete = tasks.filter((task) => !task.completed);
+
+      const sorted =
+        sortOrder === "ascending"
+          ? [...completed, ...incomplete]
+          : [...incomplete, ...completed];
+
+      const start = (page - 1) * tasksPerPage;
+
+      return {
+        data: sorted.slice(start, start + tasksPerPage),
+      };
+    }
+
+    if (sortOrder === "descending") {
+      data = data.reverse();
+    }
+
     const sorted = await data
-      .offset((currentPage - 1) * tasksPerPage)
+      .offset((page - 1) * tasksPerPage)
       .limit(tasksPerPage)
-      .toArray();
+      .sortBy(sortKey);
 
     return { data: sorted };
   } catch {
